@@ -448,11 +448,11 @@
 			guess whose largest bucket is $B_j$ with $j>0$.
 			\end{enumerate}
 		\end{proof}
-	\item The minimax algorithm is a guessing strategy described by
-	Knuth [DK76].
-	At each turn, the algorithm ranks the possible guesses based on the fewest
-	number of solutions that they would eliminate over all possible responses. It
-	then picks the guess with the highest rank.\\\\
+	\item The minimax algorithm is a guessing strategy described by Knuth [DK76].
+	At each turn, the algorithm assigns each of the possible guesses a score equal
+	to the minimum number of solutions that they would eliminate over all
+	possible responses from the codemaker. It then picks the guess with the maximum
+	score.\\\\
 	\textit{Corollary.} The minimax algorithm on Mastermind with $n$ spots, $k$
 	colors, and no repeats takes at most
 		\begin{equation*}
@@ -488,9 +488,11 @@
 	
 \clearpage
 \section*{Extension of Previous Section to Repeated Colors}
-	An analogous result for the above section can be easily shown with guesses
-	eliminating a factor of $n^2k$ possible solutions at each step. However, in order to
-	replicate the bound of $nk$ with repeated colors, we need to make the following assumption:
+	In order to replicate the bound of $nk$ with repeated colors, we need to make the
+	following assumption:\footnote{The proof in the previous section can be extended
+	easily to general $n$ and $k$: Substitute to show that there is always a guess that
+	eliminates a factor of $1/n^2k$ possible solutions at each step. For a tighter
+	bound with repeated colors, however, we need to make more restrictive assumptions.}
 	There exists a guess vector $v$ such that all of the solutions in set $S$
 	correspond to a single response $r$ after making the guess $v$. Note that this
 	is always satisfied if the solutions are any set of solutions remaining after
@@ -529,8 +531,8 @@
 			& = \frac{(k-1)^j}{k^j}\\
 			& \le \frac{k-1}{k}
 			\end{align*}
-		Therefore, we always eliminate a fraction at least $1/k\ge 1/nk$
-		of the solutions.
+		Therefore, we always eliminate a fraction at least $1/k\ge 1/nk$ of the
+		solutions.
 		
 		When $k<n$, it is difficult to find the size of one bucket compared to the
 		entire set, so instead we will compare one bucket to the sum of itself
@@ -558,7 +560,7 @@
 			\frac{|B_{0}|}{|S|}
 			& = \frac{(k-1)^n}{k^n}\\
 			& \le \frac{k-1}{k}\\
-			& \le 1-\frac{1}{kn}
+			& \le 1-\frac{1}{nk}
 		\end{align*}
 		So we have that the first guess of any game will always eliminate at least
 		$1/nk$ of the remaining solutions.
@@ -599,18 +601,17 @@
 			& = \frac{1}{nk}|S|
 			\end{align*}
 		It is important to check that the induction hypothesis holds- namely, that
-		there exists a guess of size $n-1$ such that all of the (n-1)-vectors
+		there exists a guess of size $n-1$ such that all of the $(n-1)$-vectors
 		we're considering produce the same response.
 		
 		However, by our assumptions, $\sigma$ is an $n$-vector such that all of the
 		$n$ vectors fall into a  single bucket $j$. Since every vector we're
 		considering for induction is in the same sub-bucket 
 		$D_{\sigma_1}$, if we consider only spots 2 through $n$, all of these
-		$(n-1)$-vectors will have
-		exactly 1 fewer hit than they did as $n$-vectors, (as all of them had a hit
-		in the first spot), so all of them fall into the same bucket (bucket $j-1$)
-		for the guess $\{\sigma_2, \sigma_3, \ldots, \sigma_n\}$,
-		so the condition is satisfied.
+		$(n-1)$-vectors will have exactly one fewer hit than they did as $n$-vectors,
+		(as all of them had a hit in the first spot), so all of them fall into the
+		same bucket (bucket $j-1$) for the guess
+		$\{\sigma_2, \sigma_3, \ldots, \sigma_n\}$, so the condition is satisfied.
 		\end{enumerate}
 
 		\textit{Case 2.} If $j=0$, we can no longer find a new $\overline{\sigma}$
