@@ -1,0 +1,683 @@
+\documentclass[12pt, a4paper]{article}
+\author{Aaron Berger, Christopher Chute, Matthew Stone}
+\title{Notes from Mastermind Research}
+\usepackage[bottom=1.5in, left=1in, right=1in, top=1.1in]{geometry}
+\usepackage{amsmath, amsthm, amssymb}
+\newtheorem{lem}{Lemma}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{footnote}
+
+% \begin{header footer formatting}
+\usepackage{fancyhdr}
+\setlength{\headheight}{48pt}
+\pagestyle{fancyplain}
+\lhead{Mastermind Project: \textit{Notes}\\\today{}}
+\rhead{AB, CC, MS}
+\rfoot{\thepage}
+\cfoot{}
+% \end{header footer formatting}
+
+% remove ``*'' for numbered theorems
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+% \begin{pretty i-hat and j-hat}
+\newcommand*{\ihat}{\hat{\imath}}
+\newcommand*{\jhat}{\hat{\jmath}}
+\newcommand*{\jwidehat}{\widehat{\jmath}}
+% \end{pretty i-hat and j-hat}
+
+% \begin{pretty code or pseudocode}
+\usepackage{listings}
+\usepackage{courier}
+\lstset{
+         basicstyle=\footnotesize\ttfamily,
+%        numbers=left,               
+         numberstyle=\tiny,          
+%        stepnumber=2,              
+         numbersep=5pt,              
+         tabsize=4,                 
+         extendedchars=true,         
+         breaklines=true,            
+         keywordstyle=\color{red},
+         frame=tblr,% Set the borders, tblr == (top, bottom, left, right)
+%        keywordstyle=[1]\textbf,    
+%        keywordstyle=[2]\textbf,   
+%        keywordstyle=[3]\textbf,   
+%        keywordstyle=[4]\textbf,  
+         stringstyle=\color{white}\ttfamily,
+         showspaces=false,          
+         showtabs=false,           
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+%        backgroundcolor=\color{red},
+         showstringspaces=false            
+ }
+\lstloadlanguages{C}
+% Example Usage:
+% \lstinputlisting{pseudocode.txt}
+% \end{pretty code or pseudocode}
+
+% ********************************* END OF PREAMBLE ***********************************
+
+\begin{document}
+\section*{Mastermind with No Repeats: Lower Bound for Guessing Strategies}
+	\begin{enumerate}
+	\item\textit{Game.}
+	In this version of Mastermind, there are $n$ spots and $n$
+	colors; all guesses and solutions are permutations.
+	
+	\item \textit{Trivial Lower Bound.}
+	We have $n!$ possible hidden vectors, and each query has $n$ possible
+	responses.\footnote{The possible responses are $0, 1, \ldots, n-2, n$, since it is
+	impossible to get $n-1$ black hits with no repeats and $n=k$.}
+	Since we must distinguish between every pair of vectors, we must ask at least
+		\begin{equation*}
+		\log_{n}(n!)\sim \left(n-\frac{n}{\ln(n)}\right)
+		\end{equation*}
+
+	\item\textit{Buckets.}
+	In order to beat the trivial lower bound, we use a more accurate picture
+	of the distribution of the possible solutions after feedback from a given guess.
+	For any guess, we can split the possible solutions up into groups, which
+	we will call \textit{buckets}; one bucket for each possible response given by
+	the codemaker. For any guess we make, the number of possible solutions that give
+	the response ``$k$ (black) hits'' is the number of permutations with $k$ fixed
+	points with respect to our guess vector.
+	\begin{center}
+	\includegraphics[keepaspectratio=true, width=0.7\textwidth]{buckets}
+	\end{center}
+	The size of a bucket of possible
+	solutions with $k$ hits can be counted easily: we choose the $k$ colors that are
+	fixed points (wrt our guess vector), then we permute the remaining $n-k$ colors
+	without any fixed points, giving $D(n - k)$, the derangements on an $(n-k)$-element
+	vector:
+		\begin{equation*}
+		\binom{n}{k}D(n-k)
+		\end{equation*}
+	This tells us the initial size of each bucket, and as more guesses are
+	made, the size of each bucket can only decrease, no matter which guess is
+	considered.
+	
+	\item\textit{Notation.}
+	Let $S_{n}(t)$ be the minimum number of possible solutions remaining
+	after $t$ guesses for any guessing strategy. We compute this lower bound by using
+	a set of guesses which are guaranteed to eliminate at least as many solutions
+	as any other guess we could make. The worst-case scenario for this set of guesses
+	therefore provides a lower bound for the number of guesses required by any
+	guessing strategy to guarantee finding the hidden vector.
+	
+	\item\textbf{Recurrence Relation on Number of Possible Solutions after $t$ Turns:}
+		\begin{enumerate}
+		\item We will inductively prove a lower bound, $S_{n}(t)$. By the
+		discussion above,
+		we know the maximum size of each bucket containing possible solutions.
+		The best possible guess distributes the remaining solutions as evenly as
+		possible so that the bucket containing the most remaining solutions is as
+		small as possible. This best-possible distribution will fill some number of
+		smaller buckets entirely and split the remaining solutions evenly
+		into some number $x$ larger buckets. That is, there are $x$ incompletely
+		filled buckets.
+		
+		\item At the beginning of the $t$-th turn, we have at least $S_{n}(t-1)$
+		possible
+		solutions remaining. As we showed before, the size of each bucket is bounded
+		by its original size of $\binom{n}{k}D(n-k)$. Thus the number of solutions
+		remaining $(t-1)$-th turn relates to the value of $S_{n}(t)$ as follows:
+		
+		Let $B_i(t)$ be the exact number of possible solutions remaining in the
+		bucket holding possible solutions with $i$ fixed points during the
+		$t$-th turn (after submitting the guess vector, but before feedback). So
+		\begin{align*}
+		S_{n}(t-1) & = \sum_{i = 0}^{n}B_i(t)\\
+		& = \sum_{i=0}^{x-1}B_i(t) + \sum_{i=x}^{n}B_i(t)\\
+		& \le \sum_{i = 0}^{x-1}S_n(t) + \sum_{i=x}^{n}\binom{n}{i}D(n-i)\quad
+		\text{for optimal $x$}\\
+		& = x\cdot S_{n}(t) + \sum_{i = x}^{n}\binom{n}{i}D(n-i)
+		\end{align*}
+		Once we know $S_{n}(t)$, picking $x$ too large results in some smaller boxes
+		overfilled. Picking $x$ too small results in some larger boxes overfilled. So
+		changing $x$ to be something other than optimal always increases the RHS
+		of this equation. Thus we have
+		\begin{align*}
+		S_{n}(t-1) & \le x\cdot S_{n}(t) + \frac{n!}{x!}\quad\forall x
+		\end{align*}
+		Where $t$ is the number of turns taken, $S_{n}(t)$ is the number of possible
+		solutions remaining after the $t$-th turn, and $D(k)$ is the derangements
+		on a set of size $k$.
+		\end{enumerate}
+		
+		\item\textit{Claim.}
+			\begin{equation*}
+			\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}
+			\end{equation*}
+			This inequality leads to our bound on $S_{n}(t)$ given
+			below.\footnote{A combinatorial argument can be made as follows: The LHS
+			denotes the number of permutations of an $n$-element vector which have
+			at least $x$ fixed points. Suppose we choose $x$ fixed points and
+			simply permute the rest of the vector. This gives $\binom{n}{x}(n-x)!
+			=\frac{n!}{x!}$ possible permutations. Clearly this includes all
+			vectors with at least $x$ fixed points (and overcounts by some
+			margin), so the inequality holds.}
+			\begin{proof}
+				\begin{align*}
+				\sum_{i=x}^n\binom{n}{i}D(n-i) & =
+				\frac{n!}{x!}\sum_{i=x}^{n}\frac{x!}{i!(n-i)!}D(n-i)\\
+				& \qquad\text{we use the fact that }\frac{x!}{i!}\le\frac{1}{(i-x)!}\\
+				& \le \frac{n!}{x!}\sum_{i=x}^{n}\frac{1}{(i-x)!(n-i)!}D(n-i)\\
+				& \qquad\text{let $k=i-x$}\\
+				& = \frac{n!}{x!}\sum_{k=0}^{n-x}\frac{1}{k!(n-x-k)!}D(n-x-k)\\
+				& = \frac{n!}{x!(n-x)!}\sum_{k=0}^{n-x}\binom{n-x}{k}D(n-x-k)\\
+				& \qquad\text{note the summation counts all possible permutations}\\
+				& = \frac{n!}{x!(n-x)!}(n-x)!\\
+				& = \frac{n!}{x!}				
+				\end{align*}
+			\end{proof}		
+		\begin{enumerate}
+		\item Plug the above result into the inequality to get
+			\begin{equation*}
+			S_{n}(t-1) \le x\cdot S_{n}(t) + \frac{n!}{x!}
+			\end{equation*}
+		So we have
+			\begin{equation*}
+			S_{n}(t)\ge \frac{1}{x}\left(S_{n}(t-1)-\frac{n!}{x!}\right)
+			\end{equation*}
+		\end{enumerate}
+	\end{enumerate}
+	\clearpage
+		\begin{theorem} For all $n$, and for any constant $C_n$, we have
+			\begin{equation*}
+			\frac{S_{n}(t)}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
+			\end{equation*}
+			\begin{equation*}
+			\text{where }\quad0\le t\le n-C_{n}
+			\end{equation*}
+		\end{theorem}
+	Here we use $H_n$ to denote the $n$-th harmonic number.\footnote{$H_n=\sum_{i = 1}
+	^n\frac{1}{i}$}
+		\begin{proof}
+		While this equation holds for all $x$, to achieve a desirable bound, we will
+		let $x=t+C_{n}$ for any positive constant $C_{n}=C_{n}(n)$. We have
+		\begin{enumerate}[label=]
+		\item\textit{Base Case.} When $t=0$, we have $S_n(0)= n!$ and
+			\begin{equation*}
+			\frac{S_{n}(0)}{n!}\ge \frac{C_{n}! - (H_{C_{n}}-H_{C_{n}})}{C_{n}!} = 1
+			\end{equation*}
+			
+		\item \textit{Inductive Step.} Assume the induction hypothesis holds for $t-1$.
+			\begin{align*}
+			\frac{S_{n}(t)}{n!}
+			& \ge \frac{1}{x}\left(\frac{S_{n}(t-1)}{n!}-\frac{1}{x!}\right)
+			\end{align*}
+		Let $x=C_{n}+t$.
+			\begin{align*}
+			\frac{S_{n}(t)}{n!}
+			& \ge \frac{1}{C_{n}+t}\left(\frac{S_{n}(t-1)}{n!}
+			-\frac{1}{(C_{n}+t)!}\right)
+			\end{align*}
+		Inductively,
+			\begin{align*}
+			\frac{S_{n}(t)}{n!}
+			& \ge \frac{1}{C_{n}+t}\left(\frac{C_{n}!-(H_{C_{n}+t} - H_{C_{n}})}
+			{(C_{n}+t-1)!} - \frac{1}{(C_{n}+t)!}\right)\\
+			& \ge \left(\frac{C_{n}! - (H_{C_{n}+t-1} - H_{C_{n}}) - \frac{1}{C_{n}+t}}
+			{(C_{n}+t)!}\right)\\
+			& \ge \left(\frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_{n}+t)!}\right)
+			\end{align*}
+			Then
+			\begin{align*}
+			S_{n}(n-C_{n}) & \ge n!\left(\frac{C_{n}! - (H_n - H_{C_{n}})}{n!}\right)\\
+			& \ge C_{n}! - (H_n-H_{C_{n}})
+			\end{align*}
+		Thus the inequality holds for all $n$.
+		\end{enumerate}
+		\end{proof}
+		We choose $C_{n}$ by the following reasoning: we want to achieve a lower bound
+		of $n-C_{n}$ turns. Thus, we want $S_n(n-C_{n})>1$, which follows if
+		\begin{equation*}
+		C_{n}! - (H_n - H_{C_{n}}) > 1
+		\end{equation*}
+		For $C_{n}=\log\log n$, this is $\ge 1$ for $n\ge e^{198}$.\\
+		For $C_{n}=\log n$, this is true for $n\ge 10$.
+		
+ 	In conclusion, when $n$ is sufficiently large, the minimum number of remaining
+	possible solutions after $n - \log\log n$ guesses is at least
+		\begin{align*}
+		S_n(n-\log\log n) & \ge (\log\log n)! - (H_n - H_{\log\log n})\\
+		& > 1
+		\end{align*}
+	Thus there is no strategy that can reduce the set of possible solutions to
+	one, and guarantee finding the codemaker's hidden vector, in $n-\log\log n$
+	turns or fewer.
+
+\clearpage
+\section*{Lower Bound on Guessing Effectiveness for Permutation Game}
+
+	\begin{theorem} In Mastermind with no repeats with $n$ spots and $k$ colors,
+	for any set of possible remaining solutions, there exists a
+	guess vector for which any response will eliminate at least $1/nk$ of the
+	remaining solutions.
+	\end{theorem}
+	\begin{enumerate}
+	\item\textit{Notation.}
+		\begin{enumerate}[label=\roman*.]
+		\item\textit{Basics.} Let $n$ be the number of spots in the hidden vector.
+		Let $k$ be the number of colors available. Since we allow no repeats in this
+		variant of Mastermind, we have $k\ge n$. We will use single-count responses,
+		which are the number of spots in which our guess vector and the hidden vector
+		have the same color in that spot.
+		\item\textit{Remaining Solution Set.} As the game proceeds, we maintain a set
+		$S$ that contains all possible solution vectors that haven't been ruled out
+		by a previous guess and response.
+		\item\textit{Bucket.} As defined in the previous section, a guess splits
+		the remaining possible solutions into ``buckets,'' where a bucket $B_i$
+		contains all the remaining possible solutions with $i$ fixed points with
+		respect to the guess vector.
+		\item\textit{Sub-Bucket.} Within a bucket, we will divide the vectors
+		based on a chosen component, say the first element of each vector.
+		Then there will be $k$ sub-buckets $D_i$, where $D_1$ contains all vectors
+		from the bucket with a $1$ in the first spot, $D_2$ contains all those
+		with a $2$ in the first spot, and so on.
+		\end{enumerate}
+
+	\item
+		\begin{proof}
+		We give a proof by induction on $n$.
+			\begin{enumerate}[label=]
+			\item\textit{Base Case.} When $n=1$, we have a single-element vector.
+			So there are at most $k$ possible solutions remaining at any step, thus
+			$|S|\le k$. If we guess one of the remaining solutions $v\in S$, this
+			will eliminate $1$ solution ($v$ itself) if the response is $0$
+			and $|S|-1$ solutions if the response is $1$. So we're guaranteed to
+			eliminate at least $1/|S|\ge 1/(nk)$ solutions.
+			
+			\item\textit{Inductive Step.} Assume that for $n-1$ spots and any number
+			of colors $\widehat{k}$ (where $n\ge 2$), we are guaranteed that
+			there is a guess that eliminates a fraction at least $1/(n\widehat{k})$
+			of the solutions.
+			
+			Consider a guess vector $\sigma=\{\sigma_1, \sigma_2, \ldots, \sigma_n\}$.
+			We will analyze the number of solutions
+			eliminated from $S$ by guessing $\sigma$ in the worst-case. We divide $S$
+			into $n$ buckets $B_1, B_2, \ldots, B_n$, where $B_i$ is as defined above
+			($i$ fixed points with respect to $\sigma$). Consider the response $j$
+			that eliminates as few possible solutions as possible from $S$,
+			so $|B_j| = \max\{|B_1|, |B_2|, \ldots, |B_n|\}$.
+			
+			Suppose that
+				\begin{equation*}
+				|B_j|\le\frac{nk - 1}{nk}\cdot|S|
+				\end{equation*}
+			Then the response $j$ would eliminate at least $|S|/(nk)$ solutions from
+			$S$, and since $j$ eliminates the fewest possible solutions of any
+			response, all responses to $\sigma$ eliminate a fraction at least
+			$1/(nk)$ of the possible solutions in $S$.
+			
+			Otherwise we have
+				\begin{equation*}
+				|B_j|>\frac{nk - 1}{nk}\cdot|S|
+				\end{equation*}
+			\textit{Case 1.} If $j>0$, the total number of hits among all vectors in
+			$B_j$ is $j\cdot |B_j|$. These hits are divided up among $n$ spots,
+			therefore by the pigeonhole principle, at least one position
+			must have at least
+				\begin{align*}
+				\frac{j}{n}\cdot|B_j|
+				\end{align*}
+			Vectors that match the guess at that spot. WLOG, we assume this is
+			position one. We now divide the bucket $B_j$ into sub-buckets $D_i$,
+			where permutation $s\in B_j$ is put into sub-bucket $D_{s_1}$. From above,
+			we have 
+			\begin{equation*}
+			|D_{\sigma_1}|\ge \frac{j}{n}\cdot|B_j|
+			\end{equation*}
+			We have two sub-cases:
+				\begin{enumerate}[label=\roman*.]
+				\item $|D_{\sigma_1}|\le \dfrac{n-1}{n}\cdot|B_j|$:\\
+				Then we apply the pigeonhole principle on the remaining solutions
+				in $B_j$ to find the second-largest sub-bucket:
+				By our assumption, there are at least $|B_j|/n$ solutions remaining
+				in $B_j$, and there are $k-1$ remaining sub-buckets $D_i$. By the
+				pigeonhole principle, there exists a $D_\alpha$ such that 
+				\begin{equation*}
+				|D_\alpha| \ge \frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|
+				\end{equation*}
+				If $\alpha$ is an element of $\sigma$, then WLOG
+    			let the color be $\sigma_2$. Then in this case we consider the
+				guess vector
+    			$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
+    			Otherwise, consider the guess vector
+    			$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
+				Consider the buckets $C_i$ formed from the guess vector
+				$\overline{\sigma}$. In either case, the vectors in $D_{\sigma_1}$ will
+				have at least one fewer hit with $\overline{\sigma}$ than with
+				$\sigma$, and the guess vectors in $D_{\alpha}$ will have at least
+				one more hit. Therefore, any response to $\overline{\sigma}$ which
+				corresponds to some vectors in $D_{\sigma_1}$ corresponds to none
+				of the vectors in $D_{\alpha}$ and vice versa. So we know that any
+				response to $\overline{\sigma}$ will entirely eliminate at least one
+				of those two sets. From above, we know
+					\begin{align*}
+					|D_{\sigma_1}| & \ge \frac{j}{n}\cdot|B_j|\\
+					& \ge \frac{j}{n}\cdot\frac{nk-1}{nk}\cdot|S|\\
+					& \ge \frac{1}{n}\cdot\frac{n}{nk}\cdot|S|\\
+					& = \frac{1}{nk}\cdot|S|
+					\end{align*}
+				And
+					\begin{align*}
+					|D_\alpha| & \ge\frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|\\
+					& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
+					& \ge \frac{1}{nk}\cdot|S|
+					\end{align*}
+				Since $\overline{\sigma}$ will always eliminate at least one of
+				these two sets, we also have that $\overline{\sigma}$ will eliminate
+				at least $|S|/(nk)$ vectors from $S$ with any response.
+					
+				\item $|D_{\sigma_1}|> \dfrac{n-1}{n}\cdot|B_j|$:\\
+				Consider the set of vectors in $D_{\sigma_1}$. By definition,
+				all of them have $\sigma_1$ as their first entry. Their remaining
+				$n-1$ entries are made up of the remaining $k-1$ colors, and no two of
+				them coincide in all spots $2, 3, \ldots, n$ (otherwise they would be
+				the same vector). Therefore, if we consider this new set of $n-1$
+				vectors formed by taking spots $2, 3, \ldots, n$ of each vector in
+				$D_{\sigma_1}$, they are a set of possible solutions for this
+				Mastermind game with $n-1$ spots and $k-1$ colors. By the induction
+				hypothesis, there is a guess of size $n-1$ that is guaranteed to
+				eliminate $1/((n-1)(k-1))$ of these vectors. If we add $\sigma_1$
+				to the
+				beginning of this guess, it becomes a guess of size $n$. For any
+				response $r$, any of the vectors in $D_{\sigma_1}$ will be eliminated
+				if and only if their vector of spots $2, 3, \ldots, n$ was eliminated
+				by the response $r-1$ in the smaller game of Mastermind. Therefore,
+				this guess still guarantees that we eliminate
+				\begin{align*}
+				\frac{1}{(n-1)(k-1)}|D_{\sigma_1}|
+				& \ge \frac{1}{(n-1)(k-1)}\cdot\frac{n-1}{n}\cdot|B_j|\\
+				& \ge \frac{1}{(k-1)}\cdot\frac{1}{n}
+				\cdot\frac{nk-1}{nk}\cdot|S|\\
+				& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
+				& \ge \frac{1}{nk}\cdot|S|
+				\end{align*}
+				\end{enumerate}
+			
+			\textit{Case 2.} If $j=0$, we consider the first component of all vectors
+			in the bucket $B_0$. Since $j=0$ and $\sigma=\{\sigma_1, \sigma_2, \ldots,
+			\sigma_n\}$, no vector in $B_0$ can contain $\sigma_1$ in the first
+			position, so there are $k-1$ possible colors in the first position. By
+			the pigeonhole principle, there must be one color which appears in the
+			first spot of at least
+				\begin{equation*}
+				\frac{1}{k-1}\cdot|B_0|
+				\end{equation*}
+			vectors in $B_0$. If this color appears in $\sigma$, WLOG
+			let the color be $\sigma_2$. Then in this case we consider the guess vector
+			$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
+			Otherwise, call this new color $\tau$ and consider the guess vector
+			$\overline{\sigma}=\{\tau, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
+			In either case, $\overline{\sigma}$ matches these $|B_0|/(k-1)$ vectors
+			in either one or two positions. Consider the
+			buckets $C_i$ formed by the guess $\overline{\sigma}$. We know
+				\begin{align*}
+				|C_1|+|C_2| & \ge \frac{1}{k-1}\cdot |B_0|\\
+				& \ge \frac{1}{k-1}\cdot\frac{nk-1}{nk}\cdot|S|\\
+				& \ge \frac{1}{k-1}\cdot\frac{nk-n}{nk}\cdot|S|\\
+				& = \frac{n}{nk}\cdot|S|\\
+				& \ge \frac{2}{nk}\cdot|S|
+				\end{align*}
+			Therefore we have either
+				\begin{equation*}
+				|C_1|\ge\frac{1}{nk}\cdot|S|\qquad\text{or}
+				\qquad|C_2|\ge\frac{1}{nk}\cdot|S|
+				\end{equation*}
+			Let this larger bucket be $C_{\alpha}$, then suppose
+			\begin{equation*}|C_{\alpha}|\le\frac{nk-1}{nk}|S|\end{equation*}
+			Then getting the response $\alpha$ will eliminate at least $|S|/(nk)$
+			possible solutions from $S$, and getting any other response will
+			eliminate at least $|C_\alpha|\ge |S|/(nk)$ possible solutions. Therefore
+			the guess $\overline{\sigma}$ is guaranteed to eliminate at least
+			$|S|/(nk)$ solutions from $S$.
+			
+			Otherwise we have
+			\begin{equation*}|C_{\alpha}|>\frac{nk-1}{nk}|S|\end{equation*}
+			Then, this satisfies the conditions for Case 1 above, where we have a
+			guess whose largest bucket is $B_j$ with $j>0$.
+			\end{enumerate}
+		\end{proof}
+	\item The minimax algorithm is a guessing strategy described by
+	Knuth [DK76].
+	At each turn, the algorithm ranks the possible guesses based on the fewest
+	number of solutions that they would eliminate over all possible responses. It
+	then picks the guess with the highest rank.\\\\
+	\textit{Corollary.} The minimax algorithm on Mastermind with $n$ spots, $k$
+	colors, and no repeats takes at most
+		\begin{equation*}
+		\frac{\log\left(\frac{k!}{(k-n)!}\right)}{\log\left(\frac{nk}{nk-1}\right)}
+		\end{equation*}
+	turns to find the hidden vector.
+		\begin{proof}
+		Each step in the minimax algorithm cuts the set of possible solutions $S$ down
+		by a factor of $(nk-1)/(nk)$ at each step. To complete the game, we need to
+		cut $S$ down by
+			\begin{equation*}
+			\frac{1}{\left(\frac{k!}{(k-n)!}\right)}
+			\end{equation*}
+		Thus the required number of steps is
+			\begin{equation*}
+			\log_{\left(\frac{nk-1}{nk}\right)}\left(\frac{1}{\frac{k!}{(k-n)!}}\right)
+			\end{equation*}
+		Which is equivalent to the claim.
+		\end{proof}
+	This gives us the following asymptotic bounds:
+		\begin{enumerate}[label=\roman*.]
+		\item The minimax algorithm for Mastermind with $n$ spots, $k$
+		colors, and no repeats takes at most $O(n^2k\log k)$ turns to find the
+		hidden vector.
+		
+		\item In the same game where $n=k$, the minimax algorithm takes at most
+		$O(n^3\log n)$ turns to find the hidden vector.
+		\end{enumerate}
+	Both of these asymptotic bounds are actually strict upper bounds, and 
+	each of them differs from the exact bound by a constant factor which approaches
+	1 as $n$ approaches infinity.
+	\end{enumerate}
+	
+\clearpage
+\section*{Extension of Previous Section to Repeated Colors}
+	An analogous result for the above section can be easily shown with guesses
+	eliminating a factor of $n^2k$ possible solutions at each step. However, in order to
+	replicate the bound of $nk$ with repeated colors, we need to make the following assumption:
+	There exists a guess vector $v$ such that all of the solutions in set $S$
+	correspond to a single response $r$ after making the guess $v$. Note that this
+	is always satisfied if the solutions are any set of solutions remaining after
+	any set of guesses in an actual game of Mastermind. We simply let the guess vector
+	$v$ be any guess vector that has already been guessed. Clearly, all solutions
+	remaining correspond to whichever response was given to that guess vector, since
+	guesses corresponding to any other response were eliminated. We will also prove the
+	theorem for the special case of the very first guess separately.
+	
+	\begin{theorem}
+	In a game of Mastermind with $n$ spots and $k$ colors, for any set of remaining
+	solutions that can actually be achieved during a game of Mastermind,
+	there is always a guess for which any response will eliminate at least
+	$1/nk$ of the remaining solutions.
+	\end{theorem}
+	\begin{proof}
+	We will follow the same logic as taken in the previous proof, but will describe
+	only the parts that differ from the previous proof.
+		\begin{enumerate}
+		\item Because of the problem statement, we will separately prove the base
+		case where $S$ is the set of all $k^n$ possible solutions before any guesses
+		have been made. In this case, we guess the vector $\{1, 1, \ldots, 1\}$. The
+		bucket $B_j$ has size
+			\begin{equation*}
+			|B_j| = \binom{n}{j}(k-1)^{n-j}
+			\end{equation*}
+		So the greatest fraction of possible solutions remaining is
+			\begin{align*}
+			\max_{j}\left(\frac{\binom{n}{j}(k-1)^{n-j}}{k^n}\right)
+			\end{align*}
+		When $k\ge n$, we have
+			\begin{align*}
+			\frac{\binom{n}{j}(k-1)^j}{k^n}
+			& \le \frac{n^{n-j}(k-1)^j}{k^n}\\
+			& \le \frac{k^{n-j}(k-1)^j}{k^n}\\
+			& = \frac{(k-1)^j}{k^j}\\
+			& \le \frac{k-1}{k}
+			\end{align*}
+		Therefore, we always eliminate a fraction at least $1/k\ge 1/nk$
+		of the solutions.
+		
+		When $k<n$, it is difficult to find the size of one bucket compared to the
+		entire set, so instead we will compare one bucket to the sum of itself
+		and the next bucket. This ratio will always be at least the ratio of
+		one bucket compared to the entire set.
+			\begin{align*}
+			\frac{|B_{j+1}|}{|S|}
+			& \le \frac{|B_{j+1}|}{|B_j|+|B_{j+1}|}\\
+			& \le \frac{1}{\frac{|B_j|}{|B_{j+1}|}+1}\\
+			& \le \frac{1}{\frac{\binom{n}{j}(k-1)^{n-j}}
+			{\binom{n}{j+1}(k-1)^{n-j-1}}+1}\\
+			& \le \frac{1}{\frac{j+1}{n-j}(k-1)+1}\\
+			\end{align*}
+			We plug in $k \ge 2$ (the entire problem is trivial when $k = 1$, as
+			there is only 1 solution).
+			\begin{align*}
+			\ldots\quad & \le \frac{1}{\frac{j+1}{n-j}+1}\\
+			& \le \frac{n-j}{n+1}\\
+			& \le \frac{n}{n+1}\\
+			& = 1-\frac{1}{n+1}\\
+			& \le 1-\frac{1}{nk}
+			\end{align*}
+		Additionally, for bucket 0, we have:
+		\begin{align*}
+			\frac{|B_{0}|}{|S|}
+			& = \frac{(k-1)^n}{k^n}\\
+			& \le \frac{k-1}{k}\\
+			& \le 1-\frac{1}{kn}
+		\end{align*}
+		So we have that the first guess of any game will always eliminate at least
+		$1/nk$ of the remaining solutions.
+		\item The argument for the base case where $n=1$ proceeds exactly as in the
+		previous section.
+		\item The induction hypothesis remains almost the same: Assume that for $n-1$
+		spots and any number
+		of colors $\widehat{k}$ (where $n\ge 2$), we are guaranteed that
+		there is a guess that eliminates a fraction at least $1/(n\widehat{k})$
+		of the solutions, given that there is a guess such that all solutions fall into
+		the same bucket.
+
+		\item\textit{Main Proof.}\\
+		Let this bucket be $j$. From our assumptions $B_j = S$. Then we have two
+		subcases as before: 
+
+		\textit{Case 1.} If $j>0$, we make the following adjustments to the previous
+		proof.
+		\begin{enumerate}[label=\roman*.]
+		\item For the first subcase, we are now allowed repeats, so we
+		can always let
+			\begin{equation*}
+			\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}
+			\end{equation*}
+		The proof of the rest of this subcase follows.
+		
+		\item For the second subcase, we proceed as the previous section did by
+		considering $D_{\sigma_1}$, but now we are no longer guaranteed that the spots
+		2 through $n$ of these vectors have no
+		instance of $\sigma_1$
+		since colors can be repeated. Whereas before, inducted on $n-1$ spots with
+		$k-1$ possible colors, we now have to induct on $n-1$ spots still with $k$
+		possible colors. This is fine,
+		though, as by the induction hypothesis we can therefore eliminate
+			\begin{align*}
+			\frac{1}{(n-1)k}|D_{\sigma_1}|
+			& \ge \frac{1}{(n-1)k}\frac{n-1}{n}|B_j|\\
+			& = \frac{1}{nk}|S|
+			\end{align*}
+		It is important to check that the induction hypothesis holds- namely, that
+		there exists a guess of size $n-1$ such that all of the (n-1)-vectors
+		we're considering produce the same response.
+		
+		However, by our assumptions, $\sigma$ is an $n$-vector such that all of the
+		$n$ vectors fall into a  single bucket $j$. Since every vector we're
+		considering for induction is in the same sub-bucket 
+		$D_{\sigma_1}$, if we consider only spots 2 through $n$, all of these
+		$(n-1)$-vectors will have
+		exactly 1 fewer hit than they did as $n$-vectors, (as all of them had a hit
+		in the first spot), so all of them fall into the same bucket (bucket $j-1$)
+		for the guess $\{\sigma_2, \sigma_3, \ldots, \sigma_n\}$,
+		so the condition is satisfied.
+		\end{enumerate}
+
+		\textit{Case 2.} If $j=0$, we can no longer find a new $\overline{\sigma}$
+		and switch to Case 1, so instead we
+		induct similarly to Case 1. We split the
+		bucket up into sub-buckets as before. By pigeonhole principle, there must exist
+		an $\alpha$ such that
+		$|D_\alpha| \ge |B_j|/(k-1) \ge |S|/(nk)$ (since $j=0$ we have no hits, so
+		$|D_{\sigma_1}| = 0$).  We then 
+		split into two subcases based on the size of $D_\alpha$ compared to the size of
+		the entire bucket as we did in Case 1 and the proof proceeds in exactly the
+		same manner.
+		\end{enumerate}
+	\end{proof}
+	
+\clearpage
+\section*{Optimality of Mastermind for $(n, k) = (4, 6)$}
+	Up to isomorphism, the first guess for this game will be one of the
+	following:
+		\begin{equation*}
+		\{(0, 0, 0, 0), (0, 0, 0, 1), (0, 0, 1, 1), (0, 0, 1, 2), (0, 1, 2, 3)\}
+		\end{equation*}
+		Their respective worst-case responses and remaining solutions after that
+		response are
+		\begin{equation*}
+		\{(0, 0)\rightarrow 625, (1, 0)\rightarrow 317, (0, 0)\rightarrow 256,
+		(0, 1)\rightarrow 276, (0, 2)\rightarrow 312\}
+		\end{equation*}
+	For each of these guesses, there exists a response that leaves at least 256
+	possible remaining solutions, as shown above. After this point, for every possible
+	guess made, there will be at most fourteen possible responses given. Thus, at every
+	step, the number of possible solutions remaining is reduced by at most a factor of
+	fourteen. We use this information-theoretic lower bound to show that after the
+	third guess, there will still be at least two solutions remaining:
+		\begin{equation*}
+		\left\lceil\frac{\left\lceil \frac{256}{14}\right\rceil}{14}\right\rceil = 2
+		\end{equation*}
+	Thus no strategy could guess the hidden vector on the fourth turn, so it is not
+	possible for a deterministic guessing strategy to guarantee finding the
+	hidden vector in fewer than five turns.
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
