@@ -652,6 +652,72 @@
 	Thus no strategy could guess the hidden vector on the fourth turn, so it is not
 	possible for a deterministic guessing strategy to guarantee finding the
 	hidden vector in fewer than five turns.
+	
+\clearpage
+\section*{Lower Bound for Non-Adaptive Strategies: $n=k$}
+	Let
+		\begin{equation*}
+		t=\frac{n\log n}{(\log\log n)^{1+\epsilon}}\quad\text{and}\quad x=\log n
+		\end{equation*}
+	For sufficiently large $n$,
+		\begin{equation*}
+		\frac{n\log n}{(\log\log n)^c} < \frac{n\log n}{4} <\frac{n(\log n - 1)}{2}
+		\end{equation*}
+	$\Longrightarrow$
+		\begin{align*}
+		\log(x^t) & < \frac{1}{2}(n\log n - n)\\
+		& < \frac{1}{2}\log (n!)\quad\text{cf. Stirling's Approx.}\\
+		\end{align*}
+	$\Longrightarrow$
+		\begin{align*}
+		\lim_{n\rightarrow\infty}\frac{\log(n!)}{\log(x^t)}
+		& \ge 2
+		\end{align*}
+	$\Longrightarrow$
+		\begin{align*}
+		\lim_{n\rightarrow\infty}\frac{n!}{x^t}
+		& \ge \lim_{n\rightarrow\infty}\frac{n!}{\sqrt{n!}}\\
+		& = \lim_{n\rightarrow\infty}\sqrt{n!}\\
+		& = \infty
+		\end{align*}
+	$n>>0$
+		\begin{align*}
+		\log(x!) & > x\log x - x\\
+		& = \log n \cdot \log\log n - \log n\\
+		& = \log n (\log\log n - 1)\\
+		& > 4\log n
+		\end{align*}
+	Giving
+		\begin{align*}
+		\log t & = \log n + \log\log n - \log((\log\log n)^{1+\epsilon})\\
+		& < \log n + \log\log n\\
+		& < 2\log n
+		\end{align*}
+	$\Longrightarrow$
+		\begin{align*}
+		\lim_{n\rightarrow\infty}\frac{\log t}{\log x^t} \le 2
+		\end{align*}
+	$\Longrightarrow$
+		\begin{align*}
+		\lim_{n\rightarrow\infty}\frac{t}{x!}
+		& \le \lim_{n\rightarrow\infty}\frac{t}{t^2}\\
+		& = 0
+		\end{align*}
+	Therefore
+		\begin{equation*}
+		\lim_{n\rightarrow\infty}\left(1-\frac{t}{x!}\right) = 1\qquad\text{and}\qquad
+		\lim_{n\rightarrow\infty}\frac{n!}{x^t}\left(1-\frac{t}{x!}\right) = \infty
+		\end{equation*}
+	So for sufficiently large $n$,
+		\begin{equation*}
+		n!\left(1-\frac{t}{x!}\right) > x^t \Longrightarrow N_t>k_t
+		\end{equation*}
+	
+	Therefore, for all $\epsilon$ and for sufficiently large $n$, we have a lower bound
+	of
+		\begin{equation*}
+		\frac{n\log n}{(\log\log n)^{1-\epsilon}}
+		\end{equation*}
 \end{document}
 
 
