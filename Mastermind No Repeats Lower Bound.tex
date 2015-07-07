@@ -743,24 +743,24 @@ repeats and exactly $x$ fixed points (which is $|B_x|$).}
 	\end{align*}
 \clearpage
 We want to plug this upper bound into equation 1.
-For $\alpha<1/e$, $f(\alpha)=-\alpha\log\alpha$ is an increasing function.
+For $\alpha<1/e$, $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function.
 So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and
 still have an upper bound. For the first three values, we will use the upper bound
-$f(\alpha)<1/e$. 
+$f(\alpha)\le 1/(e\log 2)$. 
     \begin{align*}
-    H(Y_i) &\leq \frac{3}{e}+\sum_{x=3}^n -\frac{1}{x!} \cdot\log_2(\frac{1}{x!})\\
-    &= \frac{3}{e}+\sum_{x=3}^n \frac{\log_2(x!)}{x!}\\
-    &\leq \frac{3}{e}+\sum_{x=3}^n \frac{x \log_2 x}{x!}\\
-    &\leq \frac{3}{e}+\sum_{x=3}^n \frac{x (x-1)}{x!}\\
-    &= \frac{3}{e}+\sum_{x=3}^n \frac{1}{(x-2)!}\\
-    &\leq \frac{3}{e}+e-1\\
-    & < 3
+    H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2(\frac{1}{x!})\\
+    &= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{\log_2(x!)}{x!}\\
+    &\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x \log_2 x}{x!}\\
+    &\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x (x-1)}{x!}\\
+    &= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{1}{(x-2)!}\\
+    &\leq \frac{3}{e\log 2}+e-1\\
+    & < 4
     \end{align*}
-Combining this with the summation above gives $H(Y) \leq 3s$, so we get
+Combining this with the summation above gives $H(Y) \leq 4s$, so we get
 	\begin{align*}
 	H(X) &\leq H(Y)\\
-	\log_2\left(\frac{k!}{(k-n)!}\right) &\leq 3s\\
-	s &\geq \frac{1}{3}\log_2\left(\frac{k!}{(k-n)!}\right)
+	\log_2\left(\frac{k!}{(k-n)!}\right) &\leq 4s\\
+	s &\geq \frac{1}{4}\log_2\left(\frac{k!}{(k-n)!}\right)
 	\end{align*}
 
 This gives us a lower bound of $O(n \log k)$ turns for any non-adaptive strategy for
@@ -769,15 +769,14 @@ Mastermind with no repeats.
 
 \clearpage
 \section*{Upper Bound on Non-Adaptive Strategies for Mastermind}
-For a game of mastermind on $n$ pegs and $k$ colors (with or without repeats), every
-hidden vector and query can be represented by a matrix $A\in \mathbb{R}^{n\times k}$,
+For a game of mastermind with $n$ spots and $k$ colors (with or without repeats), every
+hidden vector and query can be represented by a matrix $A\in\mathbb{R}^{n\times k}$,
 defined by $A_{ij}=1$ if the $i$-th peg is the $j$-th color, and 0 otherwise.
 In that way, for a given hidden vector matrix $X$ and query matrix $Q$,
 the codemaker's response to the query is given by $X\cdot Q$.
 Let $S$ be the space which the set of possible queries spans. Then, for any
-$Q_1, \ldots, Q_k$ which span $S$, any matrix $X\in S$,
-including all hidden permutations, can be uniquely determined by the numbers
-$X\cdot Q_i$ for $i\in [1,k]$.
+$Q_1, \ldots, Q_k$ which span $S$, any matrix $X\in S$, including all hidden
+permutations, can be uniquely determined by the numbers $X\cdot Q_i$ for $i\in [1,k]$.
 
 As the set of all possible queries spans $S$, there must exist a subset of queries,
 $K$, with $|K|=\text{dim}(S)$ and $K$ spanning $S$. Thus, the queries of $K$ uniquely
@@ -786,7 +785,6 @@ so $\text{dim}(S)\le \text{dim}(\mathbb{R}^{n\times k})=n\cdot k$.
 
 Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines every
 possible hidden permutation.
-
 \end{document}
 
 
