@@ -652,137 +652,141 @@
 	Thus no strategy could guess the hidden vector on the fourth turn, so it is not
 	possible for a deterministic guessing strategy to guarantee finding the
 	hidden vector in fewer than five turns.
-	
-\clearpage
-\section*{Lower Bound for Non-Adaptive Strategies: $n=k$}
-	We consider the game of Mastermind for $n=k$ with no repeats.
-	To put a lower bound on non-adaptive strategies, we make the following observation:
-	In order to distinguish between all possible solutions, every solution needs to
-	have a distinct set of responses for the guesses made by a given strategy.
-	Therefore, we will analyze all solutions for which every response
-	is less than some number $x$. Let $t$ be the number of guesses made. There will
-	therefore be at most $x^t$ possible response sets. The number of solutions which
-	do not correspond to the responses for a single query is at most the sum of the
-	sizes of the smaller buckets, which we define as buckets $B_x$ through $B_n$.
-	Thus after $t$ guesses, the number of remaining solutions corresponding to these
-	responses is at least
-		\begin{equation*}
-		n!-t\sum_{i=x}^{n}\binom{n}{i}D(n-i)
-		\end{equation*}
-	As proven before, the above sum is at most $n!/x!$. Thus, the number of solutions
-	is at least $n!(1-t/x!)$. Now we let
-		\begin{equation*}
-		t=\frac{n\log n}{(\log\log n)^{1+\epsilon}}\quad\text{and}\quad x=\log n
-		\end{equation*}
-	Thus we have
-		\begin{align*}
-		\log x^t & = \frac{n\log n}{(\log\log n)^{1+\epsilon}}\cdot\log\log n\\
-		& = \frac{n\log n}{(\log\log n)^{\epsilon}}
-		\end{align*}
-	For sufficiently large $n$,
-		\begin{equation*}
-		\frac{n\log n}{(\log\log n)^{\epsilon}}<\frac{n\log n}{4}
-		< \frac{n(\log n - 1)}{2}
-		\end{equation*}
-	Therefore,
-		\begin{align*}
-		\log(x^t) & < \frac{1}{2}(n\log n - n)\\
-		& < \frac{1}{2}\log (n!)\quad\text{cf. Stirling's Approx.}\\
-		\end{align*}
-	Raising $e$ to the power of both sides, we get
-		\begin{align*}
-		x^t<\sqrt{n!}
-		\end{align*}
-		
-	\noindent
-	Similarly, we can bound $\log x!$ below by
-		\begin{align*}
-		\log(x!) & > x\log x - x\\
-		& = \log n \cdot \log\log n - \log n\\
-		& = \log n (\log\log n - 1)\\
-		& > 4\log n\quad\text{for sufficiently large $n$}
-		\end{align*}
-	Also
-		\begin{align*}
-		\log t & = \log n + \log\log n - \log((\log\log n)^{1+\epsilon})\\
-		& < \log n + \log\log n\\
-		& < 2\log n
-		\end{align*}
-	By exponentiating both sides, we get
-		\begin{align*}
-		x! > t^2
-		\end{align*}
-	By combining these two results, we get
-		\begin{equation*}
-		\frac{n!}{x^t}\left(1-\frac{t}{x!}\right)
-		\ge \sqrt{n!}\left(1-\frac{1}{t}\right)
-		\end{equation*}
-
-	\noindent
-	And for sufficiently large $n$,
-		\begin{equation*}
-		\sqrt{n!}\left(1-\frac{1}{t}\right)>1
-		\end{equation*}
-	Which gives the inequality
-		\begin{equation*}
-		n!\left(1-\frac{t}{x!}\right) > x^t
-		\end{equation*}
-	Therefore, for any $\epsilon>0$ there exists a number $N$ such that for any $n>N$,
-	for any set of
-	\begin{equation*}
-	\frac{n\log n}{(\log\log n)^{1+\epsilon}}
-	\end{equation*}
-	guesses, there will be more solutions that have received only responses
-	between 0 and $x-1$ than there will be response sets of those responses.
-	Therefore it is impossible for any non-adaptive strategy to guarantee identifying
-	the solution vector in fewer than the following number of guesses:
-		\begin{equation*}
-		\frac{n\log n}{(\log\log n)^{1+\epsilon}}
-		\end{equation*}
 
 \clearpage
 \section*{Lower Bound for Non-Adaptive Strategies Using Entropy}
-Our proof follows along similar lines as [Doerr et al]. Let $q_i$ be the $i$-th
-guess of our deterministic strategy.
-Let $s$ be the smallest index such that all $n!$ codes in $S_n$
-are uniquely determined by the responses to $q_1, q_2, \ldots, q_s$.
-Consider a code $Z$ sampled uniformly at random from the set of permutations $S_n$.
-Then consider the random variables $Y_i = \textnormal{eq}(Z, q_i)$ be the response
-(\# black hits) to guess $q_i$.
-Then the vector $Y = (Y_1,Y_2,\ldots,Y_s)$ always uniquely determines, and is uniquely
-determined by, $Z$. So $H(Z) = H(Y)$. Since $Z$ is a random variable with $n!$ outcomes
-of equal probability, we know $H(Z) = \log_2 n!$.
+\subsection*{Introduction to Entropy}
+For a formal introduction to some of the properties of entropy, the authors found the
+paper ``Three tutorial lectures on entropy and counting'' by David Galvin to be a
+helpful resource. Here we will describe a few of the relevant properties of entropy
+and provide informal justification.
 
-We know for any series of events, the entropy of the series as a whole is less than
-or equal to the sum of the individual entropies of the events. Using this, we get:
+Entropy is a metric for characterizing a random variable, which can be roughly
+described as the expected amount of information yielded by that random variable when
+it takes on one of the values in its domain. The entropy of a random variable $X$ with
+domain $D$ is defined as
+	\begin{equation*}
+	H(X) = \sum_{x\in D}-\text{Pr}[X=x]\cdot\log_2\left(\text{Pr}[X=x]\right)
+	\end{equation*}
+Entropy has the following properties:
+	\begin{enumerate}[label=]
+	\item\underline{Property 1} If $X,Y$ uniquely determine each others'
+	outcomes, then $H(X)=H(Y)$.
+		\begin{proof}
+		For every outcome $x_i\in D$, let $y_i$ be the outcome such that $\{X=x_i\}
+		\Leftrightarrow \{Y=y_i\}$. Therefore,
+		$\text{Pr}[X=x_i]=\text{Pr}[Y=y_i]$ for every pair of corresponding outcomes
+		$x_i$ and $y_i$. Then we have
+			\begin{align*}
+			H(X) & = \sum_{i}-\text{Pr}[X=x_i]\cdot\log_2(\text{Pr}[X=x_i])\\
+			& = \sum_{i}-\text{Pr}[Y=y_i]\cdot\log_2(\text{Pr}[Y=y_i])\\
+			& = H(Y)
+			\end{align*}
+		\end{proof}
+		
+	\item\underline{Property 2} (Subadditivity) A vector $X=(X_1, X_2, \ldots, X_n)$
+	of random variables (which is itself a random variable) has
+		\begin{equation*}
+		H(X)\le \sum_{i=1}^{n}X_i
+		\end{equation*}
+	\textit{Justification.} To find the total information gained from $X$, we sum
+	the information gained from each component. However, the components are not
+	necessarily independent, therefore we might get some repeated information. The
+	amount of \textit{unique} information we get from $X$ should therefore be
+	at most the sum of the information gained from the individual components. For
+	a formal proof, see pp. 8-9 in [DG14].
+	\end{enumerate}
+
+\subsection*{Proof}
+\begin{theorem}
+Every non-adaptive strategy for Mastermind with no repeats must submit at least
+$O(n \log k)$ queries to uniquely identify all possible hidden vectors.
+\end{theorem}
+
+\begin{proof}
+Our proof follows along similar lines as [Doerr et al]. Let $q_i$ be the $i$-th
+guess of our deterministic strategy. Let $s$ be the smallest index such that all
+$k!/(k-n)!$ codes are uniquely determined by the responses to $q_1, q_2, \ldots, q_s$.
+
+Consider a code $Z$ sampled uniformly at random from the set of $k!/(k-n)!$ codes. Then
+consider the random variables $Y_i = \textnormal{eq}(Z, q_i)$ be the response (\# black
+hits) to guess $q_i$.
+Then the vector $Y = (Y_1,Y_2,\ldots,Y_s)$ always uniquely determines, and is uniquely
+determined by, $Z$. So by Property 1, $H(Z) = H(Y)$. Since $Z$ is a random
+variable with $k!/(k-n)!$ outcomes of equal probability, we know
+$H(Z) = \log_2(k!/(k-n)!)$.
+
+By Property 2, we know
     \begin{equation*}
     H(Y) \leq \sum_{i=1}^s H(Y_i).
     \end{equation*}
-
 So now we bound $H(Y_i)$. By its definition,
-
-    \begin{equation*}
-    H(Y_i)=-\sum_{x=0}^n \textnormal{Pr}[Y_i=x]\cdot\log_2(\textnormal{Pr}[Y_i=x]).
-    \end{equation*}
-
-What is Pr$[Y_i = x]$? This is the number of solution vectors that have $x$ fixed
-points with respect to the query $q_i$. Using our previous terminology, this is bucket
-$x$, which, as we've shown before has size $|B_x| \leq n!/x!$ (maybe footnote here).
-So we get Pr$(Y_i = x) \leq (n!/x!)/n! = 1/x!$. So 
+    \begin{equation}
+    H(Y_i)=-\sum_{x=0}^n \textnormal{Pr}[Y_i=x]\cdot\log_2(\textnormal{Pr}[Y_{i}=x]).
+    \end{equation}
+What is Pr$[Y_i = x]$? This is the probability that $X$ is a solution vector with $x$
+fixed points with respect to the query $q_i$. Using our previous terminology, this is
+the probability that $X$ is in bucket $x$.
+So we get\footnote{In going from the first to the second line,
+we make the same combinatorial argument as before:
+Choosing $x$ fixed points, choosing $n-x$ colors from the remaining $k-x$ possibilities
+and permuting those $n-x$ positions overcounts all vectors with no repeated colors
+and at least $x$ fixed points and thus overcounts the number of vectors with no
+repeats and exactly $x$ fixed points (which is $|B_x|$).}
+	\begin{align*}
+	\textnormal{Pr}[Y_i = x] &= \frac{|B_x|}{\left(\frac{k!}{(k-n)!}\right)}\\
+	&\leq \frac{\binom{n}{x}\frac{(k-x)!}{(k-n)!}}{\left(\frac{k!}{(k-n)!}\right)}\\
+	& = \frac{1}{x!}\cdot
+	\frac{\left(\frac{n!}{(n-x)!}\right)}{\left(\frac{k!}{(k-x)!}\right)}\\
+	&= \frac{1}{x!}\cdot\frac{n(n-1)\cdots(n-x+1)}{k(k-1)\cdots(k-x+1)}\\
+	&\leq \frac{1}{x!}
+	\end{align*}
+\clearpage
+We want to plug this upper bound into equation 1.
+For $\alpha<1/e$, $f(\alpha)=-\alpha\log\alpha$ is an increasing function.
+So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and
+still have an upper bound. For the first three values, we will use the upper bound
+$f(\alpha)<1/e$. 
     \begin{align*}
-    H(Y_i) &\leq -\sum_{x=0}^n \frac{1}{x!} \cdot\log_2(\frac{1}{x!})\\
-    & = \sum_{x=2}^n \frac{\log_2(x!)}{x!}\quad\text{zero for $x\in\{1, 2\}$}\\
-    &\leq \sum_{x=2}^n \frac{x \log_2 x}{x!}\\
-    &\leq \sum_{x=2}^n \frac{x (x-1)}{x!}\\
-    & = \sum_{x=2}^n \frac{1}{(x-2)!}\\
-    &\leq e
+    H(Y_i) &\leq \frac{3}{e}+\sum_{x=3}^n -\frac{1}{x!} \cdot\log_2(\frac{1}{x!})\\
+    &= \frac{3}{e}+\sum_{x=3}^n \frac{\log_2(x!)}{x!}\\
+    &\leq \frac{3}{e}+\sum_{x=3}^n \frac{x \log_2 x}{x!}\\
+    &\leq \frac{3}{e}+\sum_{x=3}^n \frac{x (x-1)}{x!}\\
+    &= \frac{3}{e}+\sum_{x=3}^n \frac{1}{(x-2)!}\\
+    &\leq \frac{3}{e}+e-1\\
+    & < 3
     \end{align*}
+Combining this with the summation above gives $H(Y) \leq 3s$, so we get
+	\begin{align*}
+	H(X) &\leq H(Y)\\
+	\log_2\left(\frac{k!}{(k-n)!}\right) &\leq 3s\\
+	s &\geq \frac{1}{3}\log_2\left(\frac{k!}{(k-n)!}\right)
+	\end{align*}
 
-Combining this with the above inequality gives $H(Y) \leq s\cdot e$. So we have
-$\log_2(n!)\le s\cdot e$ so $s \ge \log_2(n!)/e$.
+This gives us a lower bound of $O(n \log k)$ turns for any non-adaptive strategy for
+Mastermind with no repeats.
+\end{proof}
 
-This gives us a lower bound of $O(n \log n)$ turns for any non-adaptive strategy for
-permutation mastermind.
+\clearpage
+\section*{Upper Bound on Non-Adaptive Strategies for Mastermind}
+For a game of mastermind on $n$ pegs and $k$ colors (with or without repeats), every
+hidden vector and query can be represented by a matrix $A\in \mathbb{R}^{n\times k}$,
+defined by $A_{ij}=1$ if the $i$-th peg is the $j$-th color, and 0 otherwise.
+In that way, for a given hidden vector matrix $X$ and query matrix $Q$,
+the codemaker's response to the query is given by $X\cdot Q$.
+Let $S$ be the space which the set of possible queries spans. Then, for any
+$Q_1, \ldots, Q_k$ which span $S$, any matrix $X\in S$,
+including all hidden permutations, can be uniquely determined by the numbers
+$X\cdot Q_i$ for $i\in [1,k]$.
+
+As the set of all possible queries spans $S$, there must exist a subset of queries,
+$K$, with $|K|=\text{dim}(S)$ and $K$ spanning $S$. Thus, the queries of $K$ uniquely
+determine any hidden permutation. $S\subset \mathbb{R}^{n\times k}$,
+so $\text{dim}(S)\le \text{dim}(\mathbb{R}^{n\times k})=n\cdot k$.
+
+Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines every
+possible hidden permutation.
+
 \end{document}
 
 
