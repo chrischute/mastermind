@@ -768,6 +768,78 @@ Mastermind with no repeats.
 \end{proof}
 
 \clearpage
+\section*{Lower Bound on Non-Adaptive Strategies with Dual-Color Response: Entropy
+Argument}
+We provide an entropy argument to give a lower bound for guessing strategies for a
+game of mastermind on $n$ pegs and $k\ge n^2$ colors (without repeats).
+
+We let $x$ be the total number of hits (black hits plus white hits). Let $D_x$ be the
+set of buckets of hidden vectors corresponding to responses $(b,w)$, where $b+w=x$.
+The number of hidden vectors in $D_x$ is equal to the number of ways to choose the
+$x$ hit colors out of $n$ colors in our guess, times the number of ways to choose
+the remaining $n-x$ colors out of the other $k-n$ colors, times the number of ways
+to permute all those elements.
+That is,
+    \begin{equation*}
+    \sum_{B\in D_x}|B| = \binom{n}{x}\binom{k-n}{n-x} n!
+	\end{equation*}
+Let $Y_i$ be the response to the $i$th guess. So $Y_i=(b,w)$, a 2-vector giving the
+number of black hits and white hits. We have
+    \begin{align*}
+    H(Y_i)&=\sum_{x=0}^n \sum_{B\in D_x}-\text{Pr}[Y_i=B]\cdot\log_2\text{Pr}[Y_i=B] \\
+    &\leq  \sum_{x=0}^n -|D_x|\cdot \frac{\text{Pr}[Y_i\in D_x]}{|D_x|}\cdot
+    \log_2 \left(\frac{\text{Pr}[Y_i\in D_x]}{|D_x|}\right).
+    \end{align*}
+This is because $f(\alpha) = -\alpha\cdot\log_2 \alpha$ is concave down on
+$[0,1]$, and thus replacing each term of
+$f(\alpha)$ in the second summation with $f$ evaluated on the average
+of all $\alpha$ is guaranteed to increase the total sum. Also, note that
+$|D_x|=x+1$, as there are $x+1$ ways to have $b+w=x$ for non-negative $b$ and $w$.
+    \begin{align*}
+    \text{Pr}[Y_i\in D_x]&=\frac{\sum_{B\in D_x} |B|}{\sum_{B} |B|}\\
+    &=\frac{\binom{n}{x}\binom{k-n}{n-x}n!}{\frac{k!}{(k-n)!}}\\
+    &=\frac{(n!)^2((k-n)!)^2}{x!(k-x)!((n-x)!)^2 k!}\\
+    &\le \frac{(n!)^2((k-n)!)^2}{x!(k-n)!((n-n)!)^2 k!}\\
+    &=\frac{(n!)^2(k-n)!}{x! k!}\\
+    &=\frac{1}{x!}\cdot\frac{n^2(n-1)^2\cdots 2^2\cdot 1^2}{k(k-1)
+    \cdots(k-n+2)(k-n+1)} \\
+    &\le \frac{1}{x!}, \text{ as $k \ge n^2$ and $(n-i)^2 \le n^2-i$ for $0\le i<n$.}
+    \end{align*}
+We want to find an upper bound for $H(Y_i)$. For
+$\alpha<1/e$, we know $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function. So as
+$\text{Pr}[Y_i\in D_x]/|D_x|\le 1/(x!\cdot (x+1))=1/(x+1)!$, for all $x\ge 2$ we have
+$f(1/(x+1)!)$ is an upper bound for $f(\text{Pr}[Y_i\in D_x]/|D_x|)$. For the first two
+values, we will use the upper bound $f(\alpha)\le 1/(e\log2)$.
+    \begin{align*}
+	H(Y_i)&\le \sum_{x=0}^1 (x+1)\frac{1}{e\log2}~+~\sum_{x=2}^n \frac{-(x+1)}{(x+1)!}
+	\cdot\log_2 \left(\frac{1}{(x+1)!}\right)\\
+    &\le\frac{3}{e\log2}+\frac{\log_2 6}{2}+\frac{\log_2 24}{6}+\sum_{x=4}^n
+    \frac{\log_2((x+1)!)}{x!}
+    \end{align*}
+    For $x\ge 4$, we have $\log_2((x+1)!)\le (x+1)\log(x+1)/\log 2\le x(x-1)$.
+    Thus,
+    \begin{align*}
+	H(Y_i)&\le\frac{3}{e\log2}+\frac{\log_2 6}{2}+\frac{\log_2 24}{6}+\sum_{x=4}^n 
+	\frac{1}{(x-2)!}\\
+    &\le\frac{3}{e\log2}+\frac{\log_2 6}{2}+\frac{\log_2 24}{6}+e-2\\
+    &=\frac{3}{e\log2}+\frac{2\log 3}{3\log 2}+e-1\\
+    &<5
+    \end{align*}
+Combining this with the summation above gives $H(Y)<5s$, so we get
+    \begin{equation*}
+    H(X)\le H(Y)
+    \end{equation*}
+    \begin{equation*}
+    \log_2 \left(\frac{k!}{(k-n)!}\right)\le 5s
+    \end{equation*}
+    \begin{equation*}
+    s\ge\frac{1}{5}\log_2 \left(\frac{k!}{(k-n)!}\right)
+    \end{equation*}
+    \quad
+This gives us a lower bound of $O(n\log k)$ turns for any non-adaptive strategy for
+Mastermind without repeats using both black and white hits.
+
+\clearpage
 \section*{Upper Bound on Non-Adaptive Strategies for Mastermind}
 For a game of mastermind with $n$ spots and $k$ colors (with or without repeats), every
 hidden vector and query can be represented by a matrix $A\in\mathbb{R}^{n\times k}$,
@@ -785,69 +857,6 @@ so $\text{dim}(S)\le \text{dim}(\mathbb{R}^{n\times k})=n\cdot k$.
 
 Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines every
 possible hidden permutation.
-
-\clearpage
-\section*{Non-Adaptive Lower Bound using Entropy and Black and White Hits}
-For a game of mastermind on $n$ pegs and $k$ colors (without repeats), we're going to
-use an entropy arguement to find a lower bound for all $k\ge n^2$.
-
-We let $x$ be the total number of hits (black hits plus white hits). The number of hidden vectors with $x$ total hits is equal to the number of ways to choose the $x$ hit colors out of $n$ colors used, times the number of ways to choose the remaining $n-x$ colors out of the other $k-n$ colors, times the number of ways to permute all those elements. That is:
-    \begin{equation*}
-    \binom{n}{x}\cdot\binom{k-n}{n-x}\cdot n!
-	\end{equation*}
-We have:
-    \begin{align*}
-    H(Y_i)&=\sum_{x=0}^n \sum_{B\in D_x}-\text{Pr}[Y_i=B]\cdot\log_2\text{Pr}[Y_i=B] \\
-    &\leq  \sum_{x=0}^n -|D_x|\cdot \frac{\text{Pr}[Y_i\in D_x]}{|D_x|}\cdot
-    \log_2 \left(\frac{\text{Pr}[Y_i\in D_x]}{|D_x|}\right).
-    \end{align*}
-This is because $f(\alpha) = -\alpha\cdot\log_2 \alpha$ is concave down on
-$[0,1]$, and thus replacing each term of
-$f(\alpha)$ in the second summation with $f$ evaluated on the average
-of all $\alpha$ is guaranteed to increase the total sum. Also, note that
-$|D_x|=x+1$, as there are $x+1$ ways to have $b+w=x$ for non-negative $b$ and $w$.
-    \begin{align*}
-    \text{Pr}[Y_i\in D_x]&=\frac{\sum_{B\in D_x} |B|}{\sum_{B} |B|}\\
-    &=\frac{\binom{n}{x}\cdot\binom{k-n}{n-x}\cdot n!}{\frac{k!}{(k-n)!}}\\
-    &=\frac{(n!)^2\cdot((k-n)!)^2}{x!\cdot(k-x)!\cdot((n-x)!)^2\cdot k!}\\
-    &\le \frac{(n!)^2\cdot((k-n)!)^2}{x!\cdot(k-n)!\cdot((n-n)!)^2\cdot k!}\\
-    &=\frac{(n!)^2\cdot(k-n)!}{x!\cdot k!}\\
-    &=\frac{1}{x!}\cdot\frac{n^2\cdot(n-1)^2\cdots 2^2\cdot 1^2}{k\cdot(k-1)
-    \cdots(k-n+2)\cdot(k-n+1)} \\
-    &\le \frac{1}{x!}, \text{ as $k \ge n^2$ and $(n-i)^2 \le n^2-i$ for $0\le i<n$.}
-    \end{align*}
-We want to find an upper bound for $H(Y_i)$. For
-$\alpha<1/e, f(\alpha)=-\alpha\log_2\alpha$ is an increasing function. So as
-$\text{Pr}[Y_i\in D_x]/|D_x|\le 1/(x!\cdot (x+1))=1/(x+1)!$, for all $x\ge 2$ we have
-$f(1/(x+1)!)$ is an upper bound for $f(\text{Pr}[Y_i\in D_x]/|D_x|)$. For the first two
-values, we will use the upper bound $f(\alpha)\le 1/(e\log2)$.
-    \begin{align*}
-	H(Y_i)&\le \sum_{x=0}^1 (x+1)\cdot\frac{1}{e\log2}~+~\sum_{x=2}^n -(x+1)\cdot
-	\frac{1}{(x+1)!}\cdot \log_2 \left(\frac{1}{(x+1)!}\right)\\
-    &\le\frac{3}{e\log2}+\frac{\log_2 6}{2}+\frac{\log_2 24}{6}+\sum_{x=4}^n
-    \frac{1}{x!}\cdot \log_2 ((x+1)!)
-    \end{align*}
-    For $x\ge 4$, we have $\log_2((x+1)!)\le (x+1)\log(x+1)/\log 2\le x(x-1)$. Thus:
-    \begin{align*}
-	H(Y_i)&\le\frac{3}{e\log2}+\frac{\log_2 6}{2}+\frac{\log_2 24}{6}+\sum_{x=4}^n 
-	\frac{1}{(x-2)!}\\
-    &\le\frac{3}{e\log2}+\frac{\log_2 6}{2}+\frac{\log_2 24}{6}+e-2\\
-    &=\frac{3}{e\log2}+\frac{2\log 3}{3\log 2}+e-1\\
-    &<5
-    \end{align*}
-    Combining this with the summation above gives $H(Y)<5s$, so we get
-    \begin{equation*}
-    H(X)\le H(Y)
-    \end{equation*}
-    \begin{equation*}
-    \log_2 \left(\frac{k!}{(k-n)!}\right)\le 5s
-    \end{equation*}
-    \begin{equation*}
-    s\ge\frac{1}{5}\log_2 \left(\frac{k!}{(k-n)!}\right)
-    \end{equation*}
-    \quad
-This gives us a lower bound of $O(n\log k)$ turns for any non-adaptive strategy for
-Mastermind without repeats using both black and white hits.
 \end{document}
 
 
