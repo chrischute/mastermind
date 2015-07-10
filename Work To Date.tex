@@ -1,0 +1,167 @@
+\documentclass[12pt, a4paper]{article}
+\author{Aaron Berger, Christopher Chute, Matthew Stone}
+\title{Notes from Mastermind Research}
+\usepackage[bottom=1.5in, left=1in, right=1in, top=1.1in]{geometry}
+\usepackage{amsmath, amsthm, amssymb}
+\newtheorem{lem}{Lemma}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{footnote}
+
+% \begin{header footer formatting}
+\usepackage{fancyhdr}
+\setlength{\headheight}{48pt}
+\pagestyle{fancyplain}
+\lhead{Mastermind Project: \textit{Notes}\\\today{}}
+\rhead{AB, CC, MS}
+\rfoot{\thepage}
+\cfoot{}
+% \end{header footer formatting}
+
+% remove ``*'' for numbered theorems
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+% \begin{pretty i-hat and j-hat}
+\newcommand*{\ihat}{\hat{\imath}}
+\newcommand*{\jhat}{\hat{\jmath}}
+\newcommand*{\jwidehat}{\widehat{\jmath}}
+% \end{pretty i-hat and j-hat}
+
+% \begin{pretty code or pseudocode}
+\usepackage{listings}
+\usepackage{courier}
+\lstset{
+         basicstyle=\footnotesize\ttfamily,
+%        numbers=left,               
+         numberstyle=\tiny,          
+%        stepnumber=2,              
+         numbersep=5pt,              
+         tabsize=4,                 
+         extendedchars=true,         
+         breaklines=true,            
+         keywordstyle=\color{red},
+         frame=tblr,% Set the borders, tblr == (top, bottom, left, right)
+%        keywordstyle=[1]\textbf,    
+%        keywordstyle=[2]\textbf,   
+%        keywordstyle=[3]\textbf,   
+%        keywordstyle=[4]\textbf,  
+         stringstyle=\color{white}\ttfamily,
+         showspaces=false,          
+         showtabs=false,           
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+%        backgroundcolor=\color{red},
+         showstringspaces=false            
+ }
+\lstloadlanguages{C}
+% Example Usage:
+% \lstinputlisting{pseudocode.txt}
+% \end{pretty code or pseudocode}
+
+% ********************************* END OF PREAMBLE ***********************************
+
+\begin{document}
+\section*{Mastermind with No Repeats, $n = k$: Lower Bound for Guessing Strategies}
+	\begin{itemize}	
+	\item Previous Bound: $n-n/log(n)$
+	\item Our Bound:  There is no strategy that guarantees a win in $n-\log\log n$ turns.
+
+	\end{itemize}
+\section*{Lower Bound on Guessing Effectiveness for Permutation Game}
+	\begin{itemize}
+	\item Previous Work: None found
+	\item Our work: In Mastermind with no repeats with $n$ spots and $k$ colors,
+	for any set of possible remaining solutions, there exists a
+	guess vector for which any response will eliminate at least $1/nk$ of the
+	remaining solutions.
+	This gives us the following asymptotic bounds:
+		\begin{enumerate}[label=\roman*.]
+		\item The minimax algorithm for Mastermind with $n$ spots, $k$
+		colors, and no repeats takes at most $O(n^2k\log k)$ turns to find the
+		hidden vector.
+		
+		\item In the same game where $n=k$, the minimax algorithm takes at most
+		$O(n^3\log n)$ turns to find the hidden vector.
+		\end{enumerate}
+	
+	\end{itemize}
+	
+
+\section*{Extension of Previous Section to Repeated Colors}
+	
+	\begin{itemize}
+	\item Previous Work: None found
+	\item Our Work: In a game of Mastermind with $n$ spots and $k$ colors, for any set of remaining
+	solutions that can actually be achieved during a game of Mastermind,
+	there is always a guess for which any response will eliminate at least
+	$1/nk$ of the remaining solutions. \\
+	This gives the same asymptotic bounds as above.
+	
+	\end{itemize}
+
+\section*{Optimality of Mastermind for $(n, k) = (4, 6)$}
+	\begin{itemize}
+	\item Previous Work: This was presumably already done by Knuth, not confirmed yet.
+	\item Our bound: It is not
+	possible for a deterministic guessing strategy to guarantee finding the
+	hidden vector in fewer than five turns.
+
+	\end{itemize}
+\clearpage
+\section*{Lower Bound for Non-Adaptive Strategies Using Only Black Hits}
+
+\begin{itemize}
+	\item Previous Work: This is an adaptation of a bound for Mastermind with repeats by [Doerr et al] to Mastermind without repeats.
+	\item Our Work: Every non-adaptive strategy for Mastermind with no repeats must submit at least
+$O(n \log k)$ queries to uniquely identify all possible hidden vectors if given only black-hit responses.
+\end{itemize}
+
+\section*{Upper Bound on Non-Adaptive Strategies for Mastermind}
+\begin{itemize}
+	\item Previous Work: None found
+	\item Our Work: There exists a set of at most $n k$ queries which uniquely determines every
+possible hidden permutation (with or without repeats).
+\end{itemize}
+
+\section*{Non-Adaptive Lower Bound using Black and White Hits}
+\begin{itemize}
+	\item Previous Work: None found
+	\item Our Work: For $k \ge n^2$, we get lower bound of $O(n\log k)$ turns for any non-adaptive strategy for
+Mastermind without repeats using both black and white hits.
+\end{itemize}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
