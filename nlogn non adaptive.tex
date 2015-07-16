@@ -93,26 +93,26 @@ Multiplying both sides of this inequality by $(1-1/k)^x$ results in the claim.
 \clearpage
 Case 2: $k-2 \leq x \leq k$
 \begin{equation*}
-\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(n-2)^{-2i}=\sum_{i=0}^{\lfloor x/2 \rfloor} \frac{\frac{x(x-1)\cdots(x-2i+1)}{(n-2)^{2i}}}{i!^2}
+\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}=\sum_{i=0}^{\lfloor x/2 \rfloor} \frac{\frac{x(x-1)\cdots(x-2i+1)}{(k-2)^{2i}}}{i!^2}
 \end{equation*}
-For $x=n-2, n-1, \text{or } n$:\\
+For $x=k-2, k-1, \text{or } k$:\\
 \\
-For $i\ge3$, $x(x-1)\cdots(x-2i+1)\le n(n-1)\cdots(n-2i+1)\le(n-2)^{2i}$. Thus, 
+For $i\ge3$, $x(x-1)\cdots(x-2i+1)\le k(k-1)\cdots(k-2i+1)\le(k-2)^{2i}$. Thus, 
 \begin{align*}
-\sum_{i=3}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(n-2)^{-2i} & \le \sum_{i=3}^{\lfloor x/2 \rfloor} \frac{1}{(i!)^2} \\
+\sum_{i=3}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i} & \le \sum_{i=3}^{\lfloor x/2 \rfloor} \frac{1}{(i!)^2} \\
 & \le \sum_{i=3}^\infty \frac{1}{(i!)^2} \\
 & < .0296\\
 \end{align*}
 \begin{align*}
-\sum_{i=0}^{2} \binom{x}{i}\binom{x-i}{i}(n-2)^{-2i} & = 1+\frac{x(x-1)}{(n-2)^2}+\frac{x(x-1)(x-2)(x-3)}{4(n-2)^4} \\
-& \le 1+\frac{n(n-1)}{(n-2)^2}+\frac{n(n-1)(n-2)(n-3)}{4(n-2)^4} \\
-& < 2.5536 \text{ for } n\ge 14
+\sum_{i=0}^{2} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i} & = 1+\frac{x(x-1)}{(k-2)^2}+\frac{x(x-1)(x-2)(x-3)}{4(k-2)^4} \\
+& \le 1+\frac{k(k-1)}{(k-2)^2}+\frac{k(k-1)(k-2)(k-3)}{4(k-2)^4} \\
+& < 2.5536 \text{ for } k\ge 14
 \end{align*}
 Thus putting the two together gives
 \begin{align*}
-\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(n-2)^{-2i} & \le 2.5832 \\
-& < \left(1+\frac{1}{n-2}\right)^{n-2} \text{ for } n\ge14\\
-& \le \left(1+\frac{1}{n-2}\right)^{x}
+\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i} & \le 2.5832 \\
+& < \left(1+\frac{1}{k-2}\right)^{k-2} \text{ for } k\ge14\\
+& \le \left(1+\frac{1}{k-2}\right)^{x}
 \end{align*}
 
 \clearpage
