@@ -859,71 +859,85 @@ Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines
 possible hidden permutation.
 
 \clearpage
-\section*{Deterministic $O(n\log n)$ Non-Adaptive Strategy}
-This proof will follow a similar path as [Grebinski and Kucherov
-(optimally...additive model)].
-We want 
-	\begin{equation*}
-	\sum_{i=0}^{\left\lfloor\frac{x}{2}\right\rfloor}\text{Pr}[\text{Eq}(q,v_1)=i
-	\cap\text{Eq}(q,v_2) = i]\leq \sum_{i=0}^x\text{Pr}[\text{Eq}(q,v_1) = i]
-	\cdot\text{Pr}[\text{Eq}(q,v_2) = i]
-	\end{equation*}
-We will show this in an appendix or something.
-	\begin{align*}
-	\sum_{i=0}^x\text{Pr}[\text{Eq}(q,v_1) = i]
-	\cdot\text{Pr}[ \text{Eq}(q,v_2) = i]
-	& \le \sum_{i=0}^x\text{P}_\text{max}(\text{Eq}(q,v_1))
-	\cdot\text{Pr}[ \text{Eq}(q,v_2) = i] \\
-	&= \text{P}_\text{max}(\text{Eq}(q,v_1))
-	\cdot \sum_{i=0}^x\text{Pr}[ \text{Eq}(q,v_2) = i] \\
-	&= \text{P}_\text{max}(\text{Eq}(q,v_1))
-	\end{align*}
-$P_\text{max}$ will always be bucket 0 unless $x=n$, in which case it's
-bucket 1. This is proved by taking a ratio of consecutive terms to show the sequence
-is decreasing for all other values of \#of hits. [insert actual equation here]
-	\begin{align*}
-	\text{Pr}[\text{Eq}(q,v_1) =0] = \left(1-\frac{1}{n}\right)^x \\
-	\text{Pr}[\text{Eq}(q,v_1)=1 | x=n] = \left(1-\frac{1}{n}\right)^{n-1} \\
-	\text{So we can write P$_\text{max}
-	\leq \left(1-\frac{1}{n}\right)^{\text{min}(x,n-1)}$}
-	\end{align*}
-So the sum of the probability that two vectors have the same response on all $s$
-questions is:
-	\begin{equation*}
-	\sum_{x=2}^n(\text{\# of reduced pairs that disagree in $x$ spots}
-	(\text{Probability this pair is in the same bucket}) 
-	\end{equation*}
-	
-	\begin{align*}
-	&=\sum_{x=1}^n \binom{n}{x}n^x(n-1)^x
-	\left(1-\frac{1}{n}\right)^{s\cdot{\text{min}(x,n-1)}} \\
-	&\le \sum_{x=1}^n n^{3x} \left(1-\frac{1}{n}\right)^{s\cdot{\text{min}(x,n-1)}} \\
-	&= \sum_{x=1}^n n^{3x}\left(1-\frac{1}{n}\right)^{(4n\log n){\text{min}(x,n-1)}} \\
-	&< \sum_{x=1}^n n^{3x} \left(\frac{1}{e}\right)^{(4\log n){\text{min}(x,n-1)}} \\
-	&= \sum_{x=1}^n n^{3x} \left(\frac{1}{n}\right)^{4\cdot{\text{min}(x,n-1)}} \\
-	&\le \sum_{x=1}^n \frac{1}{n} \\
-	&\le 1
-	\end{align*}
-	
-\clearpage
-\section*{Matt's Part of Appendix}
+\section*{Existence of a Deterministic $O(k\log n)$ Non-Adaptive Strategy}
+This proof was inspired by [Grebinski and Kucherov (optimally...additive model)].
+This holds for $k\geq n$. \\
 \textit{Claim.}
 	\begin{equation*}
-	\sum_{i=0}^{\left\lfloor x/2\right\rfloor}\binom{x}{i}\binom{x-1}{i}(n-2)^{-2i}
-	\le \left(1+\frac{1}{n-2}\right)^x
+	\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}\text{Pr}[\text{Eq}(q,v_1) = i
+	\cap\text{Eq}(q,v_2) = i] \leq \left(1-\frac{1}{k}\right)^x
 	\end{equation*}
-	Where $x\ge .613n$.
-\begin{proof}
-	\begin{enumerate}[label=\roman*.]
-	\item Let $x\le n-2$. Then, 
-		\begin{align*}
-		\left\lfloor x/2\right\rfloor\binom{x}{i}\binom{x-1}{i}(n-2)^{-2i}
-		& \le \frac{x(x-1)\cdots(x-2i+1)}{(n-2)^{2i}(i!)^2}\\\\
-		& < \left(\frac{x}{n-2}\right)^{2i}(i!)^2
-		\end{align*}
-	
-	\end{enumerate}
-\end{proof}
+\textit{Case 1.} When $x \leq k-3$, we have
+	\begin{align*}
+	\text{Pr}[\text{Eq}(q,v_1) = i \cap \text{Eq}(q,v_2) = i]
+	& = \text{Pr}[\text{Eq}(q,v_2) = i] \cdot
+	\text{Pr}[\text{Eq}(q,v_1) = i | \text{Eq}(q,v_2) = i]   \\
+	&= \binom{x}{i}\left(\frac{1}{k}\right)^i \left(\frac{k-1}{k}\right)^{x-i}
+	\cdot\binom{x-i}{i}\left(\frac{1}{k-1}\right)^{i}
+	\left(\frac{k-2}{k-1}\right)^{x-2i} \\
+	&=\frac{x!}{(k-2)^{2i}(i!)^2(x-2i)!}\left(\frac{k-2}{k}\right)^x \\
+	&\leq \frac{x^{2i}}{(k-2)^{2i}(i!)}\left(\frac{k-2}{k}\right)^x.
+	\end{align*}
+Now we have
+    \begin{align*}
+    \sum_{i=0}^{\left\lfloor x/2 \right\rfloor}\text{Pr}[\text{Eq}(q,v_1) = i
+    \cap \text{Eq}(q,v_2) = i] \left(\frac{k}{k-1}\right)^x 
+    &\leq \sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
+    \frac{x^{2i}}{(k-2)^{2i}(i!)}\left(\frac{k-2}{k}\right)^x
+    \left(\frac{k}{k-1}\right)^x \\
+    &=\sum_{i=0}^{\left\lfloor x/2 \right\rfloor} \frac{x^{2i}}{(k-2)^{2i}(i!)}
+    \left(1-\frac{1}{k-1}\right)^x \\
+    &<\left(1-\frac{1}{k-1}\right)^x ~ \sum_{i=0}^{\infty}
+    \left(\frac{x^2}{(k-2)^2}\right)^i\frac{1}{i!} \\
+    &<e^{-\frac{x}{k-1}}\cdot e^\frac{x^2}{(k-2)^2} \\
+    &<1\quad \text{ for } x \leq (k-3).
+    \end{align*}
+Multiplying both sides of this inequality by $(1-1/k)^x$ results in the claim. 
+
+\textit{Case 2.} $k-2 \leq x \leq k$
+    \begin{equation*}
+    \sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+    =\sum_{i=0}^{\lfloor x/2 \rfloor} \frac{\frac{x(x-1)
+    \cdots(x-2i+1)}{(k-2)^{2i}}}{i!^2}
+    \end{equation*}
+For $x=k-2, k-1, \text{or } k$:
+
+For $i\ge3$, $x(x-1)\cdots(x-2i+1)\le k(k-1)\cdots(k-2i+1)\le(k-2)^{2i}$. Thus, 
+    \begin{align*}
+    \sum_{i=3}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+    & \le \sum_{i=3}^{\lfloor x/2 \rfloor} \frac{1}{(i!)^2} \\
+    & \le \sum_{i=3}^\infty \frac{1}{(i!)^2} \\
+    & < .0296.
+    \end{align*}
+    \begin{align*}
+    \sum_{i=0}^{2} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+    & = 1+\frac{x(x-1)}{(k-2)^2}+\frac{x(x-1)(x-2)(x-3)}{4(k-2)^4} \\
+    & \le 1+\frac{k(k-1)}{(k-2)^2}+\frac{k(k-1)(k-2)(k-3)}{4(k-2)^4} \\
+    & < 2.5536 \text{ for } k\ge 14.
+    \end{align*}
+Thus putting the two together gives
+	\begin{align*}
+	\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+	& \le 2.5832 \\
+	& < \left(1+\frac{1}{k-2}\right)^{k-2} \text{ for } k\ge 14\\
+	& \le \left(1+\frac{1}{k-2}\right)^{x}.
+	\end{align*}
+
+\clearpage
+So the sum of the probability that two vectors have the same response on all $s$ questions is:
+	\begin{equation*}
+	\sum_{x=1}^n(\text{\# of reduced pairs that disagree in $x$ spots})
+	(\text{Probability this pair is in the same bucket})
+	\end{equation*}
+\begin{align*}
+&=\sum_{x=1}^n \binom{n}{x}n^x(n-1)^x \left(1-\frac{1}{k}\right)^{s\cdot x} \\
+&\le \sum_{x=1}^n n^{3x} \left(1-\frac{1}{k}\right)^{s\cdot x} \\
+&= \sum_{x=1}^n n^{3x} \left(1-\frac{1}{k}\right)^{(4k\log n)x} \\
+&< \sum_{x=1}^n n^{3x} \left(\frac{1}{e}\right)^{(4\log n)x} \\
+&= \sum_{x=1}^n n^{3x} \left(\frac{1}{n}\right)^{4 x} \\
+&\le \sum_{x=1}^n \frac{1}{n} \\
+&\le 1
+\end{align*}
 \end{document}
 
 
