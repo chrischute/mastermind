@@ -930,12 +930,12 @@ So the sum of the probability that two vectors have the same response on all $s$
 	(\text{Probability this pair is in the same bucket})
 	\end{equation*}
 \begin{align*}
-&=\sum_{x=1}^n \binom{n}{x}n^x(n-1)^x \left(1-\frac{1}{k}\right)^{s\cdot x} \\
-&\le \sum_{x=1}^n n^{3x} \left(1-\frac{1}{k}\right)^{s\cdot x} \\
-&= \sum_{x=1}^n n^{3x} \left(1-\frac{1}{k}\right)^{(4k\log n)x} \\
-&< \sum_{x=1}^n n^{3x} \left(\frac{1}{e}\right)^{(4\log n)x} \\
-&= \sum_{x=1}^n n^{3x} \left(\frac{1}{n}\right)^{4 x} \\
-&\le \sum_{x=1}^n \frac{1}{n} \\
+&\le\sum_{x=1}^n \binom{n}{x}k^x(k-1)^x \left(1-\frac{1}{k}\right)^{s\cdot x} \\
+&\le \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{s\cdot x} \\
+&= \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{(4k\log k)x} \\
+&< \sum_{x=1}^n k^{3x} \left(\frac{1}{e}\right)^{(4\log k)x} \\
+&= \sum_{x=1}^n k^{3x} \left(\frac{1}{k}\right)^{4 x} \\
+&\le \sum_{x=1}^n \frac{1}{k} \\
 &\le 1
 \end{align*}
 \end{document}
