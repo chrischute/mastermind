@@ -687,7 +687,7 @@ Entropy has the following properties:
 	\item\underline{Property 2} (Subadditivity) A vector $X=(X_1, X_2, \ldots, X_n)$
 	of random variables (which is itself a random variable) has
 		\begin{equation*}
-		H(X)\le \sum_{i=1}^{n}X_i
+		H(X)\le \sum_{i=1}^{n}H(X_i)
 		\end{equation*}
 	\textit{Justification.} To find the total information gained from $X$, we sum
 	the information gained from each component. However, the components are not
@@ -857,6 +857,73 @@ so $\text{dim}(S)\le \text{dim}(\mathbb{R}^{n\times k})=n\cdot k$.
 
 Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines every
 possible hidden permutation.
+
+\clearpage
+\section*{Deterministic $O(n\log n)$ Non-Adaptive Strategy}
+This proof will follow a similar path as [Grebinski and Kucherov
+(optimally...additive model)].
+We want 
+	\begin{equation*}
+	\sum_{i=0}^{\left\lfloor\frac{x}{2}\right\rfloor}\text{Pr}[\text{Eq}(q,v_1)=i
+	\cap\text{Eq}(q,v_2) = i]\leq \sum_{i=0}^x\text{Pr}[\text{Eq}(q,v_1) = i]
+	\cdot\text{Pr}[\text{Eq}(q,v_2) = i]
+	\end{equation*}
+We will show this in an appendix or something.
+	\begin{align*}
+	\sum_{i=0}^x\text{Pr}[\text{Eq}(q,v_1) = i]
+	\cdot\text{Pr}[ \text{Eq}(q,v_2) = i]
+	& \le \sum_{i=0}^x\text{P}_\text{max}(\text{Eq}(q,v_1))
+	\cdot\text{Pr}[ \text{Eq}(q,v_2) = i] \\
+	&= \text{P}_\text{max}(\text{Eq}(q,v_1))
+	\cdot \sum_{i=0}^x\text{Pr}[ \text{Eq}(q,v_2) = i] \\
+	&= \text{P}_\text{max}(\text{Eq}(q,v_1))
+	\end{align*}
+$P_\text{max}$ will always be bucket 0 unless $x=n$, in which case it's
+bucket 1. This is proved by taking a ratio of consecutive terms to show the sequence
+is decreasing for all other values of \#of hits. [insert actual equation here]
+	\begin{align*}
+	\text{Pr}[\text{Eq}(q,v_1) =0] = \left(1-\frac{1}{n}\right)^x \\
+	\text{Pr}[\text{Eq}(q,v_1)=1 | x=n] = \left(1-\frac{1}{n}\right)^{n-1} \\
+	\text{So we can write P$_\text{max}
+	\leq \left(1-\frac{1}{n}\right)^{\text{min}(x,n-1)}$}
+	\end{align*}
+So the sum of the probability that two vectors have the same response on all $s$
+questions is:
+	\begin{equation*}
+	\sum_{x=2}^n(\text{\# of reduced pairs that disagree in $x$ spots}
+	(\text{Probability this pair is in the same bucket}) 
+	\end{equation*}
+	
+	\begin{align*}
+	&=\sum_{x=1}^n \binom{n}{x}n^x(n-1)^x
+	\left(1-\frac{1}{n}\right)^{s\cdot{\text{min}(x,n-1)}} \\
+	&\le \sum_{x=1}^n n^{3x} \left(1-\frac{1}{n}\right)^{s\cdot{\text{min}(x,n-1)}} \\
+	&= \sum_{x=1}^n n^{3x}\left(1-\frac{1}{n}\right)^{(4n\log n){\text{min}(x,n-1)}} \\
+	&< \sum_{x=1}^n n^{3x} \left(\frac{1}{e}\right)^{(4\log n){\text{min}(x,n-1)}} \\
+	&= \sum_{x=1}^n n^{3x} \left(\frac{1}{n}\right)^{4\cdot{\text{min}(x,n-1)}} \\
+	&\le \sum_{x=1}^n \frac{1}{n} \\
+	&\le 1
+	\end{align*}
+	
+\clearpage
+\section*{Matt's Part of Appendix}
+\textit{Claim.}
+	\begin{equation*}
+	\sum_{i=0}^{\left\lfloor x/2\right\rfloor}\binom{x}{i}\binom{x-1}{i}(n-2)^{-2i}
+	\le \left(1+\frac{1}{n-2}\right)^x
+	\end{equation*}
+	Where $x\ge .613n$.
+\begin{proof}
+	\begin{enumerate}[label=\roman*.]
+	\item Let $x\le n-2$. Then, 
+		\begin{align*}
+		\left\lfloor x/2\right\rfloor\binom{x}{i}\binom{x-1}{i}(n-2)^{-2i}
+		& \le \frac{x(x-1)\cdots(x-2i+1)}{(n-2)^{2i}(i!)^2}\\\\
+		& < \left(\frac{x}{n-2}\right)^{2i}(i!)^2
+		\end{align*}
+	
+	\end{enumerate}
+\end{proof}
 \end{document}
 
 
