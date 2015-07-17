@@ -859,85 +859,138 @@ Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines
 possible hidden permutation.
 
 \clearpage
-\section*{Existence of a Deterministic $O(k\log n)$ Non-Adaptive Strategy}
-This proof was inspired by [Grebinski and Kucherov (optimally...additive model)].
-This holds for $k\geq n$. \\
-\textit{Claim.}
-	\begin{equation*}
-	\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}\text{Pr}[\text{Eq}(q,v_1) = i
-	\cap\text{Eq}(q,v_2) = i] \leq \left(1-\frac{1}{k}\right)^x
-	\end{equation*}
-\textit{Case 1.} When $x \leq k-3$, we have
-	\begin{align*}
-	\text{Pr}[\text{Eq}(q,v_1) = i \cap \text{Eq}(q,v_2) = i]
-	& = \text{Pr}[\text{Eq}(q,v_2) = i] \cdot
-	\text{Pr}[\text{Eq}(q,v_1) = i | \text{Eq}(q,v_2) = i]   \\
-	&= \binom{x}{i}\left(\frac{1}{k}\right)^i \left(\frac{k-1}{k}\right)^{x-i}
-	\cdot\binom{x-i}{i}\left(\frac{1}{k-1}\right)^{i}
-	\left(\frac{k-2}{k-1}\right)^{x-2i} \\
-	&=\frac{x!}{(k-2)^{2i}(i!)^2(x-2i)!}\left(\frac{k-2}{k}\right)^x \\
-	&\leq \frac{x^{2i}}{(k-2)^{2i}(i!)}\left(\frac{k-2}{k}\right)^x.
-	\end{align*}
-Now we have
-    \begin{align*}
-    \sum_{i=0}^{\left\lfloor x/2 \right\rfloor}\text{Pr}[\text{Eq}(q,v_1) = i
-    \cap \text{Eq}(q,v_2) = i] \left(\frac{k}{k-1}\right)^x 
-    &\leq \sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
-    \frac{x^{2i}}{(k-2)^{2i}(i!)}\left(\frac{k-2}{k}\right)^x
-    \left(\frac{k}{k-1}\right)^x \\
-    &=\sum_{i=0}^{\left\lfloor x/2 \right\rfloor} \frac{x^{2i}}{(k-2)^{2i}(i!)}
-    \left(1-\frac{1}{k-1}\right)^x \\
-    &<\left(1-\frac{1}{k-1}\right)^x ~ \sum_{i=0}^{\infty}
-    \left(\frac{x^2}{(k-2)^2}\right)^i\frac{1}{i!} \\
-    &<e^{-\frac{x}{k-1}}\cdot e^\frac{x^2}{(k-2)^2} \\
-    &<1\quad \text{ for } x \leq (k-3).
-    \end{align*}
-Multiplying both sides of this inequality by $(1-1/k)^x$ results in the claim. 
+\section*{Existence of a Deterministic $O(k\log k)$ Non-Adaptive Strategy}
+This proof was inspired by [GK00].
+	\begin{theorem}
+    When $k\ge n$, there always exists a set of $O(k\log k)$ queries,
+    the responses to which will distinguish between all possible $n$-vectors from an
+    alphabet of size $k$.
+	\end{theorem}
 
-\textit{Case 2.} $k-2 \leq x \leq k$
-    \begin{equation*}
-    \sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
-    =\sum_{i=0}^{\lfloor x/2 \rfloor} \frac{\frac{x(x-1)
-    \cdots(x-2i+1)}{(k-2)^{2i}}}{i!^2}
-    \end{equation*}
-For $x=k-2, k-1, \text{or } k$:
-
-For $i\ge3$, $x(x-1)\cdots(x-2i+1)\le k(k-1)\cdots(k-2i+1)\le(k-2)^{2i}$. Thus, 
-    \begin{align*}
-    \sum_{i=3}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
-    & \le \sum_{i=3}^{\lfloor x/2 \rfloor} \frac{1}{(i!)^2} \\
-    & \le \sum_{i=3}^\infty \frac{1}{(i!)^2} \\
-    & < .0296.
-    \end{align*}
-    \begin{align*}
-    \sum_{i=0}^{2} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
-    & = 1+\frac{x(x-1)}{(k-2)^2}+\frac{x(x-1)(x-2)(x-3)}{4(k-2)^4} \\
-    & \le 1+\frac{k(k-1)}{(k-2)^2}+\frac{k(k-1)(k-2)(k-3)}{4(k-2)^4} \\
-    & < 2.5536 \text{ for } k\ge 14.
-    \end{align*}
-Thus putting the two together gives
-	\begin{align*}
-	\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
-	& \le 2.5832 \\
-	& < \left(1+\frac{1}{k-2}\right)^{k-2} \text{ for } k\ge 14\\
-	& \le \left(1+\frac{1}{k-2}\right)^{x}.
-	\end{align*}
-
-\clearpage
-So the sum of the probability that two vectors have the same response on all $s$ questions is:
-	\begin{equation*}
-	\sum_{x=1}^n(\text{\# of reduced pairs that disagree in $x$ spots})
-	(\text{Probability this pair is in the same bucket})
-	\end{equation*}
-\begin{align*}
-&\le\sum_{x=1}^n \binom{n}{x}k^x(k-1)^x \left(1-\frac{1}{k}\right)^{s\cdot x} \\
-&\le \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{s\cdot x} \\
-&= \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{(4k\log k)x} \\
-&< \sum_{x=1}^n k^{3x} \left(\frac{1}{e}\right)^{(4\log k)x} \\
-&= \sum_{x=1}^n k^{3x} \left(\frac{1}{k}\right)^{4 x} \\
-&\le \sum_{x=1}^n \frac{1}{k} \\
-&\le 1
-\end{align*}
+	\begin{proof}
+	As in [GK00], we use the term ``critical pair'' to refer to a comparison between
+	two vectors in which we only analyze the spots that differ. For example, the
+	following vectors produce the following critical pair:\\
+		\begin{center}
+		\includegraphics[width=0.7\textwidth, keepaspectratio=true]{criticalpair.pdf}
+		\end{center}
+	The theorem follows directly if we can show that there's a non-zero probability
+	that $O(k\log k)$ queries distinguish between every possible critical pair. We
+	use the following lemma:
+    	\begin{lemma}
+    	Given a query $q$ and a critical pair $v_1,v_2$ of size $x$,
+		the probability that $v_1$ and $v_2$ receive the same response is at most
+		$(1-1/k)^x$. That is,
+    	\begin{equation*}
+    	\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
+		\textnormal{Pr}[\textnormal{Eq}(q,v_1) = i
+    	\cap\textnormal{Eq}(q,v_2) = i] \leq \left(1-\frac{1}{k}\right)^x
+    	\end{equation*}
+    	\end{lemma}		
+		
+		\begin{proof}
+		We prove two separate cases:
+			\begin{enumerate}[label=]
+			\item\textit{Case 1.} When $x \leq k-3$, we have
+            	\begin{align*}
+            	\text{Pr}[\text{Eq}(q,v_1) = i & \cap \text{Eq}(q,v_2) = i]\\\\
+            	& = \text{Pr}[\text{Eq}(q,v_2) = i] \cdot
+            	\text{Pr}[\text{Eq}(q,v_1) = i | \text{Eq}(q,v_2) = i]\\\\
+            	&= \binom{x}{i}\binom{x-i}{i}\left(\frac{1}{k}\right)^{2i}
+				\left(\frac{k-2}{k}\right)^{x-2i}\\\\
+            	&=\frac{x!(k-2)^{x-2i}}{(i!)^2(k^x)(x-2i)!} \\\\
+            	&\leq \frac{x^{2i}}{(k-2)^{2i}(i!)}\left(\frac{k-2}{k}\right)^x.
+            	\end{align*}
+            Now we have
+                \begin{align*}
+                \sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
+                \text{Pr}[\text{Eq}(q,v_1) = i
+                & \cap \text{Eq}(q,v_2) = i] \left(\frac{k}{k-1}\right)^x\\
+                &\leq \sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
+                \frac{x^{2i}}{(k-2)^{2i}(i!)}\left(\frac{k-2}{k}\right)^x
+                \left(\frac{k}{k-1}\right)^x \\\\
+                &=\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
+                \frac{x^{2i}}{(k-2)^{2i}(i!)}
+                \left(1-\frac{1}{k-1}\right)^x \\\\
+                &<\left(1-\frac{1}{k-1}\right)^x ~ \sum_{i=0}^{\infty}
+                \left(\frac{x^2}{(k-2)^2}\right)^i\left(\frac{1}{i!}\right) \\
+                &<e^{-\frac{x}{k-1}}\cdot e^\frac{x^2}{(k-2)^2} \\\\
+                &<1\quad \text{ for } x \leq (k-3).
+                \end{align*}
+            Multiplying both sides of this inequality by $(1-1/k)^x$ results in
+            the claim.\\
+            
+            \item\textit{Case 2.} When $k-2 \leq x \leq k$, we manipulate the sum
+            slightly differently: First we multiply both sides of the inequality by
+            $(k-2)^x/k^x$ to give,
+            	\begin{equation*}
+				\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+				\le \left(\frac{k-1}{k-2}\right)^x
+				\end{equation*}
+			We will bound the LHS from above by a constant:
+                \begin{equation*}
+                \sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+                =\sum_{i=0}^{\lfloor x/2 \rfloor} \frac{\frac{x(x-1)
+                \cdots(x-2i+1)}{(k-2)^{2i}}}{i!^2}
+                \end{equation*}
+            When $i\ge 3$,
+            	\begin{align*}
+				x(x-1)\cdots(x-2i+1) & \le k(k-1)\cdots(k-2i+1)\\
+	            & \le(k-2)^{2i}
+	            \end{align*}
+            Thus, 
+                \begin{align*}
+                \sum_{i=3}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+                & \le \sum_{i=3}^{\lfloor x/2 \rfloor} \frac{1}{(i!)^2}\\
+                & \le \sum_{i=3}^\infty \frac{1}{(i!)^2}\\
+                & < .0296.
+                \end{align*}
+            We separately bound the contribution of the terms for $i=0, 1, 2$:
+                \begin{align*}
+                \sum_{i=0}^{2} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+                & = 1+\frac{x(x-1)}{(k-2)^2}+\frac{x(x-1)(x-2)(x-3)}{4(k-2)^4} \\
+                & \le 1+\frac{k(k-1)}{(k-2)^2}+\frac{k(k-1)(k-2)(k-3)}{4(k-2)^4} \\
+                & < 2.5536 \text{ for } k\ge 14.
+                \end{align*}
+            Combining the sub-cases when $0\le i< 3$ and $i\ge 3$ gives
+            	\begin{align*}
+            	\sum_{i=0}^{\lfloor x/2 \rfloor} \binom{x}{i}\binom{x-i}{i}(k-2)^{-2i}
+            	& < 2.5832 \\
+            	& < \left(1+\frac{1}{k-2}\right)^{k-2} \text{ for } k\ge 14\\
+            	& = \left(\frac{k-1}{k-2}\right)^{x}.
+            	\end{align*}
+			\end{enumerate}
+		Cases 1 and 2 together show that for all critical pairs $v_1$, $v_2$ with
+		size $x$, the probability that $v_1$ and $v_2$ receive the same response
+		with respect to a given query is at most $(1-1/k)^x$.
+		\end{proof}
+    
+    Two vectors are distinguised from one another if we've made at least one query
+    for which the vectors received different responses. Thus the probability that
+    there exists a pair of vectors that have not been distinguished from one another
+    is given by the sum over all critical pairs of the probability that two vectors
+    received the same response to all submitted queries. Let $s=4k\log k$ be
+    the number of queries submitted. Then we have
+    	\begin{align*}
+		\text{Pr}[\exists\text{ pair } v_1, v_2 & \text{ not distinguished}]\\
+    	& = \sum_{x=1}^n(\text{\# of critical pairs of size }x)
+		\cdot\text{Pr}[\text{single pair not distinguished}]\\
+        & = \sum_{x=1}^n \left[\binom{n}{x}k^x(k-1)^x
+        \cdot\left(\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
+		\textnormal{Pr}[\textnormal{Eq}(q,v_1) = i
+    	\cap\textnormal{Eq}(q,v_2) = i]\right)^s ~\right]\\
+        &\le\sum_{x=1}^n \binom{n}{x}k^x(k-1)^x
+        \left(1-\frac{1}{k}\right)^{s\cdot x} \\
+        &\le \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{s\cdot x} \\
+        &= \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{(4k\log k)x} \\
+        &< \sum_{x=1}^n k^{3x} \left(\frac{1}{e}\right)^{(4\log k)x} \\
+        &= \sum_{x=1}^n k^{3x} \left(\frac{1}{k}\right)^{4 x} \\
+        &\le \sum_{x=1}^n \frac{1}{k} \\
+        &\le 1
+        \end{align*}
+    Thus, for $k\ge n$ there always exists a set of $O(k\log k)$ queries that
+    distinguishes between all possible $n$-vectors from an alphabet of size $k$.
+\end{proof}
 \end{document}
 
 
