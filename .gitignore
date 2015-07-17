@@ -2,4 +2,8 @@
 *.gz
 *.aux
 *.ezdraw
+*.snm
+*.toc
+*.out
+*.nav
 
