@@ -34,24 +34,24 @@
 		\end{enumerate}
     \end{frame}
     
-    \begin{frame}
-    	\frametitle{Minimax Example}
-		\begin{enumerate}[label=\roman*.]
-		\item Hidden Vector: $(3, 5, 0, 0)$
-		\item What to guess? Eliminate as many as possible.
-		\item Simulation [Format: Number Remaining $\rightarrow$ Guess $\rightarrow$
-		(Black Hits, White Hits)]
-			\begin{align*}
-			1296 & \rightarrow \onslide<2->{(0, 0, 1, 1)\rightarrow}
-			\onslide<3->{(0, 2)}\\
-			\onslide<4->{96}
-			\onslide<5->{& \rightarrow (1, 2, 3, 3) \rightarrow (0, 1)\\
-			14 & \rightarrow (4, 1, 0, 4) \rightarrow (1, 0)\\
-			3 & \rightarrow (2, 5, 0, 0) \rightarrow (3, 0)\\
-			1 & \rightarrow (3, 5, 0, 0) \rightarrow (4, 0)}
-			\end{align*}
-		\end{enumerate}
-    \end{frame}
+%    \begin{frame}
+%    	\frametitle{Minimax Example}
+%		\begin{enumerate}[label=\roman*.]
+%		\item Hidden Vector: $(3, 5, 0, 0)$
+%		\item What to guess? Eliminate as many as possible.
+%		\item Simulation [Format: Number Remaining $\rightarrow$ Guess $\rightarrow$
+%		(Black Hits, White Hits)]
+%			\begin{align*}
+%			1296 & \rightarrow \onslide<2->{(0, 0, 1, 1)\rightarrow}
+%			\onslide<3->{(0, 2)}\\
+%			\onslide<4->{96}
+%			\onslide<5->{& \rightarrow (1, 2, 3, 3) \rightarrow (0, 1)\\
+%			14 & \rightarrow (4, 1, 0, 4) \rightarrow (1, 0)\\
+%			3 & \rightarrow (2, 5, 0, 0) \rightarrow (3, 0)\\
+%			1 & \rightarrow (3, 5, 0, 0) \rightarrow (4, 0)}
+%			\end{align*}
+%		\end{enumerate}
+%    \end{frame}
     
     \begin{frame}
     	\frametitle{Generalizations}
@@ -62,37 +62,45 @@
 		\end{enumerate}
     \end{frame}
 
+%    \begin{frame}
+%    	\frametitle{Known Bounds}
+%		\begin{enumerate}[label=\arabic*.]
+%		\item\textit{Mastermind with Repeats:}
+%   		\begin{enumerate}[label=\roman*.]
+%    		\item When $n\le k \le n^2\log\log(n)$, [Chvatal] and [Doerr, et. al.]
+%    			\begin{equation*}
+%    			\frac{n\log(k)}{\log\binom{n+2}{2}}\le f(n, k)\le O(n\log\log(n))
+%    			\end{equation*}
+%    		\item When $k=n^{\alpha}$ for $0<\alpha<1$, [Doerr, et. al.]
+%    			\begin{equation*}
+%    			f(n, k) = \Theta(n)
+%    			\end{equation*}
+%    		\end{enumerate}
+%		\end{enumerate}
+%	\end{frame}
+
     \begin{frame}
     	\frametitle{Known Bounds}
-		\begin{enumerate}[label=\arabic*.]
-		\item\textit{Mastermind with Repeats:}
-    		\begin{enumerate}[label=\roman*.]
-    		\item When $n\le k \le n^2\log\log(n)$, [Chvatal] and [Doerr, et. al.]
-    			\begin{equation*}
-    			\frac{n\log(k)}{\log\binom{n+2}{2}}\le f(n, k)\le O(n\log\log(n))
-    			\end{equation*}
-    		\item When $k=n^{\alpha}$ for $0<\alpha<1$, [Doerr, et. al.]
-    			\begin{equation*}
-    			f(n, k) = \Theta(n)
-    			\end{equation*}
-    		\end{enumerate}
-		\end{enumerate}
-	\end{frame}
-	
-	\begin{frame}
-	\frametitle{Known Bounds (cont.)}
-		\begin{enumerate}[label=\arabic*.]
-		\setcounter{enumi}{1}
-    	\item\textit{Mastermind without Repeats:} 
-    		\begin{enumerate}[label=\roman*.]
-    		\item When $n=k$, we have the permutation game:
-			[Our Result] and [Ouali et. al]
-    			\begin{equation*}
-    			n - \log\log(n) \le f(n, k)\le n\log(n) + O(n)
-    			\end{equation*}
-    		\end{enumerate}
+	\begin{enumerate}[label=\arabic*.]
+	\item Lower Bounds: Try to beat $O(n)$.
+	\item Upper Bounds: Try to achieve/beat $O(n \log k)$
 	\end{enumerate}
     \end{frame}
+	
+%	\begin{frame}
+%	\frametitle{Known Bounds (cont.)}
+%		\begin{enumerate}[label=\arabic*.]
+%		\setcounter{enumi}{1}
+ %   	\item\textit{Mastermind without Repeats:} 
+  %  		\begin{enumerate}[label=\roman*.]
+ %   		\item When $n=k$, we have the permutation game:
+%			[Our Result] and [Ouali et. al]
+ %   			\begin{equation*}
+ %   			n - \log\log(n) \le f(n, k)\le n\log(n) + O(n)
+%    			\end{equation*}
+ %   		\end{enumerate}
+%	\end{enumerate}
+%    \end{frame}
     
     \begin{frame}
     \frametitle{Deriving $n-\log\log n$ Lower Bound}
@@ -138,6 +146,13 @@
 	Use these properties to give lower bound on non-adaptive strategies.
     \end{frame}
     
+    \begin{frame}
+    \frametitle{Non-Adaptive Strategies}
+    	\begin{enumerate}[label=\roman*.]
+		\item Random Guessing
+		\item Evaluate probability of success
+		\end{enumerate}
+    \end{frame}
     
 
 %    \begin{frame}
@@ -155,14 +170,14 @@
 %		\end{enumerate}
 %    \end{frame}
 
-    \begin{frame}
-    \frametitle{Future Topics to Explore}
-    	\begin{enumerate}[label=\roman*.]
-		\item Alternative Queries: Can query any subgraph
-		\item Does our lower bound extend to general $n$ and $k$?
-		\item Non-adaptive strategies: Submit all guesses at beginning
-		\end{enumerate}
-    \end{frame}
+%    \begin{frame}
+%    \frametitle{Future Topics to Explore}
+%    	\begin{enumerate}[label=\roman*.]
+%		\item Alternative Queries: Can query any subgraph
+%		\item Does our lower bound extend to general $n$ and $k$?
+%		\item Non-adaptive strategies: Submit all guesses at beginning
+%		\end{enumerate}
+%    \end{frame}
 \end{document}
 
 
