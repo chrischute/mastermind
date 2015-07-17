@@ -868,7 +868,10 @@ This proof was inspired by [GK00].
 	\end{theorem}
 
 	\begin{proof}
-	As in [GK00], we use the term ``critical pair'' to refer to a comparison between
+	To prove the theorem, we select a set of $4k\log k$ random guesses and show that the with probability $<1$
+	there exists a pair of vectors that are indistinguishable by these guesses. This would imply
+	the existance of a set of guesses that distinguishes between every pair of possible solutions.
+	As in [GK00], we only look at distinguishing between ``critical pairs'', which are
 	two vectors in which we only analyze the spots that differ. For example, the
 	following vectors produce the following critical pair:\\
 		\begin{center}
@@ -894,8 +897,6 @@ This proof was inspired by [GK00].
 			\item\textit{Case 1.} When $x \leq k-3$, we have
             	\begin{align*}
             	\text{Pr}[\text{Eq}(q,v_1) = i & \cap \text{Eq}(q,v_2) = i]\\\\
-            	& = \text{Pr}[\text{Eq}(q,v_2) = i] \cdot
-            	\text{Pr}[\text{Eq}(q,v_1) = i | \text{Eq}(q,v_2) = i]\\\\
             	&= \binom{x}{i}\binom{x-i}{i}\left(\frac{1}{k}\right)^{2i}
 				\left(\frac{k-2}{k}\right)^{x-2i}\\\\
             	&=\frac{x!(k-2)^{x-2i}}{(i!)^2(k^x)(x-2i)!} \\\\
@@ -965,30 +966,40 @@ This proof was inspired by [GK00].
 		with respect to a given query is at most $(1-1/k)^x$.
 		\end{proof}
     
-    Two vectors are distinguised from one another if we've made at least one query
-    for which the vectors received different responses. Thus the probability that
-    there exists a pair of vectors that have not been distinguished from one another
-    is given by the sum over all critical pairs of the probability that two vectors
-    received the same response to all submitted queries. Let $s=4k\log k$ be
-    the number of queries submitted. Then we have
+    Using Lemma 1, we get 
+	\begin{equation*}
+	\text{Pr}[v_1,v_2 \text{ not distinguished by s random queries}] \leq \left(1-\frac{1}{k}\right)^{xs}
+	\end{equation*}
+Now we want to calculate
     	\begin{align*}
 		\text{Pr}[\exists\text{ pair } v_1, v_2 & \text{ not distinguished}]\\
-    	& = \sum_{x=1}^n(\text{\# of critical pairs of size }x)
-		\cdot\text{Pr}[\text{single pair not distinguished}]\\
+	& = \text{Pr}\left[\bigcup_{v_1,v_2 \text{ critical pair}} \textnormal{Eq}(q,v_1) =
+    	\textnormal{Eq}(q,v_2)\right] \\
+	& \le \sum_{v_1,v_2 \text{ critical pair}} \textnormal{Pr}[\textnormal{Eq}(q,v_1) = i
+    	\cap\textnormal{Eq}(q,v_2) = i] 
+	\end{align*}
+By Boole's inequality. \\
+ But for a fixed length $x$, this probability is the same for all critical pairs $(v_1,v_2)$ of length $x$. This
+allows us to rewrite the above sum as
+\begin{equation*}
+    	\sum_{x=1}^n(\text{\# of critical pairs of size }x)
+		\cdot\text{Pr}[\text{single pair of lenteh $x$ not distinguished}].
+\end{equation*}
+So we now use $s = 4k \log k$ queries to bound
+	\begin{align*}
+    	\sum_{x=1}^n&(\text{\# of critical pairs of size }x)
+		\cdot\text{Pr}[\text{single pair of lenteh $x$ not distinguished}]\\
         & = \sum_{x=1}^n \left[\binom{n}{x}k^x(k-1)^x
         \cdot\left(\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
 		\textnormal{Pr}[\textnormal{Eq}(q,v_1) = i
     	\cap\textnormal{Eq}(q,v_2) = i]\right)^s ~\right]\\
-        &\le\sum_{x=1}^n \binom{n}{x}k^x(k-1)^x
-        \left(1-\frac{1}{k}\right)^{s\cdot x} \\
-        &\le \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{s\cdot x} \\
-        &= \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{(4k\log k)x} \\
+        &\le \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{(4k\log k)x} \\
         &< \sum_{x=1}^n k^{3x} \left(\frac{1}{e}\right)^{(4\log k)x} \\
         &= \sum_{x=1}^n k^{3x} \left(\frac{1}{k}\right)^{4 x} \\
         &\le \sum_{x=1}^n \frac{1}{k} \\
-        &\le 1
+        &\le 1.
         \end{align*}
-    Thus, for $k\ge n$ there always exists a set of $O(k\log k)$ queries that
+    So we have $\text{Pr}[\exists\text{ pair } v_1, v_2  \text{ not distinguished}] < 1$. Thus, for $k\ge n$ there always exists a set of $O(k\log k)$ queries that
     distinguishes between all possible $n$-vectors from an alphabet of size $k$.
 \end{proof}
 \end{document}
