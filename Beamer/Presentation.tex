@@ -36,7 +36,7 @@
     	\begin{enumerate}[label=\roman*.]
 		\item At most five turns needed
 		\end{enumerate}
-		\begin{tcolorbox}[colback=green!5,colframe=green!40!black,title=Minimax]
+%		\begin{tcolorbox}[colback=green!5,colframe=green!40!black,title=Minimax]
 		For each possible guess
 			\begin{enumerate}[label=]
 			\item For each possible response to that guess
@@ -46,7 +46,7 @@
 			\item Let \textit{score} be max. number solutions remaining
 			\end{enumerate}
 		Make guess with minimum score
-		\end{tcolorbox}
+%		\end{tcolorbox}
     \end{frame}
  
     \begin{frame}
@@ -58,6 +58,27 @@
 		\end{enumerate}
     \end{frame}
     
+    \begin{frame}
+    \frametitle{Trivial Lower Bound}
+    \begin{enumerate}[label=\arabic*.]
+	\item One set of responses per solution
+	\item \# of solutions = $k^n$
+	\item $\binom{n+2}{2} \approx n^2$ responses per turn \\
+	\onslide<2->{$\Rightarrow \binom{n+2}{2}^s \geq k^n$}
+    \end{enumerate}
+    \end{frame}
+
+    \begin{frame}
+    \frametitle{(Somewhat) Trivial Upper Bound}
+    \begin{enumerate}[label=\arabic*.]
+	\item Represent guesses and solutions as matrices ($Q_{ij} = 1$ iff the i-th spot is the j-th color)
+	\item $Q_{ij} \in \mathbb R^{nk}$
+	\item \# of black hits of $Q$ with hidden matrix $X$ is  $Q\cdot X$.
+	\item Dot products with basis $\Rightarrow$ orthogonal basis \\
+	$\Rightarrow$ Projections onto orthogonal basis $\Rightarrow$ X
+    \end{enumerate}
+    \end{frame}
+
     \begin{frame}
     \frametitle{Coin-Weighing Problem}
     [Grebinski \& Kucherov, 2000], [Bshouty, 2009]
@@ -107,6 +128,15 @@
 		\exists \text{ a winning } & \text{set of $s$ guesses}
 		\end{align*}
     \end{frame}
+
+%    \begin{frame}
+%    \frametitle{Future Topics to Explore}
+%    \begin{enumerate}[label=\arabic*.]
+%	\item $k>n$: no tight bounds
+%	\item Permutation game algorithms
+%	
+%    \end{enumerate}
+%    \end{frame}
 
 \end{document}
 
