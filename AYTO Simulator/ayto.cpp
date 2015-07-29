@@ -13,7 +13,7 @@
 
 #define TEN_FACT (3628800)
 #define CHUNK_FRAC (8)
-/* #define DEBUG (0) */
+#define DEBUG (0)
 
 using std::cout;
 using std::cin;
@@ -33,7 +33,8 @@ typedef struct scoreargs Scoreargs;
 struct scoreargs {
 	vector<string> *chunk;
 	vector<string> *perms;
-	vector<pair<string, int> > *candidates;
+	pair<string, int> candidates[CHUNK_FRAC];
+	int thread_id;
 };
 
 int evaluate(const string &sol, const string &query);
@@ -44,7 +45,6 @@ void *get_score(void *argstruct);
 string get_worst_sequence(int sz);
 void sequence_print(string s);
 void make_chunks(vector<string> &orig, vector<vector<string> > &chunks, int n);
-bool pcomp(pair<string, int> &p1, pair<string, int> &p2);
 
 vector<string> ORIGPERMS;
 
@@ -242,16 +242,15 @@ string guess_pm(vector<string> &possible_perms, vector<string> &guessed, int tur
 	} else {
 		// run minimax with multithreading to get next guess
 		pthread_t *jobs = (pthread_t *) malloc(sizeof(pthread_t) * CHUNK_FRAC);
-		vector<pair<string, int> > candidates;
-		vector<vector<string> > chunks;
 		Scoreargs *s = (Scoreargs *) malloc(sizeof(Scoreargs));
-
+		vector<vector<string> > chunks;
 		s->perms = &possible_perms;
-		s->candidates = &candidates;
+		
 		make_chunks(ORIGPERMS, chunks, CHUNK_FRAC);
 
 		for (int i = 0; i < CHUNK_FRAC; ++i) {
 			s->chunk = &(chunks[i]);
+			s->thread_id = i;
 			tflag = pthread_create(&(jobs[i]), NULL, get_score, (void *) s);
 			assert(tflag == 0);
 		}
@@ -265,22 +264,24 @@ string guess_pm(vector<string> &possible_perms, vector<string> &guessed, int tur
 		printf("jobs is at %p\n", jobs);
 #endif
 
-		free(s);
-		free(jobs);
 
+		// get minimum score from candidates
 		pair<string, int> low_score;
-		low_score = *min_element(candidates.begin(), candidates.end(), pcomp);
+		low_score.second = possible_perms.size();
+		for (int i = 0; i < CHUNK_FRAC; i++) {
+			if (s->candidates[i].second < low_score.second) {
+				low_score = s->candidates[i];
+			}
+		}
 		next_guess = low_score.first;
+
+			free(s);
+			free(jobs);
 	}
 
 	guessed.push_back(next_guess);
 
 	return next_guess;
-}
-
-bool pcomp(pair<string, int> &p1, pair<string, int> &p2)
-{
-	return p1.second < p2.second;
 }
 
 // make_chunks:  return pointers to n (nearly) equally sized vectors
@@ -316,7 +317,8 @@ void *get_score(void *argstruct)
 	Scoreargs *args = (Scoreargs *) argstruct;
 	vector<string> *chunk = args->chunk;
 	vector<string> *perms = args->perms;
-	vector<pair<string, int> > *candidates = args->candidates;
+	pair<string, int> *cd = args->candidates;
+	int id = args->thread_id;
 
 	int sz = (*perms)[0].size();
 	int score;
@@ -340,7 +342,12 @@ void *get_score(void *argstruct)
 		}
 	}
 
-	candidates->push_back(best_guess);
+#ifdef DEBUG
+	cout << "Sample from chunks is " << (*chunk)[0] << endl;
+	cout << "Adding candidate pair<" << best_guess.first << ", "
+		 << best_guess.second << "> into cd[" << id << "]" << endl;
+#endif
+	cd[id] = best_guess;
 
 	return NULL;
 }
