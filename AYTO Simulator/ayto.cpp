@@ -33,7 +33,7 @@ typedef struct scoreargs Scoreargs;
 struct scoreargs {
 	vector<string> *chunk;
 	vector<string> *perms;
-	pair<string, int> candidates[CHUNK_FRAC];
+	pair<string, int> *candidates;
 	int thread_id;
 };
 
@@ -241,42 +241,50 @@ string guess_pm(vector<string> &possible_perms, vector<string> &guessed, int tur
 			return possible_perms[0];
 	} else {
 		// run minimax with multithreading to get next guess
-		pthread_t *jobs = (pthread_t *) malloc(sizeof(pthread_t) * CHUNK_FRAC);
-		Scoreargs *s = (Scoreargs *) malloc(sizeof(Scoreargs));
+		// (i) allocate components of all scoreargs structs, put in array
 		vector<vector<string> > chunks;
-		s->perms = &possible_perms;
-		
 		make_chunks(ORIGPERMS, chunks, CHUNK_FRAC);
-
+		pair<string, int> *cd = (pair<string, int> *) malloc(sizeof(pair<string, int>) * CHUNK_FRAC);
+		pthread_t *jobs = (pthread_t *) malloc(sizeof(pthread_t) * CHUNK_FRAC);
+		Scoreargs **args = (Scoreargs **) malloc(sizeof(Scoreargs *));
+		assert(args);
 		for (int i = 0; i < CHUNK_FRAC; ++i) {
-			s->chunk = &(chunks[i]);
-			s->thread_id = i;
-			tflag = pthread_create(&(jobs[i]), NULL, get_score, (void *) s);
+			args[i] = (Scoreargs *) malloc(sizeof(Scoreargs));
+			assert(args[i]);
+			args[i]->thread_id = i;
+			args[i]->chunk = &(chunks[i]);
+			args[i]->perms = &possible_perms;
+			args[i]->candidates = cd;
+		}
+		
+		// (ii) start all threads evaluating scores
+		for (int i = 0; i < CHUNK_FRAC; ++i) {
+			tflag = pthread_create(&(jobs[i]), NULL,
+								   get_score, (void *) args[i]);
 			assert(tflag == 0);
 		}
+
+		// (iii) wait for all threads to finish
 		for (int i = 0; i < CHUNK_FRAC; ++i) {
 			pthread_join(jobs[i], NULL);
 		}
 
-#ifdef DEBUG
-		printf("MALLOC INFORMATION:\n");
-		printf("s is at %p\n", s);
-		printf("jobs is at %p\n", jobs);
-#endif
-
-
-		// get minimum score from candidates
+		// (iv) get minimum score from candidates
 		pair<string, int> low_score;
 		low_score.second = possible_perms.size();
 		for (int i = 0; i < CHUNK_FRAC; i++) {
-			if (s->candidates[i].second < low_score.second) {
-				low_score = s->candidates[i];
+			if (cd[i].second < low_score.second) {
+				low_score = cd[i];
 			}
 		}
 		next_guess = low_score.first;
 
-			free(s);
-			free(jobs);
+		// (v) clean up
+		free(cd);
+		free(jobs);
+		for (int i = 0; i < CHUNK_FRAC; i++)
+			free(args[i]);
+		free(args);
 	}
 
 	guessed.push_back(next_guess);
