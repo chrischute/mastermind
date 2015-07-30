@@ -47,7 +47,7 @@ int wc_response(string &guess, vector<string> &perms);
 bool prcmp(pair<int, int> x, pair<int, int> y);
 string get_worst_sequence(int sz);
 void sequence_print(string s);
-struct args *create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id);
+struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id);
 
 vector<string> ORIGPERMS;
 
@@ -252,11 +252,11 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 		pair<string, int> candidates[NUM_CHUNKS];
 		vector<thread> jobs;
 		make_chunks(ORIGPERMS, chunks, NUM_CHUNKS);
-		struct args *args = create_args(possible_perms, candidates, chunks[0], guessed, 0);
+		struct args **args = create_args(possible_perms, candidates, chunks[0], guessed, 0);
 		for (int j = 0; j < NUM_CHUNKS; j++) {
-			args->chunk = &(chunks[j]);
-			args->thread_id = j;
-			jobs.push_back(thread(get_score, args));
+			args[j]->chunk = &(chunks[j]);
+			args[j]->thread_id = j;
+			jobs.push_back(thread(get_score, args[j]));
 		}
 		for (int j = 0; j < NUM_CHUNKS; j++) {
 			jobs[j].join();
@@ -264,6 +264,9 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 		
 		next_guess.first = min_candidate(candidates, NUM_CHUNKS);
 		next_guess.second = wc_response(next_guess.first, possible_perms);
+		
+		for (int k = 0; k < NUM_CHUNKS; k++)
+			free(args[k]);
 		free(args);
 	}
 
@@ -272,14 +275,19 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 	return next_guess;
 }
 
-struct args *create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id)
+struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id)
 {
-	struct args *args = (struct args *) malloc(sizeof(struct args));
-	args->perms = &perms;
-	args->cd = &cd;
-	args->chunk = &chunk;
-	args->guessed = &guessed;
-	args->thread_id = thread_id;
+	struct args **args = (struct args **) malloc(sizeof(struct args*)*NUM_CHUNKS);
+	assert(args);
+	for (int i = 0; i < NUM_CHUNKS; i++){
+		args[i] = (struct args *) malloc(sizeof(struct args));
+		assert(args[i]);
+		args[i]->perms = &perms;
+		args[i]->cd = &cd;
+		args[i]->chunk = &chunk;
+		args[i]->guessed = &guessed;
+		args[i]->thread_id = thread_id;
+	}
 
 	return args;
 }
