@@ -12,8 +12,7 @@
 #include <cmath>
 
 #define TEN_FACT (3628800)
-#define NUM_CHUNKS (4)
-// #define DEBUG (0)
+#define NUM_CHUNKS (8)
 
 using std::cout;
 using std::cin;
@@ -34,7 +33,6 @@ struct args {
 	vector<string> *perms;
 	vector<string> *chunk;
 	pair<string, int> *cd;
-	vector<string> *guessed;
 	int thread_id;
 };
 
@@ -49,7 +47,7 @@ int wc_response(string &guess, vector<string> &perms);
 bool prcmp(pair<int, int> x, pair<int, int> y);
 string get_worst_sequence(int sz);
 void sequence_print(string s);
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id);
+struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, int thread_id);
 
 vector<string> ORIGPERMS;
 
@@ -254,13 +252,8 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 		pair<string, int> candidates[NUM_CHUNKS];
 		vector<thread> jobs;
 		make_chunks(ORIGPERMS, chunks, NUM_CHUNKS);
-		struct args **args = create_args(possible_perms, candidates, chunks[0], guessed, 0);
-#ifdef DEBUG
-		printf("LOCATIONS WITHIN GUESS_PM():\n");
-		printf("possible_perms is at %p\ncandidates is at %p\n", &possible_perms, candidates);
-		printf("chunks is at %p\nchunk[0] is at %p\n", &chunks, &(chunks[0]));
-		printf("guessed is at %p\n", &guessed);
-#endif
+		struct args **args = create_args(possible_perms, candidates, chunks[0], 0);
+
 		for (int j = 0; j < NUM_CHUNKS; j++) {
 			args[j]->chunk = &(chunks[j]);
 			args[j]->thread_id = j;
@@ -283,7 +276,7 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 	return next_guess;
 }
 
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id)
+struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, int thread_id)
 {
 	struct args **args = (struct args **) malloc(sizeof(struct args*)*NUM_CHUNKS);
 	assert(args);
@@ -292,7 +285,6 @@ struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<s
 		assert(args[i]);
 		args[i]->perms = &perms;
 		args[i]->cd = cd;
-		args[i]->guessed = &guessed;
 	}
 
 	return args;
@@ -347,30 +339,18 @@ void get_score(struct args *args)
 {
 	// parse the args struct
 	vector<string> &chunk = *(args->chunk);
-	vector<string> &guessed = *(args->guessed);
 	vector<string> &perms = *(args->perms);
 	pair<string, int> *cd = args->cd;
 	int thread_id = args->thread_id;
 
-#ifdef DEBUG
-	/* TEST CODE */
-	cout << "Running thread with ID #" << thread_id << endl;
-	printf("LOCATIONS WITHIN GET_SCORE():\n");
-	printf("possible_perms is at %p\ncandidates is at %p\n", &perms, cd);
-	printf("chunk is at %p\n", &chunk);
-	printf("guessed is at %p\n", &guessed);
-#endif
-
 	typedef vector<string>::const_iterator vec_iter;
 	int sz = perms[0].size();
-	vector<int> matches(sz + 1, 0);
 
 	pair<string, int> best_guess;
 	best_guess.second = perms.size();
 	int wc_num_remaining;
 	for (vec_iter s = chunk.begin(); s != chunk.end(); ++s) {
-		if (find(guessed.begin(), guessed.end(), *s) != guessed.end())
-			continue;
+		vector<int> matches(sz + 1, 0);
 		for (vec_iter p = perms.begin(); p != perms.end(); ++p) {
 			++matches[evaluate(*s, *p)];
 		}
