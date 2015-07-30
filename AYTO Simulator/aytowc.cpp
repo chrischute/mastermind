@@ -1,19 +1,14 @@
 /* Minimax Algorithm for Are You The One? TV Show */
-/* multithreaded mini-max solver */
 
 #include <iostream>
 #include <cstdlib>
-#include <cassert>
 #include <algorithm>
 #include <string>
 #include <vector>
 #include <map>
-#include <thread>
 #include <cmath>
 
 #define TEN_FACT (3628800)
-#define NUM_CHUNKS (4)
-// #define DEBUG (0)
 
 using std::cout;
 using std::cin;
@@ -28,28 +23,16 @@ using std::atoi;
 using std::next_permutation;
 using std::max_element;
 using std::reverse;
-using std::thread;
-
-struct args {
-	vector<string> *perms;
-	vector<string> *chunk;
-	pair<string, int> *cd;
-	vector<string> *guessed;
-	int thread_id;
-};
 
 int evaluate(const string &sol, const string &query);
 vector<string> remove_perms(vector<string> &perms, int eval, string &query);
 pair<string, int> guess_tb(vector<string> &perms, vector<string> &guessed_tb, int turn);
 pair<string, int> guess_pm(vector<string> &perms, vector<string> &guessed, int turn);
-void make_chunks(vector<string> &orig, vector<vector<string> > &chunks, int n);
-string min_candidate(pair<string, int> *candidates, int n);
-void get_score(struct args *args);
+int get_score(const string &s, vector<string> &perms);
 int wc_response(string &guess, vector<string> &perms);
 bool prcmp(pair<int, int> x, pair<int, int> y);
 string get_worst_sequence(int sz);
 void sequence_print(string s);
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id);
 
 vector<string> ORIGPERMS;
 
@@ -230,7 +213,6 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 {
 	static const string digits = "0123456789";
 	pair<string, int> next_guess;
-	vector<vector<string> > chunks;
 	int sz = possible_perms[0].size();
 
 	// on first turn, we guess "0, 1, ..., n-1" if truth booth was correct
@@ -250,32 +232,22 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 		next_guess.first = possible_perms[0];
 		next_guess.second = possible_perms[0].size();
 	} else {
-		// run multi-threaded minimax to get next guess
-		pair<string, int> candidates[NUM_CHUNKS];
-		vector<thread> jobs;
-		make_chunks(ORIGPERMS, chunks, NUM_CHUNKS);
-		struct args **args = create_args(possible_perms, candidates, chunks[0], guessed, 0);
-#ifdef DEBUG
-		printf("LOCATIONS WITHIN GUESS_PM():\n");
-		printf("possible_perms is at %p\ncandidates is at %p\n", &possible_perms, candidates);
-		printf("chunks is at %p\nchunk[0] is at %p\n", &chunks, &(chunks[0]));
-		printf("guessed is at %p\n", &guessed);
-#endif
-		for (int j = 0; j < NUM_CHUNKS; j++) {
-			args[j]->chunk = &(chunks[j]);
-			args[j]->thread_id = j;
-			jobs.push_back(thread(get_score, args[j]));
+		// run minimax to get next guess
+		int best_score = TEN_FACT;
+		int score;
+		for (vector<string>::iterator i = ORIGPERMS.begin();
+			 i != ORIGPERMS.end(); ++i) {
+			if (find(guessed.begin(), guessed.end(), *i)
+				== guessed.end()) {
+				// hasn't already been guessed
+				if ((score = get_score(*i, possible_perms)) < best_score) {
+					best_score = score;
+					next_guess.first = *i;
+				}
+			}
 		}
-		for (int j = 0; j < NUM_CHUNKS; j++) {
-			jobs[j].join();
-		}
-		
-		next_guess.first = min_candidate(candidates, NUM_CHUNKS);
+
 		next_guess.second = wc_response(next_guess.first, possible_perms);
-		
-		for (int j = 0; j < NUM_CHUNKS; j++)
-			free(args[j]);
-		free(args);
 	}
 
 	guessed.push_back(next_guess.first);
@@ -283,107 +255,19 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 	return next_guess;
 }
 
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id)
-{
-	struct args **args = (struct args **) malloc(sizeof(struct args*)*NUM_CHUNKS);
-	assert(args);
-	for (int i = 0; i < NUM_CHUNKS; i++) {
-		args[i] = (struct args *) malloc(sizeof(struct args));
-		assert(args[i]);
-		args[i]->perms = &perms;
-		args[i]->cd = cd;
-		args[i]->guessed = &guessed;
-	}
-
-	return args;
-}
-
-// make_chunks:  return pointers to n (nearly) equally sized vectors
-//                from the original vector
-void make_chunks(vector<string> &orig, vector<vector<string> > &chunks, int n)
-{
-    int sz = orig.size();
-    int chunk_sz = sz / n;
-    int n_with_extra = sz % n;
-    vector<string>::iterator b = orig.begin();
-    vector<string>::iterator e;
-
-    for (int i = 0; i < n; i++) {
-        int m = chunk_sz;    // size of this chunk
-        if (n_with_extra) {
-            ++m;
-            --n_with_extra;
-        }
-        e = b + m;
-        vector<string> subvec(b, e);
-        chunks.push_back(subvec);
-        b = e;
-    }
-}
-
-// min_candidate:  string with min int from array of pair<string, ints>
-string min_candidate(pair<string, int> *candidates, int n)
-{
-	int i, minsofar;
-	string minstring;
-
-	minstring = candidates[0].first;
-	minsofar = candidates[0].second;
-	for (i = 1; i < n; ++i) {
-		if (candidates[i].second < minsofar) {
-			minsofar = candidates[i].second;
-			minstring = candidates[i].first;
-		}
-	}
-
-	return minstring;
-}
-
 // get_score:  find the maximum number of remaining solutions over all
 //             possible responses to the query s
-//             this version takes a chunk and finds the guess with lowest score
-//             from that chunk
-void get_score(struct args *args)
+int get_score(const string &s, vector<string> &perms)
 {
-	// parse the args struct
-	vector<string> &chunk = *(args->chunk);
-	vector<string> &guessed = *(args->guessed);
-	vector<string> &perms = *(args->perms);
-	pair<string, int> *cd = args->cd;
-	int thread_id = args->thread_id;
-
-#ifdef DEBUG
-	/* TEST CODE */
-	cout << "Running thread with ID #" << thread_id << endl;
-	printf("LOCATIONS WITHIN GET_SCORE():\n");
-	printf("possible_perms is at %p\ncandidates is at %p\n", &perms, cd);
-	printf("chunk is at %p\n", &chunk);
-	printf("guessed is at %p\n", &guessed);
-#endif
-
-	typedef vector<string>::const_iterator vec_iter;
 	int sz = perms[0].size();
-	vector<int> matches(sz + 1, 0);
+	vector<int> matches_eval(sz + 1, 0);
 
-	pair<string, int> best_guess;
-	best_guess.second = perms.size();
-	int wc_num_remaining;
-	for (vec_iter s = chunk.begin(); s != chunk.end(); ++s) {
-		if (find(guessed.begin(), guessed.end(), *s) != guessed.end())
-			continue;
-		for (vec_iter p = perms.begin(); p != perms.end(); ++p) {
-			++matches[evaluate(*s, *p)];
-		}
-		wc_num_remaining = *max_element(matches.begin(), matches.end());
-		if (wc_num_remaining < best_guess.second) {
-			best_guess.first = *s;
-			best_guess.second = wc_num_remaining;
-		}
+	// worst-case evaluation will be index m giving matches_eval[m] = max
+	for (vector<string>::iterator p = perms.begin(); p != perms.end(); ++p) {
+		++matches_eval[evaluate(s, *p)];
 	}
 
-	cd[thread_id] = best_guess;
-
-	return;
+	return *max_element(matches_eval.begin(), matches_eval.end());
 }
 
 // wc_response:  the response to guess that eliminates the least solutions
