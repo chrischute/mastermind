@@ -77,13 +77,39 @@
     \begin{frame}
     \frametitle{(Somewhat) Trivial Upper Bound}
     \begin{enumerate}[label=\arabic*.]
-	\item Represent guesses and solutions as matrices ($Q_{ij} = 1$ iff the i-th spot is the j-th color)
-	\item $Q_{ij} \in \mathbb R^{nk}$
-	\item \# of black hits of $Q$ with hidden matrix $X$ is  $Q\cdot X$.
-	\item Dot products with basis $\Rightarrow$ orthogonal basis \\
-	$\Rightarrow$ Projections onto orthogonal basis $\Rightarrow$ X
+	\item Represent guesses and solutions as matrices ($Q_{ij} = 1$ iff the i-th spot is the j-th color) \\
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Example]
+	The guess $(1,1,3)$ would become:
+	\[ \left( \begin{array}{ccc}
+	1 & 0 & 0 \\
+	1 & 0 & 0 \\
+	0 & 0 & 1 \end{array} \right)\]
+	\end{tcolorbox}
+	\onslide<2->{\item $Q_{ij} \in \mathbb R^{nk}$}
+	\onslide<3->{\item \# of black hits of $Q$ with hidden matrix $X$ is  $Q\cdot X$.}
+	\onslide<4->{\item Guess a basis of span of all such matrices ($\le nk$ guesses)}
+	\onslide<5->{\item Dot products with basis $\Rightarrow$ Uniquely determine $ X$} \vspace{10px}
     \end{enumerate}
     \end{frame}
+
+    \begin{frame}
+    \frametitle{(Somewhat) Trivial Upper Bound}
+	 \begin{enumerate}[label=\arabic*.]
+	\item Represent guesses and solutions as matrices ($Q_{ij} = 1$ iff the i-th spot is the j-th color) \\
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Example]
+	The guess $(1,1,3)$ would become:
+	\[ \left( \begin{array}{ccc}
+	1 & 0 & 0 \\
+	1 & 0 & 0 \\
+	0 & 0 & 1 \end{array} \right)\]
+	\end{tcolorbox}
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
+	There exists a set of at most $nk$ guesses such that any hidden vector is uniquely determined by the responses
+	to those guesses.
+	\end{tcolorbox} 
+	\end{enumerate}
+    \end{frame}
+
 
 %    \begin{frame}
  %   \frametitle{Coin-Weighing Problem}
@@ -127,10 +153,31 @@
 			\end{equation*}
 	\end{tcolorbox}
     \end{frame}
-    
+ 
+    \begin{frame}
+    \frametitle{Entropy Method}
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma]
+	A single turn in a non-adaptive strategy has $<$ $4$ bits of entropy.
+	\end{tcolorbox}
+	\onslide<2->
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma]
+	The number of bits of entropy in any winning strategy is exactly 
+	\begin{equation*}
+	\log_2 \left(\frac{k!}{(k-n)!}\right).
+	\end{equation*}
+	\end{tcolorbox}
+	\onslide<3->
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
+	The number of queries submitted by any winning non-adaptive strategy is at least
+	\begin{equation*}
+	\frac{1}{4}\log_2 \left(\frac{k!}{(k-n)!}\right).
+	\end{equation*}
+	\end{tcolorbox}
+    \end{frame}
+   
     \begin{frame}
     \frametitle{Probabilistic Method}
-    Non-Adaptive Game: Set of queries $Q=\{q_1, q_2, \ldots, q_s\}$.
+    Choose a random set of queries $Q=\{q_1, q_2, \ldots, q_s\}$.
     	\begin{align*}
 		\mathbb{P}[Q\text{ is a win} & \text{ning set of guesses }] > 0 \\
 		& \Downarrow \\
