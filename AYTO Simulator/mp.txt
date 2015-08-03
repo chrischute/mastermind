@@ -1,0 +1,66 @@
+Running AYTO Simulation with Worst-Case Responses
+**** Round 1A ****
+Num. Possibilities: 5040
+Guess: (0, 0)
+Evaluation: 0
+Round 1B
+Num. Possibilities: 4320
+Guess: (1, 0, 2, 3, 4, 5, 6)
+Evaluation: 1
+**** Round 2A ****
+Num. Possibilities: 1590
+Guess: (0, 1)
+Evaluation: 0
+Round 2B
+Num. Possibilities: 1325
+Guess: (3, 4, 0, 1, 2, 5, 6)
+Evaluation: 1
+**** Round 3A ****
+Num. Possibilities: 475
+Guess: (0, 3)
+Evaluation: 0
+Round 3B
+Num. Possibilities: 376
+Guess: (5, 1, 3, 4, 0, 2, 6)
+Evaluation: 1
+**** Round 4A ****
+Num. Possibilities: 131
+Guess: (0, 5)
+Evaluation: 0
+Round 4B
+Num. Possibilities: 93
+Guess: (3, 4, 0, 1, 2, 6, 5)
+Evaluation: 0
+**** Round 5A ****
+Num. Possibilities: 39
+Guess: (0, 4)
+Evaluation: 0
+Round 5B
+Num. Possibilities: 22
+Guess: (1, 5, 3, 4, 0, 2, 6)
+Evaluation: 1
+**** Round 6A ****
+Num. Possibilities: 14
+Guess: (2, 1)
+Evaluation: 0
+Round 6B
+Num. Possibilities: 8
+Guess: (1, 5, 3, 4, 0, 6, 2)
+Evaluation: 1
+**** Round 7A ****
+Num. Possibilities: 5
+Guess: (0, 2)
+Evaluation: 1
+Round 7B
+Num. Possibilities: 3
+Guess: (1, 5, 3, 4, 2, 0, 6)
+Evaluation: 1
+**** Round 8A ****
+Num. Possibilities: 2
+Guess: (1, 3)
+Evaluation: 1
+Round 8B
+Num. Possibilities: 1
+Guess: (2, 3, 6, 4, 1, 5, 0)
+Evaluation: 7
+Found (2, 3, 6, 4, 1, 5, 0) in 8 guesses.

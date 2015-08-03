@@ -1,7 +1,11 @@
 CC=g++
 CFLAGS=-lpthread -std=c++11
 
-all: mpayto
+all: ayto
+
+# polished multi-threaded version
+ayto: ayto.cpp
+	$(CC) $(CFLAGS) -o $@ $^
 
 # multi-threaded worst-case evaluation solver
 mpayto: mpayto.cpp
@@ -11,9 +15,5 @@ mpayto: mpayto.cpp
 aytowc: aytowc.cpp
 	$(CC) $(CFLAGS) -o $@ $^
 
-# original ayto solver, buggy
-ayto: ayto.cpp
-	$(CC) $(CFLAGS) -o $@ $^
-
 clean:
-	$(RM) a.out ayto aytowc *~ *#
+	$(RM) a.out ayto aytowc mpayto *~ *#

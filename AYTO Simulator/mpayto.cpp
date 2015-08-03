@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cassert>
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -11,7 +12,7 @@
 #include <cmath>
 
 #define TEN_FACT (3628800)
-#define NUM_CHUNKS (4)
+#define NUM_CHUNKS (8)
 
 using std::cout;
 using std::cin;
@@ -31,8 +32,7 @@ using std::thread;
 struct args {
 	vector<string> *perms;
 	vector<string> *chunk;
-	pair<string, int> **cd;
-	vector<string> *guessed;
+	pair<string, int> *cd;
 	int thread_id;
 };
 
@@ -47,7 +47,7 @@ int wc_response(string &guess, vector<string> &perms);
 bool prcmp(pair<int, int> x, pair<int, int> y);
 string get_worst_sequence(int sz);
 void sequence_print(string s);
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id);
+struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, int thread_id);
 
 vector<string> ORIGPERMS;
 
@@ -252,7 +252,8 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 		pair<string, int> candidates[NUM_CHUNKS];
 		vector<thread> jobs;
 		make_chunks(ORIGPERMS, chunks, NUM_CHUNKS);
-		struct args **args = create_args(possible_perms, candidates, chunks[0], guessed, 0);
+		struct args **args = create_args(possible_perms, candidates, chunks[0], 0);
+
 		for (int j = 0; j < NUM_CHUNKS; j++) {
 			args[j]->chunk = &(chunks[j]);
 			args[j]->thread_id = j;
@@ -265,8 +266,8 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 		next_guess.first = min_candidate(candidates, NUM_CHUNKS);
 		next_guess.second = wc_response(next_guess.first, possible_perms);
 		
-		for (int k = 0; k < NUM_CHUNKS; k++)
-			free(args[k]);
+		for (int j = 0; j < NUM_CHUNKS; j++)
+			free(args[j]);
 		free(args);
 	}
 
@@ -275,18 +276,15 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 	return next_guess;
 }
 
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, vector<string> &guessed, int thread_id)
+struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, int thread_id)
 {
 	struct args **args = (struct args **) malloc(sizeof(struct args*)*NUM_CHUNKS);
 	assert(args);
-	for (int i = 0; i < NUM_CHUNKS; i++){
+	for (int i = 0; i < NUM_CHUNKS; i++) {
 		args[i] = (struct args *) malloc(sizeof(struct args));
 		assert(args[i]);
 		args[i]->perms = &perms;
-		args[i]->cd = &cd;
-		args[i]->chunk = &chunk;
-		args[i]->guessed = &guessed;
-		args[i]->thread_id = thread_id;
+		args[i]->cd = cd;
 	}
 
 	return args;
@@ -341,21 +339,18 @@ void get_score(struct args *args)
 {
 	// parse the args struct
 	vector<string> &chunk = *(args->chunk);
-	vector<string> &guessed = *(args->guessed);
 	vector<string> &perms = *(args->perms);
-	pair<string, int> *cd = *(args->cd);
+	pair<string, int> *cd = args->cd;
 	int thread_id = args->thread_id;
 
 	typedef vector<string>::const_iterator vec_iter;
 	int sz = perms[0].size();
-	vector<int> matches(sz + 1, 0);
 
 	pair<string, int> best_guess;
 	best_guess.second = perms.size();
 	int wc_num_remaining;
 	for (vec_iter s = chunk.begin(); s != chunk.end(); ++s) {
-		if (find(guessed.begin(), guessed.end(), *s) != guessed.end())
-			continue;
+		vector<int> matches(sz + 1, 0);
 		for (vec_iter p = perms.begin(); p != perms.end(); ++p) {
 			++matches[evaluate(*s, *p)];
 		}

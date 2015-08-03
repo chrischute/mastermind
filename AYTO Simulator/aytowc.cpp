@@ -1,19 +1,14 @@
-/* Multithreaded Mini-max Solver for MTV's Are You The One? */
+/* Minimax Algorithm for Are You The One? TV Show */
 
 #include <iostream>
 #include <cstdlib>
-#include <ctime>
-#include <cassert>
 #include <algorithm>
-#include <numeric>
 #include <string>
 #include <vector>
 #include <map>
-#include <thread>
 #include <cmath>
 
 #define TEN_FACT (3628800)
-#define NUM_CHUNKS (8)
 
 using std::cout;
 using std::cin;
@@ -27,43 +22,26 @@ using std::abs;
 using std::atoi;
 using std::next_permutation;
 using std::max_element;
-using std::accumulate;
 using std::reverse;
-using std::thread;
 
-struct args {
-	vector<string> *perms;
-	vector<string> *chunk;
-	pair<string, int> *cd;
-	int thread_id;
-};
-
-void simulate_game(const string &hidden, map<string, int> &turns_taken,
-				   bool running_all);
-bool picmp(const pair<string, int> &p1, const pair<string, int> &p2);
-double map_avg(const map<string, int> &mp);
-int nrand(int n);
 int evaluate(const string &sol, const string &query);
 vector<string> remove_perms(vector<string> &perms, int eval, string &query);
 pair<string, int> guess_tb(vector<string> &perms, vector<string> &guessed_tb, int turn);
 pair<string, int> guess_pm(vector<string> &perms, vector<string> &guessed, int turn);
-void make_chunks(vector<string> &orig, vector<vector<string> > &chunks, int n);
-string min_candidate(pair<string, int> *candidates, int n);
-void get_score(struct args *args);
+int get_score(const string &s, vector<string> &perms);
 int wc_response(string &guess, vector<string> &perms);
 bool prcmp(pair<int, int> x, pair<int, int> y);
+string get_worst_sequence(int sz);
 void sequence_print(string s);
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, int thread_id);
-
 
 vector<string> ORIGPERMS;
 
 int main(int argc, char **argv)
 {
 	int sz;
-	map<string, int> turns_taken;
 	const string digits = "0123456789";
-	bool running_all = false;
+	vector<string> possible_perms;
+	bool feed = false;
 
 	if (argc != 2) {
 		cout << "usage: 'ayto npairs'" << endl;
@@ -71,7 +49,7 @@ int main(int argc, char **argv)
 	} else {
 		if ((sz = atoi(argv[1])) < 0) {
 			sz = -sz;
-			running_all = true;
+			feed = true;
 		}
 		if (sz < 3 || sz > 10) {
 			cout << "usage: 'ayto npairs' where 3 <= npairs <= 10" << endl;;
@@ -84,116 +62,59 @@ int main(int argc, char **argv)
 	do {
 		ORIGPERMS.push_back(range);
 	} while (next_permutation(range.begin(), range.end()));
+	possible_perms = ORIGPERMS;
 
-	if (running_all) {
-		for (vector<string>::const_iterator it = ORIGPERMS.begin();
-			 it != ORIGPERMS.end(); ++it) {
-			simulate_game(*it, turns_taken, running_all);
+	// run the game
+	string hidden = get_worst_sequence(sz);
+	if (feed) {
+		cout << "Enter your hidden sequence (contiguous, no spaces): " << endl;
+		cin >> hidden;
+		if (hidden.size() > 10) {
+			cout << "Invalid sequence" << endl;
+			return 1;
 		}
-		cout << "***** SUMMARY *****\n";
-		cout << "Avg. Turns: " << map_avg(turns_taken) << endl;
-		pair<string, int> wc = *max_element(turns_taken.begin(),
-											turns_taken.end(), picmp);
-		cout << "Worst Hidden Vector: ";
-		sequence_print(wc.first);
-		cout << " in " << wc.second << " turns." << endl;
-	} else {
-		string hidden = ORIGPERMS[nrand(ORIGPERMS.size())];
-		simulate_game(hidden, turns_taken, running_all);
 	}
-
-	return 0;
-}
-
-// simulate_game:  run a single round of AYTO on hidden vector
-void simulate_game(const string &hidden, map<string, int> &turns_taken,
-				   bool running_all)
-{
-	vector<string> possible_perms = ORIGPERMS;
 	pair<string, int> tbguess;
 	pair<string, int> pmguess;
 	vector<string> guessed;
 	vector<string> guessed_tb;
 	int e;
-	int sz = hidden.size();
 
-	if (!running_all) {
-		cout << "Running AYTO Simulator on Hidden Vector: ";
-		sequence_print(hidden);
-		cout << endl;
-	}
+	cout << "Running AYTO Simulation with Worst-Case Responses" << endl;
 
 	for (int turn = 1; ; ++turn) {
 		// stage one: truth booth
-		if (!running_all) {
-			cout << "**** Round " << turn << "A ****" << endl;
-			cout << "Num. Possibilities: " << possible_perms.size() << endl;
-		}
+		cout << "**** Round " << turn << "A ****" << endl;
+		cout << "Num. Possibilities: " << possible_perms.size() << endl;
 		tbguess = guess_tb(possible_perms, guessed_tb, turn);
-		if (!running_all) {
-			cout << "Guess: ";
-			sequence_print(tbguess.first);
-			cout << endl;
-			e = tbguess.second;
-			cout << "Worst-Case Evaluation: " << e << endl;
-		} else {
-			e = evaluate(hidden, tbguess.first);
-		}
+		cout << "Guess: ";
+		sequence_print(tbguess.first);
+		cout << endl;
+		e = tbguess.second;
+		cout << "Evaluation: " << e << endl;
 		possible_perms = remove_perms(possible_perms, e, tbguess.first);
 
 		// stage two: perfect matching
-		if (!running_all) {
-			cout << "Round " << turn << "B" << endl;
-			cout << "Num. Possibilities: " << possible_perms.size() << endl;
-		}
+		cout << "Round " << turn << "B" << endl;
+		cout << "Num. Possibilities: " << possible_perms.size() << endl;
 		pmguess = guess_pm(possible_perms, guessed, turn);
 
-		if (!running_all) {
-			cout << "Guess: ";
-			sequence_print(pmguess.first);
-			cout << endl;
-			e = pmguess.second;
-			cout << "Worst-Case Evaluation: " << e << endl;
-		} else {
-			e = evaluate(hidden, pmguess.first);
-		}
+		cout << "Guess: ";
+		sequence_print(pmguess.first);
+		cout << endl;
+		e = pmguess.second;
+		cout << "Evaluation: " << e << endl;
 		if (e == sz) {
 			cout << "Found ";
 			sequence_print(pmguess.first);
 			cout << " in " << turn << " guesses." << endl;
-			turns_taken[pmguess.first] = turn;
 			break;
 		}
 
 		possible_perms = remove_perms(possible_perms, e, pmguess.first);
 	}
-}
 
-// map_avg:  returns average int component of a map<string, int> type
-double map_avg(const map<string, int> &mp)
-{
-	double sum = 0.0;
-
-	for (map<string, int>::const_iterator it = mp.begin(); 
-		 it != mp.end(); ++it) {
-		sum += it->second;
-	}
-
-	return sum / mp.size();
-}
-
-// picmp:  comparison function for pair<string, int> types, via int component
-bool picmp(const pair<string, int> &p1, const pair<string, int> &p2)
-{
-	return p1.second < p2.second;
-}
-
-// nrand:  random integer in range [0, n)
-int nrand(int n)
-{
-	srand(time(NULL));
-	
-	return rand() % n;
+	return 0;
 }
 
 // evaluate:  number of black hits from permutation or truth booth query
@@ -292,7 +213,6 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 {
 	static const string digits = "0123456789";
 	pair<string, int> next_guess;
-	vector<vector<string> > chunks;
 	int sz = possible_perms[0].size();
 
 	// on first turn, we guess "0, 1, ..., n-1" if truth booth was correct
@@ -312,27 +232,22 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 		next_guess.first = possible_perms[0];
 		next_guess.second = possible_perms[0].size();
 	} else {
-		// run multi-threaded minimax to get next guess
-		pair<string, int> candidates[NUM_CHUNKS];
-		vector<thread> jobs;
-		make_chunks(ORIGPERMS, chunks, NUM_CHUNKS);
-		struct args **args = create_args(possible_perms, candidates, chunks[0], 0);
+		// run minimax to get next guess
+		int best_score = TEN_FACT;
+		int score;
+		for (vector<string>::iterator i = ORIGPERMS.begin();
+			 i != ORIGPERMS.end(); ++i) {
+			if (find(guessed.begin(), guessed.end(), *i)
+				== guessed.end()) {
+				// hasn't already been guessed
+				if ((score = get_score(*i, possible_perms)) < best_score) {
+					best_score = score;
+					next_guess.first = *i;
+				}
+			}
+		}
 
-		for (int j = 0; j < NUM_CHUNKS; j++) {
-			args[j]->chunk = &(chunks[j]);
-			args[j]->thread_id = j;
-			jobs.push_back(thread(get_score, args[j]));
-		}
-		for (int j = 0; j < NUM_CHUNKS; j++) {
-			jobs[j].join();
-		}
-		
-		next_guess.first = min_candidate(candidates, NUM_CHUNKS);
 		next_guess.second = wc_response(next_guess.first, possible_perms);
-		
-		for (int j = 0; j < NUM_CHUNKS; j++)
-			free(args[j]);
-		free(args);
 	}
 
 	guessed.push_back(next_guess.first);
@@ -340,94 +255,19 @@ pair<string, int> guess_pm(vector<string> &possible_perms,
 	return next_guess;
 }
 
-struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, int thread_id)
-{
-	struct args **args = (struct args **) malloc(sizeof(struct args*)*NUM_CHUNKS);
-	assert(args);
-	for (int i = 0; i < NUM_CHUNKS; i++) {
-		args[i] = (struct args *) malloc(sizeof(struct args));
-		assert(args[i]);
-		args[i]->perms = &perms;
-		args[i]->cd = cd;
-	}
-
-	return args;
-}
-
-// make_chunks:  return pointers to n (nearly) equally sized vectors
-//                from the original vector
-void make_chunks(vector<string> &orig, vector<vector<string> > &chunks, int n)
-{
-    int sz = orig.size();
-    int chunk_sz = sz / n;
-    int n_with_extra = sz % n;
-    vector<string>::iterator b = orig.begin();
-    vector<string>::iterator e;
-
-    for (int i = 0; i < n; i++) {
-        int m = chunk_sz;    // size of this chunk
-        if (n_with_extra) {
-            ++m;
-            --n_with_extra;
-        }
-        e = b + m;
-        vector<string> subvec(b, e);
-        chunks.push_back(subvec);
-        b = e;
-    }
-}
-
-// min_candidate:  string with min int from array of pair<string, ints>
-string min_candidate(pair<string, int> *candidates, int n)
-{
-	int i, minsofar;
-	string minstring;
-
-	minstring = candidates[0].first;
-	minsofar = candidates[0].second;
-	for (i = 1; i < n; ++i) {
-		if (candidates[i].second < minsofar) {
-			minsofar = candidates[i].second;
-			minstring = candidates[i].first;
-		}
-	}
-
-	return minstring;
-}
-
 // get_score:  find the maximum number of remaining solutions over all
 //             possible responses to the query s
-//             this version takes a chunk and finds the guess with lowest score
-//             from that chunk
-void get_score(struct args *args)
+int get_score(const string &s, vector<string> &perms)
 {
-	// parse the args struct
-	vector<string> &chunk = *(args->chunk);
-	vector<string> &perms = *(args->perms);
-	pair<string, int> *cd = args->cd;
-	int thread_id = args->thread_id;
-
-	typedef vector<string>::const_iterator vec_iter;
 	int sz = perms[0].size();
+	vector<int> matches_eval(sz + 1, 0);
 
-	pair<string, int> best_guess;
-	best_guess.second = perms.size();
-	int wc_num_remaining;
-	for (vec_iter s = chunk.begin(); s != chunk.end(); ++s) {
-		vector<int> matches(sz + 1, 0);
-		for (vec_iter p = perms.begin(); p != perms.end(); ++p) {
-			++matches[evaluate(*s, *p)];
-		}
-		wc_num_remaining = *max_element(matches.begin(), matches.end());
-		if (wc_num_remaining < best_guess.second) {
-			best_guess.first = *s;
-			best_guess.second = wc_num_remaining;
-		}
+	// worst-case evaluation will be index m giving matches_eval[m] = max
+	for (vector<string>::iterator p = perms.begin(); p != perms.end(); ++p) {
+		++matches_eval[evaluate(s, *p)];
 	}
 
-	cd[thread_id] = best_guess;
-
-	return;
+	return *max_element(matches_eval.begin(), matches_eval.end());
 }
 
 // wc_response:  the response to guess that eliminates the least solutions
