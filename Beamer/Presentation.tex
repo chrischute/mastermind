@@ -3,12 +3,31 @@
 \usepackage{enumitem}
 \usepackage{tcolorbox}
 
-% Setting up a better font
+
 \usetheme{boadilla}
+\makeatother
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle\hspace*{1em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{1ex}
+  \end{beamercolorbox}}%
+
+  \vskip0pt%
+}
+\makeatletter
+\setbeamertemplate{navigation symbols}{}
+
+% Setting up a better font
 \usefonttheme{professionalfonts}
 \usefonttheme{serif}
 
-\title{Mastermind}
+\title{Query Complexity of Mastermind Variants}
 \author{Aaron Berger, Christopher Chute, Matthew Stone}
 
 \begin{document}
