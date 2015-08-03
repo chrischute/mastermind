@@ -4,6 +4,7 @@
 \usepackage{tcolorbox}
 
 % Setting up a better font
+\usetheme{boadilla}
 \usefonttheme{professionalfonts}
 \usefonttheme{serif}
 
@@ -33,20 +34,18 @@
 
     \begin{frame}
     	\frametitle{Knuth Paper -- 1976}
-    	\begin{enumerate}[label=\roman*.]
-		\item At most five turns needed
-		\end{enumerate}
-%		\begin{tcolorbox}[colback=green!5,colframe=green!40!black,title=Minimax]
+		At most five turns needed to guarantee a victory\vspace{\baselineskip}
+		\begin{tcolorbox}[colback=green!5,colframe=green!40!black,title=Minimax]
 		For each possible guess
 			\begin{enumerate}[label=]
 			\item For each possible response to that guess
 				\begin{enumerate}[label=]
 				\item Check how many possible solutions remain
 				\end{enumerate}
-			\item Let \textit{score} be max. number solutions remaining
+			\item Let \textit{score} be min. number solutions eliminated
 			\end{enumerate}
-		Make guess with minimum score
-%		\end{tcolorbox}
+		Make guess with maximum score
+		\end{tcolorbox}
     \end{frame}
  
     \begin{frame}
@@ -61,11 +60,18 @@
     \begin{frame}
     \frametitle{Trivial Lower Bound}
     \begin{enumerate}[label=\arabic*.]
-	\item One set of responses per solution
-	\item \# of solutions = $k^n$
-	\item $\binom{n+2}{2} \approx n^2$ responses per turn \\
-	\onslide<2->{$\Rightarrow \binom{n+2}{2}^s \geq k^n$}
+	\onslide<2->{\item One set of responses per solution}
+	\onslide<3->{\item \# of solutions = $k^n$}
+	\onslide<4->{\item $\binom{n+2}{2} \approx n^2$ possible responses per turn}
     \end{enumerate}
+	\onslide<5->
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
+	For any strategy that guarantees a win in $s$ turns, \\
+	\begin{equation*}
+	\binom{n+2}{2}^s \geq k^n
+	\end{equation*}
+	\end{tcolorbox}
+
     \end{frame}
 
     \begin{frame}
@@ -79,44 +85,47 @@
     \end{enumerate}
     \end{frame}
 
-    \begin{frame}
-    \frametitle{Coin-Weighing Problem}
-    [Grebinski \& Kucherov, 2000], [Bshouty, 2009]
-    \begin{enumerate}[label=\roman*.]
-		\item Original Coin-Weighing algorithm by G\&K, non-constructive (probabilistic method)
-		\item Refined polynomial-time algorithm [Bshouty]
-	\end{enumerate}
-    [Doerr et. al., 2013]
-    	\begin{enumerate}[label=\roman*.]
-		\item Split hidden vector into ``coins'' (subvectors).
-		\item ``Weight" of each ``coin" is \# of black hits.
-		\item Use coin weighing algorithm to eliminate colors.
-		\end{enumerate}
-    \end{frame}
+%    \begin{frame}
+ %   \frametitle{Coin-Weighing Problem}
+%    [Grebinski \& Kucherov, 2000], [Bshouty, 2009]
+%    \begin{enumerate}[label=\roman*.]
+%		\item Original Coin-Weighing algorithm by G\&K, non-constructive (probabilistic method)
+%		\item Refined polynomial-time algorithm [Bshouty]
+%	\end{enumerate}
+%    [Doerr et. al., 2013]
+%    	\begin{enumerate}[label=\roman*.]
+%		\item Split hidden vector into ``coins'' (subvectors).
+%		\item ``Weight" of each ``coin" is \# of black hits.
+%		\item Use coin weighing algorithm to eliminate colors.
+%		\end{enumerate}
+%    \end{frame}
 
     \begin{frame}
     \frametitle{Entropy Method}
     \textit{Surprise Function:} For an event $x$, we want
-	
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Definition (Surprise Function)]
     	\begin{enumerate}[label=\arabic*.]
-		\item $S(x) = 0$ when $\mathbb{P}[x]=1$
-		\item $S(x) = 1$ when $\mathbb{P}[x]=1/2$
-		\item Decreasing function of $\mathbb{P}[x]$
-		\item $S(x \land y)=S(x)+S(y|x)$\quad ($=S(x)+S(y)$ if independent)\\[2\baselineskip]
+		\onslide<2->{\item $S(x) = 0$ when $\mathbb{P}[x]=1$}
+		\onslide<3->{\item $S(x) = 1$ when $\mathbb{P}[x]=1/2$}
+		\onslide<4->{\item Decreasing function of $\mathbb{P}[x]$}
+		\onslide<5->{\item $S(x \land y)=S(x)+S(y|x)$\quad ($=S(x)+S(y)$ if independent)}
 	\end{enumerate}
+	\end{tcolorbox}
 
-	\begin{enumerate}[label=]
-	\item\onslide<2->{$\Rightarrow S(x)=-\log_2(\mathbb{P}[x])$.}
-	\end{enumerate}
+	\onslide<6->\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Unique Surprise Function]
+	$S(x)=-\log_2(\mathbb{P}[x])$.
+	\end{tcolorbox}
 	\end{frame}
 	
 	\begin{frame}
-	\frametitle{Entropy Method (cont'd)}
-	Entropy is the expected surprise of a random variable.
-	\textit{Definition:} Let $X$ be a random variable with domain $D$.
+	\frametitle{Entropy Method}
+	Entropy is the expected surprise of a random variable. \\ \vspace{\baselineskip}
+	\onslide<2->\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Definition (Entropy)]
+	Let $X$ be a random variable with domain $D$.
 			\begin{equation*}
 			H(X) = \sum_{x\in D}\mathbb{P}[X=x]\cdot(-\log_2\left(\mathbb{P}[X=x]\right))
 			\end{equation*}
+	\end{tcolorbox}
     \end{frame}
     
     \begin{frame}
@@ -128,6 +137,15 @@
 		\exists \text{ a winning } & \text{set of $s$ guesses}
 		\end{align*}
     \end{frame}
+
+\begin{frame}
+\frametitle{Thanks!}
+	\begin{enumerate}[label=\arabic*.]
+	\item Special thanks to Danny Montealegre, Nathan Kaplan.
+	\item Thanks to SUMRY for this research opportunity.
+	\item Thanks to MathFest for the opportunity to present.
+	\end{enumerate}
+\end{frame}
 
 %    \begin{frame}
 %    \frametitle{Future Topics to Explore}
