@@ -1,0 +1,92 @@
+\documentclass[12pt, a4paper]{article}
+\author{Aaron Berger\qquad Christopher Chute\qquad Matthew Stone}
+\title{Query Complexity of Mastermind Variants}
+\usepackage[bottom=1.5in, left=1in, right=1in, top=1.5in]{geometry}
+\usepackage{amsmath, amsthm, amssymb}
+\newtheorem{lem}{Lemma}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{footnote}
+
+% 	 \begin{header footer formatting}
+%    \usepackage{fancyhdr}
+%    \setlength{\headheight}{48pt}
+%    \pagestyle{fancyplain}
+%    \lhead{Mastermind Project: \textit{Notes}\\\today{}}
+%    \rhead{AB, CC, MS}
+%    \rfoot{\thepage}
+%    \cfoot{}
+% 	 \end{header footer formatting}
+
+% remove ``*'' for numbered theorems
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+% \begin{pretty i-hat and j-hat}
+\newcommand*{\ihat}{\hat{\imath}}
+\newcommand*{\jhat}{\hat{\jmath}}
+\newcommand*{\jwidehat}{\widehat{\jmath}}
+% \end{pretty i-hat and j-hat}
+
+% \begin{pretty code or pseudocode}
+\usepackage{listings}
+\usepackage{courier}
+\lstset{
+         basicstyle=\footnotesize\ttfamily,
+%        numbers=left,               
+         numberstyle=\tiny,          
+%        stepnumber=2,              
+         numbersep=5pt,              
+         tabsize=4,                 
+         extendedchars=true,         
+         breaklines=true,            
+         keywordstyle=\color{red},
+         frame=tblr,% Set the borders, tblr == (top, bottom, left, right)
+%        keywordstyle=[1]\textbf,    
+%        keywordstyle=[2]\textbf,   
+%        keywordstyle=[3]\textbf,   
+%        keywordstyle=[4]\textbf,  
+         stringstyle=\color{white}\ttfamily,
+         showspaces=false,          
+         showtabs=false,           
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+%        backgroundcolor=\color{red},
+         showstringspaces=false            
+}
+\lstloadlanguages{C}
+% Example Usage:
+% \lstinputlisting{pseudocode.txt}
+% \end{pretty code or pseudocode}
+
+% ********************************* END OF PREAMBLE ***********************************
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We analyze variants of the popular board game Mastermind. In this two-player game,
+one player submits queries with the goal of identifying a hidden
+sequence, constructed at the beginning of the game by the other player. More generally,
+we discuss asymptotics for the number of guesses needed to identify an unknown
+$n$-vector constructed from an alphabet of $k$ possible symbols. We consider both
+allowing and prohibiting repetitions in the hidden vector, and we analyze both
+adaptive and non-adaptive guessing strategies.
+\end{abstract}
+
+
+\clearpage
+\section*{References}
+
+
+\end{document}
+
+
+
+
+
+

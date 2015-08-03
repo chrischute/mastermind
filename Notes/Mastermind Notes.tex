@@ -202,7 +202,7 @@
 	^n\frac{1}{i}$}
 		\begin{proof}
 		While this equation holds for all $x$, to achieve a desirable bound, we will
-		let $x=t+C_{n}$ for any positive constant $C_{n}=C_{n}(n)$. We have
+		let $x=t+C_{n}$ for any positive constant $C_{n}$. We have
 		\begin{enumerate}[label=]
 		\item\textit{Base Case.} When $t=0$, we have $S_n(0)= n!$ and
 			\begin{equation*}
@@ -900,45 +900,54 @@ This proof was inspired by [GK00].
 	\text{Pr}[v_1,v_2 \text{ not distinguished by $s$ random queries}] \leq \left(1-\frac{1}{k}\right)^{xs}
 	\end{equation*}
 Now we want to calculate
-    	\begin{align*}
-		\text{Pr}[\exists\text{ pair } v_1, v_2 & \text{ not distinguished}]\\
-	& = \text{Pr}\left[\bigcup_{v_1,v_2 \text{ critical pair}} \textnormal{Eq}(q,v_1) =
-    	\textnormal{Eq}(q,v_2)\right] \\
-	& \le \sum_{v_1,v_2 \text{ critical pair}} \textnormal{Pr}[\textnormal{Eq}(q,v_1) = i
-    	\cap\textnormal{Eq}(q,v_2) = i] 
+    \begin{align*}
+	\text{Pr}[\exists\text{ pair } v_1, v_2 & \text{ not distinguished}]\\
+	& = \text{Pr}\left[\bigcup_{v_1,v_2 \text{ critical pair}} \textnormal{Eq}(q,v_1)=    	\textnormal{Eq}(q,v_2)\right] \\
+	& \le \sum_{v_1,v_2 \text{ critical pair}} \textnormal{Pr}[\textnormal{Eq}(q,v_1)=
+	\textnormal{Eq}(q,v_2)] 
 	\end{align*}
-By Boole's inequality. \\
- But for a fixed length $x$, this probability is the same for all critical pairs $(v_1,v_2)$ of length $x$. This
-allows us to rewrite the above sum as
-\begin{equation*}
-    	\sum_{x=1}^n(\text{\# of critical pairs of size }x)
-		\cdot\text{Pr}[\text{single pair of lenteh $x$ not distinguished}].
-\end{equation*}
+By Boole's Inequality.
+
+But for a fixed length $x$, this probability is the same for all critical pairs
+$(v_1,v_2)$ of length $x$. This allows us to rewrite the above sum as
+	\begin{equation*}
+    \sum_{x=1}^n(\text{\# of critical pairs of size }x)
+	\cdot\text{Pr}[\text{single pair of lenteh $x$ not distinguished}].
+	\end{equation*}
 So we now use $s = 4k \log k$ queries to bound
 	\begin{align*}
-    	\sum_{x=1}^n&(\text{\# of critical pairs of size }x)
-		\cdot\text{Pr}[\text{single pair of lenteh $x$ not distinguished}]\\
-        & = \sum_{x=1}^n \left[\binom{n}{x}k^x(k-1)^x
-        \cdot\left(\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
-		\textnormal{Pr}[\textnormal{Eq}(q,v_1) = i
-    	\cap\textnormal{Eq}(q,v_2) = i]\right)^s ~\right]\\
-        &\le \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{(4k\log k)x} \\
-        &< \sum_{x=1}^n k^{3x} \left(\frac{1}{e}\right)^{(4\log k)x} \\
-        &= \sum_{x=1}^n k^{3x} \left(\frac{1}{k}\right)^{4 x} \\
-        &\le \sum_{x=1}^n \frac{1}{k} \\
-        &\le 1.
-        \end{align*}
-    So we have $\text{Pr}[\exists\text{ pair } v_1, v_2  \text{ not distinguished}] < 1$. Thus, for $k\ge n$ there always exists a set of $O(k\log k)$ queries that
-    distinguishes between all possible $n$-vectors from an alphabet of size $k$.
+	\sum_{x=1}^n&(\text{\# of critical pairs of size }x)
+	\cdot\text{Pr}[\text{single pair of lenteh $x$ not distinguished}]\\
+	& = \sum_{x=1}^n \left[\binom{n}{x}k^x(k-1)^x
+    \cdot\left(\sum_{i=0}^{\left\lfloor x/2 \right\rfloor}
+	\textnormal{Pr}[\textnormal{Eq}(q,v_1) = i
+    \cap\textnormal{Eq}(q,v_2) = i]\right)^s ~\right]\\
+    &\le \sum_{x=1}^n k^{3x} \left(1-\frac{1}{k}\right)^{(4k\log k)x} \\
+    &< \sum_{x=1}^n k^{3x} \left(\frac{1}{e}\right)^{(4\log k)x} \\
+    &= \sum_{x=1}^n k^{3x} \left(\frac{1}{k}\right)^{4 x} \\
+    &\le \sum_{x=1}^n \frac{1}{k} \\
+    &\le 1.
+    \end{align*}
+So we have $\text{Pr}[\exists\text{ pair } v_1, v_2  \text{ not distinguished}] < 1$.
+Thus, for $k\ge n$ there always exists a set of $O(k\log k)$ queries that
+distinguishes between all possible $n$-vectors from an alphabet of size $k$.
 \end{proof}
 
 \clearpage
 \section*{Lower Bound for non-adaptive strategies}
 \begin{theorem}
-	Any non-adaptive strategy must make at least $(k-1)/2$ guesses to distinguish all possible hidden vectors.
+Any non-adaptive strategy must make at least $(k-1)/2$ guesses to distinguish all
+possible hidden vectors.
 \end{theorem}
 \begin{proof}
-	Assume for the sake of contradiction that in some strategy that distinguishes all possible hidden vectors, there exists a pair of colors such that neither color was guessed in the first two spots (WLOG let these colors be 1 and 2). Then it would be impossible to distinguish between the hidden vectors $(1,2,\ldots,n)$ and $(2,1,\ldots,n)$, which contradicts the assumptions. Therefore, for any winning strategy, at least $k-1$ colors were guessed in these two spots. Since we can only guess two colors in those spots per turn, this gives us the lower bound of $(k-1)/2 = O(k)$ turns necessary to beat the game.
+Assume for the sake of contradiction that in some strategy that distinguishes all
+possible hidden vectors, there exists a pair of colors such that neither color was
+guessed in the first two spots (WLOG let these colors be 1 and 2). Then it would be
+impossible to distinguish between the hidden vectors $(1,2,\ldots,n)$ and
+$(2,1,\ldots,n)$, which contradicts the assumptions. Therefore, for any winning
+strategy, at least $k-1$ colors were guessed in these two spots. Since we can only
+guess two colors in those spots per turn, this gives us the lower bound of
+$(k-1)/2 =O(k)$ turns necessary to beat the game.
 \end{proof}
 \end{document}
 
