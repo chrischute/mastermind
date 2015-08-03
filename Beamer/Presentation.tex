@@ -177,12 +177,17 @@
    
     \begin{frame}
     \frametitle{Probabilistic Method}
-    Choose a random set of queries $Q=\{q_1, q_2, \ldots, q_s\}$.
+    Choose a random set of queries $Q=\{q_1, q_2, \ldots, q_s\}$. \\ \vspace{5px}
+    Calculate $\mathbb{P}[Q\text{ is a winning set of guesses}]$ \vspace{5px}
+    \onslide<2->
+    \begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
+	When the random set of guesses is of magnitude $s = 4k \log k$
     	\begin{align*}
 		\mathbb{P}[Q\text{ is a win} & \text{ning set of guesses }] > 0 \\
-		& \Downarrow \\
-		\exists \text{ a winning } & \text{set of $s$ guesses}
-		\end{align*}
+		\onslide<3->{& \Downarrow \\
+		\exists \text{ a winning } & \text{set of $4k \log k$ guesses}}
+	\end{align*}
+    \end{tcolorbox}
     \end{frame}
 
 \begin{frame}
