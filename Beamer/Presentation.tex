@@ -2,6 +2,7 @@
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
+\usepackage{wrapfig}
 
 
 \usetheme{boadilla}
@@ -39,16 +40,16 @@
     	\frametitle{Mastermind}
 	   	\begin{enumerate}[label=\roman*.]
 	    \item Codemaker vs. Codebreaker
-	    \item Queries: Guess a vector from $\{1,2,\ldots,6\}^4$
+	    \item Queries: Guess a vector from $\{1,2,\ldots,6\}^4$.	    		    
 	    \item Response
 	    	\begin{enumerate}[label=\roman*.]
 			\item Black (Red) hits
 			\item White hits
 			\end{enumerate}
    	    \end{enumerate}
-	    \begin{center}
-	    \includegraphics[width=.65\textwidth, keepaspectratio=true]{mm.png}
-	    \end{center}
+	\begin{center}
+	\includegraphics[width=.25\textwidth]{mm.jpg}
+	\end{center}
     \end{frame}
 
     \begin{frame}
@@ -78,19 +79,26 @@
     
     \begin{frame}
     \frametitle{Trivial Lower Bound}
-    \begin{enumerate}[label=\arabic*.]
-	\onslide<2->{\item One set of responses per solution}
-	\onslide<3->{\item \# of solutions = $k^n$}
-	\onslide<4->{\item $\binom{n+2}{2} \approx n^2$ possible responses per turn}
-    \end{enumerate}
-	\onslide<5->
-	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
-	For any strategy that guarantees a win in $s$ turns, \\
-	\begin{equation*}
-	\binom{n+2}{2}^s \geq k^n
-	\end{equation*}
+    \begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
+	\textit{(Game: $n$ spots, $k$ colors, repeats, adaptive allowed).}
+	
+	For any strategy that guarantees a win in $s$ turns,
+		\begin{equation*}
+		s\ge O\left(\frac{n\log k}{\log n^2}\right)
+		\end{equation*}
 	\end{tcolorbox}
-
+	\begin{proof}
+    \begin{enumerate}[label=\arabic*.]
+	\onslide<2->{\item Winning Condition: Distinct sequence of responses for each of
+	$k^n$ vectors. Let $s$ be number of guesses to guarantee a win.}
+	\onslide<3->{\item $\binom{n+2}{2}$ possible responses (cf. stars and bars),
+	giving $\binom{n+2}{2}^s$ possible response sequences.}
+	\onslide<4->{\item Therefore, $s$ must satisfy
+		\begin{equation*}
+		\binom{n+2}{2}^s\ge k^n
+		\end{equation*}}
+	\end{enumerate}
+	\end{proof}
     \end{frame}
 
     \begin{frame}
