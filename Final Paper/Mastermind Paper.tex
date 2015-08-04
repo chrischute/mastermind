@@ -82,6 +82,47 @@ strategies.
 \end{abstract}
 
 \section{Introduction}
+Mastermind is a two-player board game that was invented in 1970, and variants on its
+basic four-spot, six-color structure have been studied extensively.
+In the original game, there are two players: The codemaker and the codebreaker.
+The codemaker initiates a game by constructing a 4-vector $p$ from the six available
+colors, and the codebreaker attempts to guess the hidden vector in as few turns as
+possible. A turn consists of two parts: First the codebreaker submits a query vector
+$q$, which has the same form as a hidden vector. Second, the codemaker gives a
+two-part response:
+	\begin{enumerate}[label=\arabic*.]
+	\item Black Hits: The number of correct colors in the correct spot
+	(the number of positions $i$ such that $q_i=p_i$).
+	\item White Hits: The number of correct colors in the incorrect spot, and which
+	have not been used in another hit.
+	\end{enumerate}
+In 1976, Donald Knuth presented a greedy ``minimax'' algorithm, and he showed via
+computer simulation that his algorithm always guesses the hidden vector in five turns
+or fewer.\footnote{DK76} Moreover, the minimax algorithm for Mastermind is optimal in
+the worst case---there is no algorithm that can guarantee to win in at most four turns.
+
+There are multiple natural extensions to the original Mastermind game. Varying the
+number of spots $n$ and colors $k$, as well as the relationship between $n$ and $k$,
+is one such extension. In this paper, we also consider both allowing and prohibiting
+repeated colors in vectors, and we examine both dual-color and black-only responses.
+We explore another degree of freedom between adaptive strategies, in which the
+codebreaker receives responses and adjusts the next guess accordingly, and non-adaptive
+strategies, in which all guesses are submitted at the beginning of the
+game and the hidden vector must be uniquely determined by the sequence of responses.
+\footnote{Note that in a non-adaptive guessing strategy, our guesses need to
+\textit{identify} the hidden vector rather than guess it outright. That is, a
+non-adaptive strategy wins if the sequence of responses to the guess vectors allows
+the codebreaker to distinguish between all possible hidden vectors. It is not
+necessary that a winning set of non-adaptive guesses includes the hidden vector
+itself.}
+
+\subsection{Previous Work}
+We build on the work of Grebinski and Kucherov; Chvatal; Doerr, Spohel, Thomas, and
+Winzen; Erdos and Renyi; Knuth; Ko and Teng; Goodrich; and Bshouty. For a list of
+previously established bounds on the query complexity of mastermind variants, please
+see the appendix.
+
+\subsection{Our Contribution}
 
 
 \section{Adaptive Strategies}
