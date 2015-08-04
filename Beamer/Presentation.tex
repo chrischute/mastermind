@@ -22,6 +22,9 @@
 }
 \makeatletter
 \setbeamertemplate{navigation symbols}{}
+\setitemize{label=\usebeamerfont*{itemize item}%
+  \usebeamercolor[fg]{itemize item}
+  \usebeamertemplate{itemize item}}
 
 % Setting up a better font
 \usefonttheme{professionalfonts}
@@ -68,6 +71,20 @@
     \end{frame}
  
     \begin{frame}
+    	\frametitle{Optimality of the Minimax Algorithm}
+	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma (Pigeonhole Principle)]
+	For a query with $r$ possible responses, there exists a response that would leave at leasr $1/r$ of possible solutions remaining.
+	\end{tcolorbox}
+	Analyze the worst-case performance of any algorithm. \\
+		\begin{enumerate}[label=\roman*.]
+		\item Worst case response to first guess $\Rightarrow$ At least 256 solutions remain.
+		\item Second guess:  At least $\lceil 256/14 \rceil = 19$ solutions remain.
+		\item Third guess: At least $\lceil 19/14 \rceil = 2$ solutions remain
+		\item Fourth guess: At least two possible solutions left $\Rightarrow$ cannot guarantee to guess the solution on the fourth turn.
+		\end{enumerate}
+    \end{frame}
+
+    \begin{frame}
     	\frametitle{Extensions}
 		\begin{enumerate}[label=\roman*.]
 		\item Basic Extension: $n$ spots, $k$ colors
@@ -78,16 +95,18 @@
     
     \begin{frame}
     \frametitle{Trivial Lower Bound}
-    \begin{enumerate}[label=\arabic*.]
-	\onslide<2->{\item One set of responses per solution}
+	\onslide<2->\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma (Pigeonhole Principle)]
+	For a query with $r$ possible responses, there exists a response that would leave at leasr $1/r$ of possible solutions remaining.
+	\end{tcolorbox}
+    \begin{itemize}
 	\onslide<3->{\item \# of solutions = $k^n$}
 	\onslide<4->{\item $\binom{n+2}{2} \approx n^2$ possible responses per turn}
-    \end{enumerate}
+    \end{itemize}
 	\onslide<5->
 	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
 	For any strategy that guarantees a win in $s$ turns, \\
 	\begin{equation*}
-	\binom{n+2}{2}^s \geq k^n
+	\frac{k^n}{\binom{n+2}{2}^s} \leq 1
 	\end{equation*}
 	\end{tcolorbox}
 
