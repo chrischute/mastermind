@@ -71,14 +71,17 @@
     \begin{frame}
     	\frametitle{Optimality of the Minimax Algorithm}
 	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma (Pigeonhole Principle)]
-	For a query with $r$ possible responses, there exists a response that would leave at leasr $1/r$ of possible solutions remaining.
+	For a query with $r$ possible responses, there exists a response that would leave
+	at least $1/r$ of possible solutions remaining.
 	\end{tcolorbox}
 	Analyze the worst-case performance of any algorithm. \\
 		\begin{enumerate}[label=\roman*.]
-		\item Worst case response to first guess $\Rightarrow$ At least 256 solutions remain.
+		\item Worst case response to first guess $\Rightarrow$ At least 256 solutions
+		remain.
 		\item Second guess:  At least $\lceil 256/14 \rceil = 19$ solutions remain.
 		\item Third guess: At least $\lceil 19/14 \rceil = 2$ solutions remain
-		\item Fourth guess: At least two possible solutions left $\Rightarrow$ cannot guarantee to guess the solution on the fourth turn.
+		\item Fourth guess: At least two possible solutions left $\Rightarrow$ cannot
+		guarantee to guess the solution on the fourth turn.
 		\end{enumerate}
     \end{frame}
 
@@ -99,35 +102,34 @@
 		\begin{equation*}
 		s\ge O\left(\frac{n\log k}{\log n^2}\right)
 		\end{equation*}
-%	\onslide<2->{\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma (Pigeonhole Principle)]
-%	For a query with $r$ possible responses, there exists a response that would leave
-%	at least $1/r$ of possible solutions remaining.
-%	\end{tcolorbox}
-%    \begin{itemize}}
-%	\onslide<3->{\item \# of solutions = $k^n$}
-%	\onslide<4->{\item $\binom{n+2}{2} \approx n^2$ possible responses per turn}
-%    \end{itemize}
-%	\onslide<5->{
-%	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
-%	For any strategy that guarantees a win in $s$ turns, \\
-%	\begin{equation*}
-%	\frac{k^n}{\binom{n+2}{2}^s} \leq 1
-%	\end{equation*}}
-%>>>>>>> origin/master
 	\end{tcolorbox}
-	\begin{proof}
-    \begin{enumerate}[label=\arabic*.]
-	\onslide<2->{\item Winning Condition: Distinct sequence of responses for each of
-	$k^n$ vectors. Let $s$ be number of guesses to guarantee a win.}
-	\onslide<3->{\item $\binom{n+2}{2}$ possible responses (cf. stars and bars),
-	giving $\binom{n+2}{2}^s$ possible response sequences.}
-	\onslide<4->{\item Therefore, $s$ must satisfy
+	\onslide<2->{Recall Lemma:
+	For a query with $r$ possible responses, there exists a response that would leave
+	at least $1/r$ of the possible solutions remaining.
+    \begin{itemize}}
+	\onslide<3->{\item \# of solutions = $k^n$.}
+	\onslide<4->{\item $\binom{n+2}{2} \approx n^2$ possible responses per turn.
+    \end{itemize}}
+	\onslide<5->{In worst case, we need $\le 1$ possible solution remaining.\\
+	$\Longrightarrow$ For any strategy that guarantees a win in $s$ turns,
 		\begin{equation*}
-		\binom{n+2}{2}^s\ge k^n
+		\frac{k^n}{\binom{n+2}{2}^s} \leq 1
 		\end{equation*}}
-	\end{enumerate}
-	\end{proof}
-    \end{frame}
+	\end{frame}
+%>>>>>>> origin/master
+%	\end{tcolorbox}
+%	\begin{proof}
+%    \begin{enumerate}[label=\arabic*.]
+%	\onslide<2->{\item Winning Condition: Distinct sequence of responses for each of
+%	$k^n$ vectors. Let $s$ be number of guesses to guarantee a win.}
+%	\onslide<3->{\item $\binom{n+2}{2}$ possible responses (cf. stars and bars),
+%	giving $\binom{n+2}{2}^s$ possible response sequences.}
+%	\onslide<4->{\item Therefore, $s$ must satisfy
+%		\begin{equation*}
+%		\binom{n+2}{2}^s\ge k^n
+%		\end{equation*}}
+%	\end{enumerate}
+%	\end{proof}
 
     \begin{frame}
     \frametitle{(Somewhat) Trivial Upper Bound}
