@@ -2,9 +2,6 @@
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
-\usepackage{wrapfig}
-
-
 \usetheme{boadilla}
 \makeatother
 \setbeamertemplate{footline}
@@ -96,29 +93,27 @@
     
     \begin{frame}
     \frametitle{Trivial Lower Bound}
-<<<<<<< HEAD
     \begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
 	\textit{(Game: $n$ spots, $k$ colors, repeats, adaptive allowed).}
-	
 	For any strategy that guarantees a win in $s$ turns,
 		\begin{equation*}
 		s\ge O\left(\frac{n\log k}{\log n^2}\right)
 		\end{equation*}
-=======
-	\onslide<2->\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma (Pigeonhole Principle)]
-	For a query with $r$ possible responses, there exists a response that would leave at leasr $1/r$ of possible solutions remaining.
-	\end{tcolorbox}
-    \begin{itemize}
-	\onslide<3->{\item \# of solutions = $k^n$}
-	\onslide<4->{\item $\binom{n+2}{2} \approx n^2$ possible responses per turn}
-    \end{itemize}
-	\onslide<5->
-	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
-	For any strategy that guarantees a win in $s$ turns, \\
-	\begin{equation*}
-	\frac{k^n}{\binom{n+2}{2}^s} \leq 1
-	\end{equation*}
->>>>>>> origin/master
+%	\onslide<2->{\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Lemma (Pigeonhole Principle)]
+%	For a query with $r$ possible responses, there exists a response that would leave
+%	at least $1/r$ of possible solutions remaining.
+%	\end{tcolorbox}
+%    \begin{itemize}}
+%	\onslide<3->{\item \# of solutions = $k^n$}
+%	\onslide<4->{\item $\binom{n+2}{2} \approx n^2$ possible responses per turn}
+%    \end{itemize}
+%	\onslide<5->{
+%	\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Theorem]
+%	For any strategy that guarantees a win in $s$ turns, \\
+%	\begin{equation*}
+%	\frac{k^n}{\binom{n+2}{2}^s} \leq 1
+%	\end{equation*}}
+%>>>>>>> origin/master
 	\end{tcolorbox}
 	\begin{proof}
     \begin{enumerate}[label=\arabic*.]
