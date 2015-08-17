@@ -53,6 +53,7 @@ void get_score(struct args *args);
 int wc_response(string &guess, vector<string> &perms);
 bool prcmp(pair<int, int> x, pair<int, int> y);
 void sequence_print(string s);
+void print_summary(map<string, int> &turns_taken);
 struct args **create_args(vector<string> &perms, pair<string, int> *cd, vector<string> &chunk, int thread_id);
 
 
@@ -62,13 +63,21 @@ int main(int argc, char **argv)
 {
 	int sz;
 	map<string, int> turns_taken;
+	vector<string> sample;
 	const string digits = "0123456789";
 	bool running_all = false;
 
-	if (argc != 2) {
-		cout << "usage: 'ayto npairs'" << endl;
+	if (argc != 2 && argc != 3) {
+		cout << "usage: 'ayto n [\"sample\"]'" << endl;
 		return 1;
 	} else {
+		if (argc == 3) {
+			if (strncmp(argv[2], "sample", 6) == 0) {
+				string line;
+				while (std::getline(cin, line))
+					sample.push_back(line);
+			}
+		}
 		if ((sz = atoi(argv[1])) < 0) {
 			sz = -sz;
 			running_all = true;
@@ -90,13 +99,13 @@ int main(int argc, char **argv)
 			 it != ORIGPERMS.end(); ++it) {
 			simulate_game(*it, turns_taken, running_all);
 		}
-		cout << "***** SUMMARY *****\n";
-		cout << "Avg. Turns: " << map_avg(turns_taken) << endl;
-		pair<string, int> wc = *max_element(turns_taken.begin(),
-											turns_taken.end(), picmp);
-		cout << "Worst Hidden Vector: ";
-		sequence_print(wc.first);
-		cout << " in " << wc.second << " turns." << endl;
+		print_summary(turns_taken);
+	} else if (!sample.empty()) {
+		for (vector<string>::const_iterator it = sample.begin();
+			 it != sample.end(); ++it) {
+			simulate_game(*it, turns_taken, true);
+		}
+		print_summary(turns_taken);
 	} else {
 		string hidden = ORIGPERMS[nrand(ORIGPERMS.size())];
 		simulate_game(hidden, turns_taken, running_all);
@@ -448,31 +457,16 @@ bool prcmp(pair<int, int> x, pair<int, int> y)
 	return x.second < y.second;
 }
 
-// get_worst_sequence:  generates the worst-case minimax sequence (we think)
-string get_worst_sequence(int sz)
+// print_summary:  prints the analysis for multi-game simulation
+void print_summary(map<string, int> &turns_taken)
 {
-	const string digits = "0123456789";
-	string worst = digits.substr(0, sz);
-
-	if (sz % 2 == 1) {
-		reverse(worst.begin(), worst.end());
-		return worst;
-	} else {
-		switch (sz) {
-		case 10:
-			return "9081726354";
-		case 8:
-			return "70615243";
-		case 6:
-			return "504132";
-		case 4:
-			return "3021";
-		case 2:
-			return "01";
-		default:
-			return "";
-		}
-	}
+	cout << "***** SUMMARY *****\n";
+	cout << "Avg. Turns: " << map_avg(turns_taken) << endl;
+	pair<string, int> wc = *max_element(turns_taken.begin(),
+										turns_taken.end(), picmp);
+	cout << "Worst Hidden Vector: ";
+	sequence_print(wc.first);
+	cout << " in " << wc.second << " turns." << endl;
 }
 
 void sequence_print(const string s)
