@@ -67,6 +67,9 @@ In 1976, Donald Knuth presented a greedy ``minimax'' algorithm, and he showed vi
 computer simulation that his algorithm always guesses the hidden vector in five turns
 or fewer.\footnote{DK76} Moreover, the minimax algorithm for Mastermind is optimal in
 the worst case---there is no algorithm that can guarantee to win in at most four turns.
+\footnote{Knuth shows that the worst-case response to any possible first guess leaves
+at least 256 possible solution vectors. After this, with 14 possible responses per turn,
+the trivial information-theoretic argument gives a lower bound of five turns total to win.}
 
 There are multiple natural extensions to the original Mastermind game. Varying the
 number of spots $n$ and colors $k$, as well as the relationship between $n$ and $k$,
@@ -123,14 +126,15 @@ $X$ with each of the basis vectors of some arbitrary orthogonal basis of $S$, an
 then determne the projections of $X$ onto each basis vector in this orthogonal basis.
 Adding these components together allows us to uniquely determine $X \in S$. 
 Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines every
-possible hidden permutation.
+possible hidden permutation. (Note that since this strategy is non-adaptive and only
+uses black hits, this bound holds for every variant of the game analyzed in this paper.)
 \section{Adaptive Strategies}
 We begin by performing an analysis on the PERMUTATION game, which is the NO-REPEATS
 game where the number of spots $n$ equals the number of colors $k$. Algorithms for this game
 that take $O(n \log n)$ turns were developed by [Ko, Teng] and [Ouali, Sutherland]. The
 information-theoretic lower bound on this game is $n - n/ \log n + O(1)$. We improve this to 
-$n - \log n$ for small $n$, and $n- \log \log n$ for sufficiently large $n$, which constitutes
-the first, to our knowledge, improvement over the trivial information-thoretic lower bound
+$n - \log n$ for small $n$, and $n- \log \log n$ for sufficiently large $n$, which constitutes, 
+to our knowledge, the first improvement over the trivial information-thoretic lower bound
 for any adaptive mastermind game. \\
 \subsection{Lower Bound on the Permutation Game}
 \begin{enumerate}
@@ -140,7 +144,7 @@ for any adaptive mastermind game. \\
 	impossible to get exactly $n-1$ black hits with no repeats and $n=k$.}
 	Since we must distinguish between every pair of vectors, we must ask at least
 		\begin{equation*}
-		\log_{n}(n!)\sim \left(n-\frac{n}{\ln(n)}\right)
+		\log_{n}(n!) = n-\frac{n}{\ln(n)}+O(1)
 		\end{equation*}
 	
 	\item\textit{Buckets.}
@@ -162,15 +166,20 @@ for any adaptive mastermind game. \\
 		\begin{equation*}
 		\binom{n}{k}D(n-k)
 		\end{equation*}
-	This tells us the initial size of each bucket, and as more guesses are
-	made, the size of each bucket can only decrease, no matter which guess is
-	considered.
+	This tells us the initial size of each bucket (by symmetry, this is the same distribution
+	for any guess). In general, the buckets start out large,
+	and decrease approximately by a factor of $x$ from the $(x-1)$ bucket to the
+	$x$ bucket. It is important to note that if we look at the sizes of these buckets for
+	a particular guess
+	part-way into the game, the size of each bucket can only decrease from its original size,
+	as each previous guess simply eliminates some solutions from each bucket.
 	
 	\item\textit{Notation.}
 	Let $S_{n}(t)$ be the minimum number of possible solutions remaining
 	after $t$ guesses for any guessing strategy. We compute this lower bound by using
-	a set of guesses which are guaranteed to eliminate at least as many solutions
-	as any other guess we could make. The worst-case scenario for this set of guesses
+	a hypothetical set of guesses which are each guaranteed to eliminate at least as 
+	many solutions as any other guess we could make at any point in the game. 
+	The worst-case scenario for this set of guesses
 	therefore provides a lower bound for the number of guesses required by any
 	guessing strategy to guarantee finding the hidden vector.
 	
@@ -178,7 +187,7 @@ for any adaptive mastermind game. \\
 		\begin{enumerate}
 		\item We will inductively prove a lower bound, $S_{n}(t)$. By the
 		discussion above,
-		we know the maximum size of each bucket containing possible solutions.
+		we know the maximum possible size of each bucket.
 		The best possible guess distributes the remaining solutions as evenly as
 		possible so that the bucket containing the most remaining solutions is as
 		small as possible. This best-possible distribution will fill some number of
@@ -695,9 +704,8 @@ We begin by analyzing the NO-REPEATS game.
 \section{Non-Adaptive Strategies}
 This section follows closely the reasoning of [Doerr et al] as they analyze non-adaptive games. 
 We perform an analysis of the Black-Peg, NO-REPEATS game to get a similar bound to their original
-Black-Peg lower bound using entropy. Then, we perform a trivial extension of one of their proofs to 
-provide an upper bound on non-adaptive strategies for $k \geq n$ and provide our own proof of the
-bound, which allows us to find a small constant factor.
+Black-Peg lower bound using entropy. Then, we perform a small extension of one of their proofs to 
+provide an upper bound on non-adaptive strategies for $k \geq n$.
 \subsection{Lower Bound on Black-Peg NO-REPEATS game}
 \begin{theorem}
 Every non-adaptive strategy for Mastermind with no repeats must submit at least
@@ -774,7 +782,7 @@ arbitrary colors. Then, when we make our guesses, we adjust the responses accord
 to account for the imaginary spots. By [Doerr et al]'s result, we have a strategy that
 takes $O(k \log k)$ guesses. 
 
-\section{Many Many Colors}
+\section{Playing Mastermind with Many, Many Colors}
 \subsection{Adaptive Games}
 For adaptive games, the analysis is relatively easy. Say a strategy makes fewer than $\lfloor k/n \rfloor$
 guesses. Then there exist codes where the responses to each of these guesses are all 0 hits, 
@@ -784,9 +792,26 @@ hidden code. But we can achieve this bound to within a constant factor for large
 Simply partition the colors into groups of $n$, and guess each group. Since there are at most $n$ colors
 in the hidden vector and each color is in $1$ group, after this process (which takes $\lceil k/n \rceil$
 guesses), there are at most $n$ groups of $n$ colors that got no hits, so the color pool is reduced to
-$n^2$. From [Doerr et al] we have a strategy that takes $O(n^2)$ at this point, so for $k/n \geq n^2$
-the lower bound and this upper bound agree to within a constant factor.
-
+$n^2$. From [Doerr et al] we have a strategy that takes $O(n^2)$ at this point, so for $k/n \geq n^2$, i.e.
+$k\ge n^3$, the lower bound and this upper bound agree to within a constant factor.
+\subsection{Non-Adaptive Games}
+For the original non-adaptive game, we have the upper bound of $O(k \log k)$ turns. For the NO-REPEATS
+version, we default to the $nk$ upper bound. Interestingly, for $k \geq e^n$ the $nk$ upper bound beats
+the $k \log k$ upper bound for the original game. As for lower bounds, we have the entropy bounds
+of $O(n \log k)$ but for large $k$ relative to $n$ these are awful bounds. Instead, we give an $O(k)$
+lower bound as follows: \\
+Assume for the sake of contradiction that in some strategy that distinguishes all
+possible hidden vectors, there exists a pair of colors such that neither color was
+guessed in the first two spots (WLOG let these colors be 1 and 2). Then it would be
+impossible to distinguish between the hidden vectors $(1,2,\ldots,n)$ and
+$(2,1,\ldots,n)$, which contradicts the assumptions. Therefore, for any winning
+strategy, at least $k-1$ colors were guessed in these two spots. Since we can only
+guess two colors in those spots per turn, this gives us the lower bound of
+$(k-1)/2 =O(k)$ turns necessary to beat the game. \\
+This $O(k)$ lower bound starts to beat the $O(n \log k)$ when 
+$k > n \log n$. So we have the lower and upper bounds of $k$ and $nk$, respectively, 
+which only
+differ by the ``constant" $n$, which is relatively tiny in the cases we're considering.
 \clearpage
 \section*{References}
 Knuth, Doerr et al, Chvatal, Ko \& Teng, Ouali \& Sutherland, Grebinski \& Kucherov
