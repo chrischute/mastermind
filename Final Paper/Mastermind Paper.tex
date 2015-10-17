@@ -1,7 +1,7 @@
 \documentclass[12pt, a4paper]{article}
 \author{Aaron Berger\qquad Christopher Chute\qquad Matthew Stone}
 \title{Query Complexity of Mastermind Variants}
-\usepackage[bottom=1.5in, left=1in, right=1in, top=1.5in]{geometry}
+\usepackage[bottom=1.2in, left=0.75in, right=0.75in, top=1in]{geometry}
 \usepackage{amsmath, amsthm, amssymb}
 \newtheorem{lem}{Lemma}
 \usepackage{graphicx}
@@ -51,7 +51,7 @@ strategies.
 \section{Introduction}
 Mastermind is a two-player board game that was invented in 1970, and variants on its
 basic four-spot, six-color structure have been studied extensively.
-In the original game, there are two players: The codemaker and the codebreaker.
+In the original game, there are two players: the codemaker and the codebreaker.
 The codemaker initiates a game by constructing a 4-vector $p$ from the six available
 colors, and the codebreaker attempts to guess the hidden vector in as few turns as
 possible. A turn consists of two parts: First the codebreaker submits a query vector
@@ -134,13 +134,13 @@ game where the number of spots $n$ equals the number of colors $k$. Algorithms f
 that take $O(n \log n)$ turns were developed by [Ko, Teng] and [Ouali, Sutherland]. The
 information-theoretic lower bound on this game is $n - n/ \log n + O(1)$. We improve this to 
 $n - \log n$ for small $n$, and $n- \log \log n$ for sufficiently large $n$, which constitutes, 
-to our knowledge, the first improvement over the trivial information-thoretic lower bound
+to our knowledge, the first improvement over the trivial information-theoretic lower bound
 for any adaptive mastermind game. \\
 \subsection{Lower Bound on the Permutation Game}
 \begin{enumerate}
 \item \textit{Trivial Lower Bound.}
 	We have $n!$ possible hidden vectors, and each query has $n$ possible
-	responses.\footnote{The possible responses are $0, 1, \ldots, n-2, n$, since it is
+	responses.\footnote{The possible responses are $0, 1, \ldots, n-2,$ and $n$, since it is
 	impossible to get exactly $n-1$ black hits with no repeats and $n=k$.}
 	Since we must distinguish between every pair of vectors, we must ask at least
 		\begin{equation*}
@@ -156,11 +156,11 @@ for any adaptive mastermind game. \\
 	the response ``$k$ (black) hits'' is the number of permutations with $k$ fixed
 	points with respect to our guess vector.
 	\begin{center}
-	\includegraphics[keepaspectratio=true, width=0.7\textwidth]{buckets}
+	\includegraphics[keepaspectratio=true, width=0.7\textwidth]{buckets.pdf}
 	\end{center}
 	The size of a bucket of possible
 	solutions with $k$ hits can be counted easily: we choose the $k$ colors that are
-	fixed points (wrt our guess vector), then we permute the remaining $n-k$ colors
+	fixed points (with respect to our guess vector), then we permute the remaining $n-k$ colors
 	without any fixed points, giving $D(n - k)$, the derangements on an $(n-k)$-element
 	vector:
 		\begin{equation*}
@@ -233,7 +233,7 @@ for any adaptive mastermind game. \\
 			at least $x$ fixed points. Suppose we choose $x$ fixed points and
 			simply permute the rest of the vector. This gives $\binom{n}{x}(n-x)!
 			=\frac{n!}{x!}$ possible permutations. Clearly this includes all
-			vectors with at least $x$ fixed points (and overcounts by some
+			vectors with at least $x$ fixed points (and over-counts by some
 			margin), so the inequality holds.}
 			\begin{proof}
 				\begin{align*}
@@ -649,19 +649,19 @@ We begin by analyzing the NO-REPEATS game.
 
 		\item\textit{Main Proof.}\\
 		Let this bucket be $j$. From our assumptions $B_j = S$. Then we have two
-		subcases as before: 
+		sub-cases as before: 
 
 		\textit{Case 1.} If $j>0$, we make the following adjustments to the previous
 		proof.
 		\begin{enumerate}[label=\roman*.]
-		\item For the first subcase, we are now allowed repeats, so we
+		\item For the first sub-case, we are now allowed repeats, so we
 		can always let
 			\begin{equation*}
 			\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}
 			\end{equation*}
-		The proof of the rest of this subcase follows.
+		The proof of the rest of this sub-case follows.
 		
-		\item For the second subcase, we proceed as the previous section did by
+		\item For the second sub-case, we proceed as the previous section did by
 		considering $D_{\sigma_1}$, but now we are no longer guaranteed that the spots
 		2 through $n$ of these vectors have no
 		instance of $\sigma_1$
@@ -799,7 +799,8 @@ For the original non-adaptive game, we have the upper bound of $O(k \log k)$ tur
 version, we default to the $nk$ upper bound. Interestingly, for $k \geq e^n$ the $nk$ upper bound beats
 the $k \log k$ upper bound for the original game. As for lower bounds, we have the entropy bounds
 of $O(n \log k)$ but for large $k$ relative to $n$ these are awful bounds. Instead, we give an $O(k)$
-lower bound as follows: \\
+lower bound as follows:
+
 Assume for the sake of contradiction that in some strategy that distinguishes all
 possible hidden vectors, there exists a pair of colors such that neither color was
 guessed in the first two spots (WLOG let these colors be 1 and 2). Then it would be
@@ -807,7 +808,8 @@ impossible to distinguish between the hidden vectors $(1,2,\ldots,n)$ and
 $(2,1,\ldots,n)$, which contradicts the assumptions. Therefore, for any winning
 strategy, at least $k-1$ colors were guessed in these two spots. Since we can only
 guess two colors in those spots per turn, this gives us the lower bound of
-$(k-1)/2 =O(k)$ turns necessary to beat the game. \\
+$(k-1)/2 =O(k)$ turns necessary to beat the game.
+
 This $O(k)$ lower bound starts to beat the $O(n \log k)$ when 
 $k > n \log n$. So we have the lower and upper bounds of $k$ and $nk$, respectively, 
 which only
