@@ -87,10 +87,7 @@ necessary that a winning set of non-adaptive guesses includes the hidden vector
 itself.}
 
 \subsection{Previous Work}
-We build on the work of Grebinski and Kucherov; Chvatal; Doerr, Spohel, Thomas, and
-Winzen; Erdos and Renyi; Knuth; Ko and Teng; Goodrich; and Bshouty. For a list of
-previously established bounds on the query complexity of mastermind variants, please
-see the appendix.
+Original analysis of the game was performed by Knuth, who laid out the minimax algorithm. Chvatal, and later Doerr et. al, were able to successfully resolve the adaptive and non-adaptive games with repeated colors variant when there are fewer colors than spots. They also describe algorithms for the standard game for more colors than spots. Goodrich, and later Ko and Teng, provide algorithms for the no-repeats variant of the game. These are the areas that we worked on.
 
 \subsection{Our Contribution}
 We specifically focus on worst-case analisis of mastermind games where the number of colors
@@ -102,7 +99,7 @@ that it eliminates at least a fraction of $1/nk$ of the remaining solutions at a
 $O(n^2k \log k)$ upper bound. Additionally, we perform analysis on a new lower bound that
 models a set of best guesses such that the distribution of the responses among the solutions
 approaches an even distribution (the best possible distrubution) as quickly as possible. With this
-analysis, we find a new lower bound (on the permutation game) of $n- \log \log n$ turns.
+analysis, we obtain an improvement over the trivial lower bound (on the permutation game) with a new bound of $n- \log \log n$ turns.
 Next, we extend two arguments by Doerr et al.: one for the black-peg NO-REPEATS game to 
 give an $n \log k$ lower bound, and one to the original non-adaptive game for an $O(k \log k)$ 
 upper bound. Finally, we end with a few notes and conjectures about the different variants of
@@ -116,7 +113,7 @@ In that way, for a given hidden vector matrix $X$ and query matrix $Q$,
 the codemaker's black-peg response to the query is given by $X\cdot Q$.
 (We are treating these matrices as vectors in $\mathbb R^{nk}$.)
 Let $S$ be the subspace spanned by the set of possible queries. 
-As the set of all possible queries spans $S$, there must exist a basis of queries,
+Then there must exist a basis of queries,
 $K$, with $|K|=\text{dim}(S)$ and $K$ spanning $S$. $S\subset \mathbb{R}^{n\times k}$,
 so $\text{dim}(S)\le \text{dim}(\mathbb{R}^{n\times k})=n\cdot k$.
 Now, we choose this basis as our set of guesses. We look at the black-hit responses to 
@@ -175,7 +172,7 @@ for any adaptive mastermind game. \\
 	as each previous guess simply eliminates some solutions from each bucket.
 	
 	\item\textit{Notation.}
-	Let $S_{n}(t)$ be the minimum number of possible solutions remaining
+	We let $S_{n}(t)$ be a lower bound on the minimum number of possible solutions remaining
 	after $t$ guesses for any guessing strategy. We compute this lower bound by using
 	a hypothetical set of guesses which are each guaranteed to eliminate at least as 
 	many solutions as any other guess we could make at any point in the game. 
@@ -216,7 +213,7 @@ for any adaptive mastermind game. \\
 		changing $x$ to be something other than optimal always increases the RHS
 		of this equation. Thus we have
 		\begin{align*}
-		S_{n}(t-1) & \le x\cdot S_{n}(t) + \frac{n!}{x!}\quad\forall x
+		S_{n}(t-1) & \le x\cdot S_{n}(t) + \sum_{i=x}^n\binom{n}{i}D(n-i)\quad\forall x
 		\end{align*}
 		Where $t$ is the number of turns taken, $S_{n}(t)$ is the number of possible
 		solutions remaining after the $t$-th turn, and $D(k)$ is the derangements
@@ -665,7 +662,7 @@ We begin by analyzing the NO-REPEATS game.
 		considering $D_{\sigma_1}$, but now we are no longer guaranteed that the spots
 		2 through $n$ of these vectors have no
 		instance of $\sigma_1$
-		since colors can be repeated. Whereas before, inducted on $n-1$ spots with
+		since colors can be repeated. Whereas before, we inducted on $n-1$ spots with
 		$k-1$ possible colors, we now have to induct on $n-1$ spots still with $k$
 		possible colors. This is fine,
 		though, as by the induction hypothesis we can therefore eliminate
@@ -679,7 +676,7 @@ We begin by analyzing the NO-REPEATS game.
 		we're considering produce the same response.
 		
 		However, by our assumptions, $\sigma$ is an $n$-vector such that all of the
-		$n$ vectors fall into a  single bucket $j$. Since every vector we're
+		$n$-vectors fall into a  single bucket $j$. Since every vector we're
 		considering for induction is in the same sub-bucket 
 		$D_{\sigma_1}$, if we consider only spots 2 through $n$, all of these
 		$(n-1)$-vectors will have exactly one fewer hit than they did as $n$-vectors,
