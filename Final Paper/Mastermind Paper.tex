@@ -9,6 +9,8 @@
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{footnote}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{mmrefs.bib}
 
 % 	 \begin{header footer formatting}
 %    \usepackage{fancyhdr}
@@ -65,7 +67,7 @@ two-part response:
 	\end{enumerate}
 In 1976, Donald Knuth presented a greedy ``minimax'' algorithm, and he showed via
 computer simulation that his algorithm always guesses the hidden vector in five turns
-or fewer.\footnote{DK76} Moreover, the minimax algorithm for Mastermind is optimal in
+or fewer \cite{DK76}. Moreover, the minimax algorithm for Mastermind is optimal in
 the worst case---there is no algorithm that can guarantee to win in at most four turns.
 \footnote{Knuth shows that the worst-case response to any possible first guess leaves
 at least 256 possible solution vectors. After this, with 14 possible responses per turn,
@@ -128,7 +130,7 @@ uses black hits, this bound holds for every variant of the game analyzed in this
 \section{Adaptive Strategies}
 We begin by performing an analysis on the PERMUTATION game, which is the NO-REPEATS
 game where the number of spots $n$ equals the number of colors $k$. Algorithms for this game
-that take $O(n \log n)$ turns were developed by [Ko, Teng] and [Ouali, Sutherland]. The
+that take $O(n \log n)$ turns were developed by \cite{KT86} and \cite{OS13}. The
 information-theoretic lower bound on this game is $n - n/ \log n + O(1)$. We improve this to 
 $n - \log n$ for small $n$, and $n- \log \log n$ for sufficiently large $n$, which constitutes, 
 to our knowledge, the first improvement over the trivial information-theoretic lower bound
@@ -811,10 +813,13 @@ This $O(k)$ lower bound starts to beat the $O(n \log k)$ when
 $k > n \log n$. So we have the lower and upper bounds of $k$ and $nk$, respectively, 
 which only
 differ by the ``constant" $n$, which is relatively tiny in the cases we're considering.
-\clearpage
-\section*{References}
-Knuth, Doerr et al, Chvatal, Ko \& Teng, Ouali \& Sutherland, Grebinski \& Kucherov
 
+% TODO: gather all citations into bibliography.
+\textit{TO CITE: } Knuth, Doerr et al, Chvatal, Ko \& Teng, Ouali \& Sutherland, Grebinski \& Kucherov
+
+\medskip
+
+\printbibliography
 \end{document}
 
 

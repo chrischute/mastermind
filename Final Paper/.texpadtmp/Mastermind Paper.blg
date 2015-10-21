@@ -1,0 +1,15 @@
+[0] Config.pm:324> INFO - This is Biber 2.1
+[0] Config.pm:327> INFO - Logfile is '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.blg'
+[52] biber-darwin:276> INFO - === Wed Oct 21, 2015, 12:48:44
+[53] Biber.pm:333> INFO - Reading '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.bcf'
+[173] Biber.pm:645> INFO - Found 3 citekeys in bib section 0
+[194] Biber.pm:2977> INFO - Processing section 0
+[215] Biber.pm:3115> INFO - Looking for bibtex format file '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/mmrefs.bib' for section 0
+[219] bibtex.pm:1021> INFO - Decoding LaTeX character macros into UTF-8
+[220] bibtex.pm:895> INFO - Found BibTeX data source '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/mmrefs.bib'
+[278] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[279] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[279] Biber.pm:2854> INFO - Sorting list 'nty' of type 'entry' with scheme 'nty' and locale 'en-US'
+[279] Biber.pm:2858> INFO - No sort tailoring available for locale 'en-US'
+[284] bbl.pm:505> INFO - Writing '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.bbl' with encoding 'ascii'
+[285] bbl.pm:596> INFO - Output to /Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.bbl
