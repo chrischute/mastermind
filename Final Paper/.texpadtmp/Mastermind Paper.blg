@@ -1,15 +1,14 @@
 [0] Config.pm:324> INFO - This is Biber 2.1
 [0] Config.pm:327> INFO - Logfile is '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.blg'
-[52] biber-darwin:276> INFO - === Wed Oct 21, 2015, 12:48:44
-[53] Biber.pm:333> INFO - Reading '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.bcf'
-[173] Biber.pm:645> INFO - Found 3 citekeys in bib section 0
+[55] biber-darwin:276> INFO - === Sun Oct 25, 2015, 19:38:54
+[55] Biber.pm:333> INFO - Reading '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.bcf'
+[174] Biber.pm:645> INFO - Found 5 citekeys in bib section 0
 [194] Biber.pm:2977> INFO - Processing section 0
 [215] Biber.pm:3115> INFO - Looking for bibtex format file '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/mmrefs.bib' for section 0
-[219] bibtex.pm:1021> INFO - Decoding LaTeX character macros into UTF-8
-[220] bibtex.pm:895> INFO - Found BibTeX data source '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/mmrefs.bib'
-[278] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[279] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[279] Biber.pm:2854> INFO - Sorting list 'nty' of type 'entry' with scheme 'nty' and locale 'en-US'
-[279] Biber.pm:2858> INFO - No sort tailoring available for locale 'en-US'
-[284] bbl.pm:505> INFO - Writing '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.bbl' with encoding 'ascii'
-[285] bbl.pm:596> INFO - Output to /Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/.texpadtmp/Mastermind Paper.bbl
+[218] bibtex.pm:1021> INFO - Decoding LaTeX character macros into UTF-8
+[219] bibtex.pm:895> INFO - Found BibTeX data source '/Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Final Paper/mmrefs.bib'
+[220] Utils.pm:146> WARN - Entry VC83 does not parse correctly
+[222] Utils.pm:146> WARN - Name "Benjamin Doerr, Reto Spohel, Henning Thomas," has too many commas: skipping name
+[226] Utils.pm:162> ERROR - BibTeX subsystem: /var/folders/g7/n1gxxr153n953r3wzpz5w1jr0000gn/T/7mEcFFh3F3/mmrefs.bib_6826.utf8, line 11, syntax error: found "title", expected end of entry ("}" or ")") (skipping to next "@")
+[226] Biber.pm:106> INFO - WARNINGS: 2
+[226] Biber.pm:110> INFO - ERRORS: 1
