@@ -89,10 +89,10 @@ necessary that a winning set of non-adaptive guesses includes the hidden vector
 itself.}
 
 \subsection{Previous Work}
-Original analysis of the game was performed by Knuth, who laid out the minimax algorithm. Chvatal, and later Doerr et. al, were able to successfully resolve the adaptive and non-adaptive games with repeated colors variant when there are fewer colors than spots. They also describe algorithms for the standard game for more colors than spots. Goodrich, and later Ko and Teng, provide algorithms for the no-repeats variant of the game. These are the areas that we worked on.
+Original analysis of the game was performed by Knuth, who laid out the minimax algorithm. \cite{VC83}, and later \cite{DS13}, were able to successfully resolve the adaptive and non-adaptive games with repeated colors variant when there are fewer colors than spots. They also describe algorithms for the standard game for more colors than spots. \cite{KT86}, and later \cite{OS13}, provide algorithms for the no-repeats variant of the game. 
 
 \subsection{Our Contribution}
-We specifically focus on worst-case analisis of mastermind games where the number of colors
+We primarily focus on three new methods for worst-case analysis of mastermind games where the number of colors
 $k$ is greater than or equal to the number of spots $n$. Unlike the case where $k < n$,
 there are barely any tight bounds for any variant of the game, and some commonly analyzed
 variants have no upper bounds at all. We first show an upper bound of $nk$ for any mastermind
@@ -102,7 +102,7 @@ $O(n^2k \log k)$ upper bound. Additionally, we perform analysis on a new lower b
 models a set of best guesses such that the distribution of the responses among the solutions
 approaches an even distribution (the best possible distrubution) as quickly as possible. With this
 analysis, we obtain an improvement over the trivial lower bound (on the permutation game) with a new bound of $n- \log \log n$ turns.
-Next, we extend two arguments by Doerr et al.: one for the black-peg NO-REPEATS game to 
+Next, we extend two arguments by \cite{DS13}: one for the black-peg NO-REPEATS game to 
 give an $n \log k$ lower bound, and one to the original non-adaptive game for an $O(k \log k)$ 
 upper bound. Finally, we end with a few notes and conjectures about the different variants of
 the game when the number of colors far exceeds the number of spots.
@@ -325,7 +325,7 @@ for any adaptive mastermind game. \\
 	turns or fewer.
 \subsection{Best Guesses and the Minimax Algorithm}
 We now move on to an analysis of the best possible guesses and the minimax algorithm. Here, 
-the best possible guess is defined in the same way as [Knuth]: it is the one such that the 
+the best possible guess is defined in the same way as \cite{DK76}: it is the one such that the 
 maximum number of solutions remaining over all responses is minimized (equivalently, the 
 minimum number of solutions eliminated over all responses is maximized). This is the guess
 chosen by the minimax algorithm. \\
@@ -521,7 +521,7 @@ We begin by analyzing the NO-REPEATS game.
 			guess whose largest bucket is $B_j$ with $j>0$.
 			\end{enumerate}
 		\end{proof}
-	\item The minimax algorithm is a guessing strategy described by Knuth [DK76].
+	\item The minimax algorithm is a guessing strategy described by Knuth \cite{DK76}.
 	At each turn, the algorithm assigns each of the possible guesses a score equal
 	to the minimum number of solutions that they would eliminate over all
 	possible responses from the codemaker. It then picks the guess with the maximum
@@ -701,7 +701,7 @@ We begin by analyzing the NO-REPEATS game.
 	\end{proof}
 	
 \section{Non-Adaptive Strategies}
-This section follows closely the reasoning of [Doerr et al] as they analyze non-adaptive games. 
+This section follows closely the reasoning of \cite{DS13} as they analyze non-adaptive games. 
 We perform an analysis of the Black-Peg, NO-REPEATS game to get a similar bound to their original
 Black-Peg lower bound using entropy. Then, we perform a small extension of one of their proofs to 
 provide an upper bound on non-adaptive strategies for $k \geq n$.
@@ -712,7 +712,7 @@ $O(n \log k)$ queries to uniquely identify all possible hidden vectors.
 \end{theorem}
 
 \begin{proof}
-Our proof follows along similar lines as [Doerr et al]. Let $q_i$ be the $i$-th
+Our proof follows along similar lines as \cite{DS13}. Let $q_i$ be the $i$-th
 guess of our deterministic strategy. Let $s$ be the smallest index such that all
 $k!/(k-n)!$ codes are uniquely determined by the responses to $q_1, q_2, \ldots, q_s$.
 
@@ -775,10 +775,10 @@ This gives us a lower bound of $O(n \log k)$ turns for any non-adaptive strategy
 Mastermind with no repeats.
 \end{proof}
 \subsection{Upper Bound for Original Game}
-First, we note that [Doerr et al] showed the existence of an $O(n \log n)$ strategy for
+First, we note that \cite{DS13} showed the existence of an $O(n \log n)$ strategy for
 $k = n$. When $k>n$, we add 'imaginary spots' until $n = k$, and fill them in with any
 arbitrary colors. Then, when we make our guesses, we adjust the responses accordingly
-to account for the imaginary spots. By [Doerr et al]'s result, we have a strategy that
+to account for the imaginary spots. By \cite{DS13}'s result, we have a strategy that
 takes $O(k \log k)$ guesses. 
 
 \section{Playing Mastermind with Many, Many Colors}
@@ -791,7 +791,7 @@ hidden code. But we can achieve this bound to within a constant factor for large
 Simply partition the colors into groups of $n$, and guess each group. Since there are at most $n$ colors
 in the hidden vector and each color is in $1$ group, after this process (which takes $\lceil k/n \rceil$
 guesses), there are at most $n$ groups of $n$ colors that got no hits, so the color pool is reduced to
-$n^2$. From [Doerr et al] we have a strategy that takes $O(n^2)$ at this point, so for $k/n \geq n^2$, i.e.
+$n^2$. From \cite{DS13} we have a strategy that takes $O(n^2)$ at this point, so for $k/n \geq n^2$, i.e.
 $k\ge n^3$, the lower bound and this upper bound agree to within a constant factor.
 \subsection{Non-Adaptive Games}
 For the original non-adaptive game, we have the upper bound of $O(k \log k)$ turns. For the NO-REPEATS
@@ -814,8 +814,6 @@ $k > n \log n$. So we have the lower and upper bounds of $k$ and $nk$, respectiv
 which only
 differ by the ``constant" $n$, which is relatively tiny in the cases we're considering.
 
-% TODO: gather all citations into bibliography.
-\textit{TO CITE: } Knuth, Doerr et al, Chvatal, Ko \& Teng, Ouali \& Sutherland, Grebinski \& Kucherov
 
 \medskip
 
