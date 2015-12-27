@@ -9,8 +9,9 @@
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage{footnote}
-\usepackage{biblatex}
-\bibliography{mmrefs.bib}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[nottoc]{tocbibind}
 
 % 	 \begin{header footer formatting}
 %    \usepackage{fancyhdr}
@@ -815,7 +816,8 @@ which only
 differ by the ``constant" $n$, which is relatively tiny in the cases we're considering.
 
 \clearpage
-\printbibliography
+\bibliographystyle{plain}
+\bibliography{mmrefs}
 \end{document}
 
 
