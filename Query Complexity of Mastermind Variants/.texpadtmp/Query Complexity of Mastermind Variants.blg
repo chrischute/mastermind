@@ -10,45 +10,45 @@ I was expecting a `,' or a `}'---line 11 of file ../QCMV_Bibliography.bib.bib
 I'm skipping whatever remains of this entry
 Warning--empty title in VC83
 Warning--empty journal in VC83
-You've used 1 entry,
+You've used 3 entries,
             2253 wiz_defined-function locations,
-            530 strings with 4225 characters,
-and the built_in function-call counts, 193 in all, are:
-= -- 15
-> -- 7
+            545 strings with 4509 characters,
+and the built_in function-call counts, 823 in all, are:
+= -- 81
+> -- 31
 < -- 0
-+ -- 3
-- -- 2
-* -- 13
-:= -- 41
-add.period$ -- 1
-call.type$ -- 1
-change.case$ -- 3
++ -- 13
+- -- 10
+* -- 69
+:= -- 143
+add.period$ -- 7
+call.type$ -- 3
+change.case$ -- 13
 chr.to.int$ -- 0
-cite$ -- 3
-duplicate$ -- 8
-empty$ -- 14
-format.name$ -- 2
-if$ -- 33
+cite$ -- 5
+duplicate$ -- 26
+empty$ -- 66
+format.name$ -- 10
+if$ -- 161
 int.to.chr$ -- 0
-int.to.str$ -- 1
-missing$ -- 1
-newline$ -- 6
-num.names$ -- 2
-pop$ -- 7
+int.to.str$ -- 3
+missing$ -- 3
+newline$ -- 16
+num.names$ -- 6
+pop$ -- 13
 preamble$ -- 1
-purify$ -- 3
+purify$ -- 11
 quote$ -- 0
-skip$ -- 3
+skip$ -- 13
 stack$ -- 0
-substring$ -- 5
-swap$ -- 1
+substring$ -- 59
+swap$ -- 5
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 4
+type$ -- 12
 warning$ -- 2
-while$ -- 2
-width$ -- 2
-write$ -- 7
+while$ -- 10
+width$ -- 4
+write$ -- 27
 (There was 1 error message)

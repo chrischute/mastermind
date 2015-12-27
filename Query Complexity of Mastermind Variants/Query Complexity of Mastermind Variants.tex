@@ -79,9 +79,9 @@ The variants which we will study are differentiated by settings of the tuple $(n
 		\end{equation}
 		and
 		\begin{equation*}
-			w(Q_t, H) = \max_{\sigma}~b(\sigma(Q_t), H),
+			w(Q_t, H) = \max_{\sigma\in S_{Q_t}}~b(\sigma(Q_t), H) - b(Q_t, H),
 		\end{equation*}
-		where $\sigma$ iterates over all permutations of $Q_t$. We note that this is the distance function used in the original game of Mastermind.
+		We note that this is the distance function used in the original game of Mastermind.
 
 		\item\textit{``Black hits only.''} When $\Delta$ is the black hits only distance function, it is defined by $\Delta(Q_t, H) = b(Q_t, H)$, where $b$ is defined as in equation (1).
 	\end{enumerate}
@@ -93,23 +93,35 @@ The variants which we will study are differentiated by settings of the tuple $(n
 	When $A$ is false, we say that the game is \textit{non-adaptive}. In this case the codebreaker submits $m$ queries $Q_1, Q_2, \ldots, Q_m$ all at once (where the codebreaker chooses $m$). The codemaker then reports a feedback vector of the form $(\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_m, H))$, after which the codebreaker must submit the final query $\overline{Q}$. The codebreaker wins if and only if $\overline{Q} = H$.
 \end{enumerate}
 
-Throughout we define $f(n, k, \Delta, R, A)$ to be the smallest integer such that the codebreaker can determine any hidden sequence $H$ in $f(n, k, \Delta, R, A)$ queries during a game with the corresponding assignment of $n$, $k$, $\Delta$, $R$, and $A$. For example, Donald Knuth's result that the original game of Mastermind (four positions, six colors, black and white hits, with repeats, adaptive) can always be solved in five turns is equivalently stated as $f(4, 6, \Delta = (b,w), R=T, A=T) = 4$. We will write simply $f(n, k)$ when the context is clear.
+Throughout we define $f(n, k, \Delta, R, A)$ to be the smallest integer such that the codebreaker can determine any hidden sequence $H$ in $f(n, k, \Delta, R, A)$ queries during a game with the corresponding assignment of $n$, $k$, $\Delta$, $R$, and $A$. We will denote true and false by $T$ and $F$, respectively, for assignment of Boolean variables. For example, Donald Knuth's result that the original game of Mastermind (four positions, six colors, black and white hits, with repeats, and adaptive) can always be determined after four turns is equivalently stated as $f(4, 6, \Delta = (b,w), R=T, A=T)\le 4$ (in fact, this bound holds with equality). We will write simply $f(n, k)$ when the context is clear.
 
-We prove the following three main results:
-\begin{enumerate}[label=\arabic*.]
-	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black hits distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.
-	
+We prove three main results, each of which builds on the previous work related to a given Mastermind variant.
+\begin{enumerate}[label=]
+	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black hits only distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.
+\end{enumerate}
+This theorem facilitates analysis of a common variant of Mastermind, in which adaptive queries are made with feedback given by the black hits only distance function. To demonstrate the theorem's usefulness, suppose that the codebreaker is in turn $t$, hence has made queries $Q_1, Q_2 \ldots, Q_{t-1}$ and received feedback instances $\Delta(Q_1, H), \Delta(Q_2, H) \ldots, \Delta(Q_{t-1},H)$. Given this set of feedback, the codebreaker can eliminate a number of possibilities for $H$. For example, suppose that a sequence $\tilde{H} = (\tilde{h}_1, \tilde{h}_2 \ldots, \tilde{h}_n)$ satisfies $\Delta(\tilde{H}, H)\neq \Delta(Q_s, H)$ for some $s\in\{1,2,\ldots, t-1\}$. Then clearly $\tilde{H}\neq H$.
+
+Using this process, the codebreaker may construct a set $S_t$ of possibilities for $H$ in turn $t$ after $t-1$ query-feedback interactions have occurred. That is, $S_t$ contains sequences of length $n$ with components from the alphabet $\mathcal{A}$ such that no member of $S_t$ has been eliminated by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. Theorem 1 then states that given $S_t$, there always exists a query $Q_t$ such that the response $\Delta(Q_t, H)$ will eliminate a fraction $1/(nk)$ of the members of $S_t$ as possibilities for $H$. By Theorem 1, $|S_{t+1}|\le (1-1/(nk))|S_{t}|$, which guarantees a quantifiable amount of progress at each turn of an adaptive, black hits only variant of mastermind.
+
+Our second main result concerns the Permutation Game, in which $n=k$ and $R=F$, thus restricting the hidden sequence $H$ to be a permutation of the alphabet $\mathcal{A}$.
+\begin{enumerate}[label=]
 	\item\textbf{Theorem 2.} Consider the Permutation Game defined by $n = k$ and $R = F$. Let $\Delta = b$ (black hits only distance function) and let $A$ be fixed. Then for all sufficiently large $n$, we have
 	\begin{equation*}
 		f(n, k = n, \Delta = b, R = F, A) \ge n - \log\log(n).
 	\end{equation*}
-	
-	\item\textbf{Theorem 3.} Consider any non-adaptive Mastermind variant, defined by $A=F$. Let $n$, $k$, $\Delta$ and $R$ be fixed. Then there exists a constant $c>0$ such that
+\end{enumerate}
+Explicit algorithms that take $O(n \log n)$ turns to solve this variant were developed by Ko and Teng\cite{KT86}, and Ouali and Sutherland\cite{OS13}. Ko and Teng approach the problem with an algorithm akin to binary search. The algorithm queries a sequence $Q_t$, swaps two components, and queries again, doing so repeatedly until a previously unknown component of $H$ is determined by the values of the distance function across these repeated queries. Ouali and Sutherland improve this algorithm primarily by altering the search routine after a single component of $H$ has been identified. In this way, Ouali and Sutherland achieve an average factor of 2 reduction in the number of queries needed to identify $H$. In our notation, these results state that there exists a constant $c>0$ such that $f(n, k=n, \Delta=b, R = F, A = T)\le c\cdot n\log(n)$.
+
+Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n)\ge n - n/\log(n) + c$ for some constant $c>0$. We improve this lower bound to $f(n)\ge n - \log(n)$ for small $n$, and $f(n)\ge n- \log \log(n)$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
+
+Our third result relates to non-adaptive variants of Mastermind, which correspond to $A=F$ in our notation.
+\begin{enumerate}[label=]
+	\item\textbf{Theorem 3.} Consider non-adaptive Mastermind, defined by $A=F$. Let $\Delta$ be the black hits only distance function, and let $n$, $k$, and $R$ be fixed. Then there exists a constant $c>0$ such that
 	\begin{equation*}
-		f(n, k, \Delta, R, A=F)\ge c\cdot n\log(k).
+		f(n, k, \Delta = b, R, A=F)\ge c\cdot n\log(k).
 	\end{equation*}
 \end{enumerate}
-
+% TODO: include previous work on problems related to third theorem.
 
 \clearpage
 \bibliographystyle{acm}

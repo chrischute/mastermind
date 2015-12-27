@@ -101,7 +101,7 @@ game. We perform the first ever worst-case analysis of Knuth's minimax algorithm
 that it eliminates at least a fraction of $1/nk$ of the remaining solutions at any step, for an 
 $O(n^2k \log k)$ upper bound. Additionally, we perform analysis on a new lower bound that
 models a set of best guesses such that the distribution of the responses among the solutions
-approaches an even distribution (the best possible distrubution) as quickly as possible. With this
+approaches an even distribution (the best possible distribution) as quickly as possible. With this
 analysis, we obtain an improvement over the trivial lower bound (on the permutation game) with a new bound of $n- \log \log n$ turns.
 Next, we extend two arguments by \cite{DS13}: one for the black-peg NO-REPEATS game to 
 give an $n \log k$ lower bound, and one to the original non-adaptive game for an $O(k \log k)$ 
@@ -123,7 +123,7 @@ Now, we choose this basis as our set of guesses. We look at the black-hit respon
 these guesses, which gives us the dot-products of the hidden vector $X$ with each of
 the basis vectors. By distribution, we can then uniquely determine the dot-products of 
 $X$ with each of the basis vectors of some arbitrary orthogonal basis of $S$, and we can
-then determne the projections of $X$ onto each basis vector in this orthogonal basis.
+then determine the projections of $X$ onto each basis vector in this orthogonal basis.
 Adding these components together allows us to uniquely determine $X \in S$. 
 Thus, there exists a set of at most $n\cdot k$ queries which uniquely determines every
 possible hidden permutation. (Note that since this strategy is non-adaptive and only
