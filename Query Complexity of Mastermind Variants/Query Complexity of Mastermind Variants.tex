@@ -1,0 +1,143 @@
+% Author and Title Information
+\newcommand*{\thetitle}{Query Complexity of Mastermind Variants}
+\newcommand*{\theauthor}{Aaron Berger\quad Christopher Chute\quad Matthew Stone}
+\newcommand*{\duedate}{December 26, 2015}
+
+% Document Settings
+\documentclass[12pt, a4paper]{article}
+\author{\theauthor}
+\title{\thetitle}
+\date{\duedate}
+\usepackage[top=.75in, left=0.5in, right=0.5in, bottom=1.5in]{geometry}
+\usepackage{amsmath, amsthm, amssymb}
+\newtheorem{lem}{Lemma}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage[T1]{fontenc}
+\usepackage{titling}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[nottoc]{tocbibind}
+
+\setlength{\droptitle}{-4em}
+\posttitle{\par\end{center}\vspace{-.35em}}
+
+% Header Formatting
+%\usepackage{fancyhdr}
+%\setlength{\headheight}{48pt}
+%\pagestyle{fancyplain}
+%\lhead{\thetitle}
+%\rhead{\theauthor\\\duedate}
+%\rfoot{}
+%\cfoot{\thepage}
+
+% Math Macros
+\newcommand{\R}{\mathbb{R}}           % Real numbers
+\newcommand{\Z}{\mathbb{Z}}           % Integer numbers
+\newcommand{\Q}{\mathbb{Q}}           % Rational numbers
+\newcommand{\N}{\mathbb{N}}           % Natural numbers
+\newcommand{\C}{\mathbb{C}}           % Complex numbers
+\newcommand{\F}{\mathbb{F}}           % Field (e.g, Z mod pZ)
+\newcommand*{\bigbar}{\overline}      % Overline
+\newcommand*{\ihat}{\hat{\imath}}     % i-hat
+\newcommand*{\jhat}{\hat{\jmath}}     % j-hat
+\newcommand{\lcm}{\text{l.c.m.}}      % Least common multiple
+\newcommand{\union}{\cup}             % Set union
+\newcommand{\intersect}{\cap}         % Set intersection
+\newcommand{\im}{\text{im}}           % Image of a function
+\newcommand{\vphi}{\varphi}           % Attractive phi
+\newcommand{\normal}{\trianglelefteq} % Is a normal subgroup of
+\newcommand{\abel}{^{\text{ab}}}      % Abelianization
+\newcommand{\Aut}{\text{Aut}}         % Automorphisms
+\newcommand{\Hol}{\text{Hol}}         % Holomorph
+\newcommand{\inv}{^{-1}}              % Inverse
+\newcommand{\nth}{^{\text{th}}}       % Superscript n-th
+
+\begin{document}
+\maketitle
+\begin{abstract}
+	We study variants of Mastermind, a popular board game whose objective is sequence reconstruction. In this two-player game, the codemaker constructs a hidden sequence $H = (h_1, h_2, \ldots, h_n)$ of colors selected from an alphabet $\mathcal{A} = \{1,2,\ldots, k\}$ (\textit{i.e.,} $h_i\in\mathcal{A}$ for all $i\in\{1,2,\ldots, n\}$). The game then proceeds in turns, each of which consists of two parts: in turn $t$, the codebreaker first submits a query sequence $Q_t = (q_1, q_2, \ldots, q_n)$ with $q_i\in \mathcal{A}$ for all $i$, and second receives feedback $\Delta(Q_t, H)$, where $\Delta$ is a function of distance between two $n$-sequences. The game terminates when $Q_t = H$, and the codebreaker seeks to end the game in as few turns as possible. Throughout we let $f(n,k)$ denote the smallest integer such that the codebreaker can determine any $H$ in $f(n,k)$ turns.\cite{VC83} We prove three main results: First, we show that given a set $S_{t}$ of sequences which is known to contain $H$, there always exists a query whose feedback implicitly produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$. Second, when $k = n$ and $h_i\neq h_j$ for all $i\neq j$, we prove that $f(n,k)\ge n - \log\log(n)$ for all sufficiently large $n$. Third, when feedback is not present in the game, we show that there exists a constant $c>0$ such that $f(n,k)\ge c\cdot n\log(k)$.
+\end{abstract}
+
+\section{Introduction}
+
+Variants of Mastermind are a family of two-player games centered around reconstruction of a hidden sequence. In all variants of the game, one player is given the role of ``codemaker,'' and the other is denoted the ``codebreaker.'' The codemaker begins the game by constructing a hidden sequence $H = (h_1, h_2, \ldots, h_n)$ where each component is selected from an alphabet $\mathcal{A} = \{1,2,\ldots,k\}$ of $k$ colors (that is, $h_i\in\mathcal{A}$ for all $i\in\{1,2,\ldots,n\}$). The goal of the codebreaker is to uniquely determine the hidden sequence $H$ through a series of queries, which are submissions of vectors of the form $Q_t = (q_1, q_2, \ldots, q_n)$. The codebreaker always seeks to determine $H$ with as few queries as possible, however the nature of these queries, the feedback received after a query, and the restrictions on $H$ differ between variants.
+
+The variants which we will study are differentiated by settings of the tuple $(n, k, \Delta, R, A)$. These parameters are defined as follows:
+\begin{enumerate}[label=(\roman*)]
+	\item ($n$) \textit{Length of Sequence.} The parameter $n$ denotes the length of the hidden sequence $H$ created by the codemaker, hence $H = (h_1, h_2, \ldots, h_n)$. The codebreaker is also required to submit query vectors of length $n$, so the $t\nth$ query vector takes the form $Q_t = (q_1, q_2, \ldots, q_n)$.
+	
+	\item ($k$) \textit{Size of Alphabet.} This parameter determines the number of possible values for components of $H$ and $Q_t$. Each game is accompanied by an alphabet $\mathcal{A} = \{1,2,\ldots,k\}$ from which the components of $H$ and $Q_t$ are selected. That is, $h_i\in\{1,2,\ldots,k\}$ and $q_i\in\{1,2,\ldots,k\}$.
+	
+	\item($\Delta$) \textit{Distance Function.} On the $t\nth$ turn of a game, the codebreaker submits a query sequence $Q_t = (q_1, q_2, \ldots, q_n)$. The codemaker then gives feedback $\Delta(Q_t, H)$, which is roughly a measure of distance between $Q_t$ and $H$. The information yielded by $\Delta(Q_t, H)$ may be used to guide the choice of $Q_{t+1}$, the next sequence to be guessed. Hence the choice of distance function affects the codebreaker's ability to make an informed query on the following turn. We study the following distance functions:
+	\begin{enumerate}[label=\alph*.]
+		\item\textit{``Black hits and white hits.''} Let $Q_t$ and $H$ be as above. The black hits and white hits distance function is defined by $\Delta(Q_t, H) = (b(Q_t, H), w(Q_t, H))$ where
+		\begin{equation}
+			b(Q_t, H) = \left|\{i\in\Z\mid q_i = h_i,~ 1\le i\le n\}\right|,
+		\end{equation}
+		and
+		\begin{equation*}
+			w(Q_t, H) = \max_{\sigma}~b(\sigma(Q_t), H),
+		\end{equation*}
+		where $\sigma$ iterates over all permutations of $Q_t$. We note that this is the distance function used in the original game of Mastermind.
+
+		\item\textit{``Black hits only.''} When $\Delta$ is the black hits only distance function, it is defined by $\Delta(Q_t, H) = b(Q_t, H)$, where $b$ is defined as in equation (1).
+	\end{enumerate}
+	
+	\item($R$) \textit{Repetition.} The parameter $R$ is a Boolean restriction on the components of $H$. If $R$ is true, we say that the variant game is \textit{with repeats} or that repeats are allowed. In this case, the hidden vector $H$ may have repeated colors, that is, we allow $h_i = h_j$ for any $i,j\in\{1,2,\ldots, n\}$. When $R$ is false, we say that the variant is \textit{no repeats}, and we require $h_i\neq h_j$ when $i\neq j$. In particular, when $R$ is false and $k = n$, we have that $H$ must be a permutation of $(1, 2, \ldots, n)$, and we refer to this variant as the \textit{Permutation Game.}
+	
+	\item($A$) \textit{Adaptiveness.} The Boolean parameter $A$ determines whether the codebreaker receives feedback after each query. If $A$ is true, we say that the game is \textit{adaptive}. In this case the game consists of two-part turns: on the $t\nth$ turn, the codebreaker first submits a query sequence $Q_t$, and then receives feedback $\Delta(Q_t, H)$. The codebreaker may use the feedback to inform the query $Q_{t+1}$ made in turn $t+1$, and the game ends in turn $s$ if and only if $Q_s = H$.
+	
+	When $A$ is false, we say that the game is \textit{non-adaptive}. In this case the codebreaker submits $m$ queries $Q_1, Q_2, \ldots, Q_m$ all at once (where the codebreaker chooses $m$). The codemaker then reports an $m$-vector of feedback $(\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_m, H))$, after which the codebreaker must submit the final query $\overline{Q}$. The codebreaker wins if and only if $\overline{Q} = H$.
+\end{enumerate}
+
+Throughout we define $f(n, k, \Delta, R, A)$ to be the smallest integer such that the codebreaker can determine any hidden sequence $H$ in $f(n, k, \Delta, R, A)$ queries during a game with the corresponding assignment of $n$, $k$, $\Delta$, $R$, and $A$. For example, Donald Knuth's result that the original game of Mastermind (four positions, six colors, black and white hits, with repeats, adaptive) can always be solved in five turns is equivalently stated as $f(4, 6, \Delta = (b,w), R=T, A=T) = 4$. We will write simply $f(n, k)$ when the context is clear.
+
+We prove the following three main results:
+\begin{enumerate}[label=\arabic*.]
+	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black hits distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.
+	
+	\item\textbf{Theorem 2.} Consider the Permutation Game defined by $n = k$ and $R = F$. Let $\Delta = b$ (black hits only distance function) and let $A$ be fixed. Then for all sufficiently large $n$, we have
+	\begin{equation*}
+		f(n, k = n, \Delta = b, R = F, A) \ge n - \log\log(n).
+	\end{equation*}
+	
+	\item\textbf{Theorem 3.} Consider any non-adaptive Mastermind variant, defined by $A=F$. Let $n$, $k$, $\Delta$ and $R$ be fixed. Then there exists a constant $c>0$ such that
+	\begin{equation*}
+		f(n, k, \Delta, R, A=F)\ge c\cdot n\log(k).
+	\end{equation*}
+\end{enumerate}
+
+
+\clearpage
+\bibliographystyle{acm}
+\bibliography{QCMV_Bibliography.bib}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

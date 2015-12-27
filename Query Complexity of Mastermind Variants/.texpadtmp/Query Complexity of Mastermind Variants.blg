@@ -1,0 +1,54 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: /Users/christopherchute/Desktop/Query Complexity of Mastermind Variants/.texpadtmp/Query Complexity of Mastermind Variants.aux
+The style file: acm.bst
+Database file #1: ../QCMV_Bibliography.bib.bib
+I was expecting a `,' or a `}'---line 11 of file ../QCMV_Bibliography.bib.bib
+ :  
+ :  title = Mastermind,
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--empty title in VC83
+Warning--empty journal in VC83
+You've used 1 entry,
+            2253 wiz_defined-function locations,
+            530 strings with 4151 characters,
+and the built_in function-call counts, 193 in all, are:
+= -- 15
+> -- 7
+< -- 0
++ -- 3
+- -- 2
+* -- 13
+:= -- 41
+add.period$ -- 1
+call.type$ -- 1
+change.case$ -- 3
+chr.to.int$ -- 0
+cite$ -- 3
+duplicate$ -- 8
+empty$ -- 14
+format.name$ -- 2
+if$ -- 33
+int.to.chr$ -- 0
+int.to.str$ -- 1
+missing$ -- 1
+newline$ -- 6
+num.names$ -- 2
+pop$ -- 7
+preamble$ -- 1
+purify$ -- 3
+quote$ -- 0
+skip$ -- 3
+stack$ -- 0
+substring$ -- 5
+swap$ -- 1
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 4
+warning$ -- 2
+while$ -- 2
+width$ -- 2
+write$ -- 7
+(There was 1 error message)
