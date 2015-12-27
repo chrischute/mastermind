@@ -1,6 +1,6 @@
 This is BibTeX, Version 0.99d (TeX Live 2015)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: /Users/christopherchute/Desktop/Query Complexity of Mastermind Variants/.texpadtmp/Query Complexity of Mastermind Variants.aux
+The top-level auxiliary file: /Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Query Complexity of Mastermind Variants/.texpadtmp/Query Complexity of Mastermind Variants.aux
 The style file: acm.bst
 Database file #1: ../QCMV_Bibliography.bib.bib
 I was expecting a `,' or a `}'---line 11 of file ../QCMV_Bibliography.bib.bib
@@ -12,7 +12,7 @@ Warning--empty title in VC83
 Warning--empty journal in VC83
 You've used 1 entry,
             2253 wiz_defined-function locations,
-            530 strings with 4151 characters,
+            530 strings with 4225 characters,
 and the built_in function-call counts, 193 in all, are:
 = -- 15
 > -- 7
