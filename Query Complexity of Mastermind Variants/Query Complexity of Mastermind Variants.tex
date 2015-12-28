@@ -112,7 +112,7 @@ Our second main result concerns the Permutation Game, in which $n=k$ and $R=F$, 
 \end{enumerate}
 Explicit algorithms that take $O(n \log n)$ turns to solve this variant were developed by Ko and Teng\cite{KT86}, and Ouali and Sutherland\cite{OS13}. Ko and Teng approach the problem with an algorithm akin to binary search. The algorithm queries a sequence $Q_t$, swaps two components, and queries again, doing so repeatedly until a previously unknown component of $H$ is determined by the values of the distance function across these repeated queries. Ouali and Sutherland improve this algorithm primarily by altering the search routine after a single component of $H$ has been identified. In this way, Ouali and Sutherland achieve an average factor of 2 reduction in the number of queries needed to identify $H$. In our notation, these results state that there exists a constant $c>0$ such that $f(n, k=n, \Delta=b, R = F, A = T)\le c\cdot n\log(n)$.
 
-Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n)\ge n - n/\log(n) + c$ for some constant $c>0$. We improve this lower bound to $f(n)\ge n - \log(n)$ for small $n$, and $f(n)\ge n- \log \log(n)$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
+Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n, n)\ge n - n/\log(n) + c$ for some constant $c>0$. We improve this lower bound to $f(n, n)\ge n - \log(n)$ for small $n$, and $f(n, n)\ge n- \log \log(n)$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
 
 Our third result relates to non-adaptive variants of Mastermind, which correspond to $A=F$ in our notation.
 \begin{enumerate}[label=]
@@ -129,12 +129,12 @@ Chvatal's proof of the above result relies on a probabilistic argument, showing 
 
 \section{Adaptive Variants of Mastermind}
 \subsection{The Permutation Game}
-We begin by performing an analysis of the Permutation Game, defined by $n=k$ and $R=F$. These parameters together imply $H=\sigma(\mathcal{A})$ for some permutation $\sigma\in S_k$ (recalling that $\mathcal{A}=\{1,2,\ldots, k\}$). As stated in the introduction, an upper bound $f(n)\le c\cdot n\log(n)$ was proved in 1986 by Ko and Teng, and again in 2013 for a smaller constant $c>0$ by Ouali and Sutherland. Here we establish lower bounds for $f(n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
+We begin by performing an analysis of the Permutation Game, defined by $n=k$ and $R=F$. These parameters together imply $H=\sigma(\mathcal{A})$ for some permutation $\sigma\in S_k$ (recalling that $\mathcal{A}=\{1,2,\ldots, k\}$). As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log(n)$ was proved in 1986 by Ko and Teng, and again in 2013 for a smaller constant $c>0$ by Ouali and Sutherland. Here we establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
 
 	\subsubsection{Trivial Lower Bound}
 	We begin by establishing the trivial information-theoretic result that
 	\begin{equation*}
-		f(n)\ge \log_{n}(n!) = n-\frac{n}{\ln(n)}+O(1).
+		f(n, n)\ge \log_{n}(n!) = n-\frac{n}{\ln(n)}+O(1).
 	\end{equation*}
 	\begin{proof}
 		Consider an instance of the Permutation Game with the black-peg-only distance function $\Delta$. To uniquely identify $H$ after $m$ turns, the query response vector $(\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_m, H))$ must distinguish between all $n!$ permutations of the alphabet $\mathcal{A}$. In the $t\nth$ turn, the codebreaker submits a query sequence $Q_t$, which has $n$ possible associated responses given by $\Delta(Q_t, H)\in\{0, 1, \ldots, n-2, n\}$. We note that it is not possible to get $\Delta(Q_t, H)=n-1$ in the Permutation Game. Therefore there are $n^m$ possible query response vectors of length $m$, hence to identify $H$ in $m$ queries requires that $n^m\ge n!$. This implies $m\ge\log_n(n!)$, and the result follows immediately.
@@ -161,7 +161,7 @@ We begin by performing an analysis of the Permutation Game, defined by $n=k$ and
 	\end{equation*}
 
 	\subsubsection{Improved Lower Bound for the Permutation Game}
-	We now employ the notion of a bucket to improve the trivial lower bound for $f(n)$ in the context of the Permutation Game.
+	We now employ the notion of a bucket to improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game.
 	\begin{enumerate}[label=]
 		\item\textbf{Theorem 2.} Consider the Permutation Game defined by $n = k$ and $R = F$. Let $\Delta = b$ (black-peg-only distance function) and let $A$ be fixed. Then for all sufficiently large $n$, we have
 		\begin{equation*}
@@ -169,18 +169,122 @@ We begin by performing an analysis of the Permutation Game, defined by $n=k$ and
 		\end{equation*}
 	\end{enumerate}
 	\begin{proof}
-		 Let $n$ be fixed. We give a proof which analyzes the evolution of $L(t)$, which we define to be a lower bound on $|S_t|$. We recall that $S_t$ is the minimal set of sequences guaranteed to contain $H$ given the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. We compute this lower bound by using a hypothetical set of queries $\{Q_1, Q_2, \ldots, Q_{t-1}\}$, constructed such that $Q_i$ maximizes the difference $|S_{i}| - |S_{i-1}|$. That is, each $Q_i$ guarantees to ``rule out'' the maximal number possibilities for $H$ in the $i\nth$ turn. The least rapidly decreasing sequence $|S_1|, |S_2|, |S_3|, \ldots$ for this set of queries will converge to $|S_i| = |S_{i+1}| = 1$, and the turn in which this convergence is initially reached will provide a lower bound for $f(n)$. Our approach is to find a number $r$ such that that $t\ge r$ implies $L(t) = 1$. We proceed by induction on $t$.
+		 Let $n$ be fixed. We give a proof which analyzes the evolution of $L(t)$, which we define to be a lower bound on $|S_t|$. We recall that $S_t$ is the minimal set of sequences guaranteed to contain $H$ given the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. We compute this lower bound by using a hypothetical set of queries $\{Q_1, Q_2, \ldots, Q_{t-1}\}$, constructed such that $Q_i$ maximizes the difference $|S_{i}| - |S_{i-1}|$. That is, each $Q_i$ guarantees to ``rule out'' the maximal number possibilities for $H$ in the $i\nth$ turn. The least rapidly decreasing sequence $|S_1|, |S_2|, |S_3|, \ldots$ for this set of queries will converge to $|S_i| = |S_{i+1}| = 1$, and the turn in which this convergence is initially reached will provide a lower bound for $f(n, n)$. Our approach is to find a number $r$ such that that $t\ge r$ implies $L(t) = 1$. We proceed by induction on $t$.
 		 
-		 By the discussion in Section (2.1.2), we know that $|B_t(s)|\le \binom{n}{s}D(n-s)$. In the terminology of buckets, the codebreaker constructs the set $S_t$ in turn $t$ by setting $S_t = B_{t-1}(\Delta(Q_{t-1}, H))$. To choose an optimal query sequence $Q_t$ (which maximizes $|S_{t+1}| - |S_{t}|$), the codebreaker therefore must choose a sequence $Q_t$ which minimizes
+		 Consider the $t\nth$ turn in an instance of the Permutation Game. In the terminology of buckets, the codebreaker constructs the set $S_t$ in turn $t$ by setting $S_t = B_{t-1}(\Delta(Q_{t-1}, H))$. To choose an ``optimal'' query sequence $Q_t$ (in the sense described above, which maximizes $|S_{t+1}| - |S_{t}|$), the codebreaker therefore must choose a sequence $Q_t$ which minimizes
 		 \begin{equation*}
 			\max_{s\in\{1,2,\ldots,n\}}|B_{t+1}(s)|.
 		 \end{equation*}
-		 Equivalently, the codebreaker chooses $Q_t$ such that the size bucket containing the most remaining solutions is as small as possible. This best-possible distribution will fill some number of
-		smaller buckets entirely and split the remaining solutions evenly
-		into some number $x$ larger buckets. That is, there are $x$ incompletely
-		filled buckets.
+		 Equivalently, the codebreaker chooses $Q_t$ such that the size of the largest bucket is as small as possible. By the discussion in Section (2.1.2), we know that $|B_t(s)|\le\binom{n}{s}D(n-s)$. The optimal query $Q_t$ will partition $S_t$ into buckets as evenly as possible, and some buckets will have size equal to their upper bound, while others will be partially filled. This best-possible partition will partition $S_t$ into two sets $X$ and $Y$ of buckets, such that $A\in X$ implies bucket $A$ is incompletely filled, $B\in Y$ implies bucket $B$ is completely filled, and $A\in X$, $B\in Y$ implies that the upper bound on $|A|$ is greater than the upper bound on $|B|$. Let $x = |X|$, so that $x$ is the number of incompletely filled buckets.
 		 
-
+		 We now give a recurrence which bounds $L(t)$. At the beginning of the $t$-th turn, we have at least $L(t-1)$ possible solutions remaining, so $|S_t|\ge L(t-1)$. Suppose that the codebreaker has selected the optimal query vector $Q_t$ for submission in turn $t$. We then have 
+		\begin{align}
+			L(t-1)
+			& \le \sum_{i = 0}^{n}|B_i(t)|\nonumber\\
+			& = \sum_{i=0}^{x-1}|B_i(t)| + \sum_{i=x}^{n}|B_i(t)|\nonumber\\
+			& \le \sum_{i = 0}^{x-1}L(t) + \sum_{i=x}^{n}\binom{n}{i}D(n-i)\quad
+			\text{for optimal $x$}\nonumber\\
+			& = x\cdot L(t) + \sum_{i = x}^{n}\binom{n}{i}D(n-i).
+		\end{align}
+		Once we know $L(t)$, picking $x$ too large results in some of the smaller buckets being sub-optimally underfilled. Picking $x$ too small results in some of the larger buckets being overfilled. So adjustment of $x$ about its optimal value always increases the value of equation (2). Thus we have
+		\begin{align*}
+			L(t-1) & \le x\cdot L(t) + \sum_{i=x}^n\binom{n}{i}D(n-i)\quad\forall x
+		\end{align*}
+		Where $t$ is the number of turns taken, $L(t)$ is a lower bound on $|S_{t+1}|$ (the number of possible solutions remaining after the $t$-th turn), and $D$ is the derangements function.
+		
+		We now prove the following lemma.
+		\begin{enumerate}[label=]
+			\item\textit{Lemma 1.}
+			\begin{equation*}
+				\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}
+			\end{equation*}
+			\begin{proof}
+				A combinatorial argument can be made as follows: The LHS	 denotes the number of permutations of an $n$-element vector which have	 at least $x$ fixed points. Suppose we choose $x$ fixed points and simply permute the rest of the vector. This gives $\binom{n}{x}(n-x)!=\frac{n!}{x!}$ possible permutations. Clearly this includes all vectors with at least $x$ fixed points (and over-counts by some margin), so the inequality holds.
+				
+				One may also observe
+				\begin{align*}
+					\sum_{i=x}^n\binom{n}{i}D(n-i) & =
+					\frac{n!}{x!}\sum_{i=x}^{n}\frac{x!}{i!(n-i)!}D(n-i)\\
+					& \qquad\text{we use the fact that }\frac{x!}{i!}\le\frac{1}{(i-x)!}\\
+					& \le \frac{n!}{x!}\sum_{i=x}^{n}\frac{1}{(i-x)!(n-i)!}D(n-i)\\
+					& \qquad\text{let $k=i-x$}\\
+					& = \frac{n!}{x!}\sum_{k=0}^{n-x}\frac{1}{k!(n-x-k)!}D(n-x-k)\\
+					& = \frac{n!}{x!(n-x)!}\sum_{k=0}^{n-x}\binom{n-x}{k}D(n-x-k)\\
+					& = \frac{n!}{x!(n-x)!}(n-x)!\\
+					& = \frac{n!}{x!}.
+				\end{align*}
+			\end{proof}
+		\end{enumerate}
+		
+		Using Lemma 1, we have
+		\begin{equation*}
+			L(t-1) \le x\cdot L(t) + \frac{n!}{x!},
+		\end{equation*}
+		which gives
+		\begin{equation*}
+			L(t)\ge \frac{1}{x}\left(L(t-1)-\frac{n!}{x!}\right).
+		\end{equation*}
+		
+		The following lemma will also be of use.
+		\begin{enumerate}[label=]
+			\item\textit{Lemma 2.} We recall that $n$ is fixed in defining $L(t)$. For any constant $C_n$, we have
+			\begin{equation*}
+				\frac{L(t)}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
+			\end{equation*}
+			where $0\le t\le n-C_{n}$ and $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
+		\begin{proof}
+			While this equation holds for all $x$, to achieve a desirable bound, we will
+		let $x=t+C_{n}$ for any positive constant $C_{n}$. We have
+		\begin{enumerate}[label=]
+		\item\textit{Base Case.} When $t=0$, we have $S_n(0)= n!$ and
+			\begin{equation*}
+			\frac{L(0)}{n!}\ge \frac{C_{n}! - (H_{C_{n}}-H_{C_{n}})}{C_{n}!} = 1
+			\end{equation*}
+			
+		\item \textit{Inductive Step.} Assume the induction hypothesis holds for $t-1$.
+			\begin{align*}
+			\frac{L(t)}{n!}
+			& \ge \frac{1}{x}\left(\frac{L(t-1)}{n!}-\frac{1}{x!}\right)
+			\end{align*}
+		Let $x=C_{n}+t$.
+			\begin{align*}
+			\frac{L(t)}{n!}
+			& \ge \frac{1}{C_{n}+t}\left(\frac{L(t-1)}{n!}
+			-\frac{1}{(C_{n}+t)!}\right)
+			\end{align*}
+		Inductively,
+			\begin{align*}
+			\frac{L(t)}{n!}
+			& \ge \frac{1}{C_{n}+t}\left(\frac{C_{n}!-(H_{C_{n}+t} - H_{C_{n}})}
+			{(C_{n}+t-1)!} - \frac{1}{(C_{n}+t)!}\right)\\
+			& \ge \left(\frac{C_{n}! - (H_{C_{n}+t-1} - H_{C_{n}}) - \frac{1}{C_{n}+t}}
+			{(C_{n}+t)!}\right)\\
+			& \ge \left(\frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_{n}+t)!}\right)
+			\end{align*}
+			Then
+			\begin{align*}
+			L(n-C_{n}) & \ge n!\left(\frac{C_{n}! - (H_n - H_{C_{n}})}{n!}\right)\\
+			& \ge C_{n}! - (H_n-H_{C_{n}})
+			\end{align*}
+		Thus the inequality holds for all $n$.
+		\end{enumerate}
+		\end{proof}
+	\end{enumerate}
+	We choose $C_{n}$ by the following reasoning: we want to achieve a lower bound
+		of $n-C_{n}$ turns. Thus, we want
+		\begin{equation*}
+			C_{n}! - (H_n - H_{C_{n}}) > 1.
+		\end{equation*}
+		When $C_{n}=\log\log n$, we have $C_{n}! - (H_n - H_{C_{n}}) > 1$ for $n\ge e^{198}$, and when $C_{n}=\log n$, this is true for $n\ge 10$.
+		
+ 	In conclusion, when $n$ is sufficiently large, the minimum number of remaining
+	possible solutions after $n - \log\log n$ guesses is at least
+		\begin{align*}
+		L(n-\log\log n)
+		& \ge (\log\log n)! - (H_n - H_{\log\log n})\\
+		& > 1
+		\end{align*}
+	Thus there is no strategy that can identify any hidden sequence in $n-\log\log(n)$ turns or fewer. Therefore, in the Permutation Game variant of Mastermind, we have $f(n, n)\ge n - \log\log(n)$ for all sufficiently large $n$.
 	\end{proof}
 
 
