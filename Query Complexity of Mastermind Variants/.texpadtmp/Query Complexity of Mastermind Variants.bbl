@@ -3,6 +3,11 @@
 \bibitem{VC83}
 {\sc Chvátal, V.}
 
+\bibitem{DK76}
+{\sc Knuth, D.}
+\newblock The computer as master mind.
+\newblock {\em Journal of Recreational Mathematics 9}, 1 (2 1976), 2--7.
+
 \bibitem{KT86}
 {\sc Ko, K.-I., and Teng, S.-C.}
 \newblock On the number of queries necessary to identify a permutation.

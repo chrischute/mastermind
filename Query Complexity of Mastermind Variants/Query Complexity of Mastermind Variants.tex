@@ -287,6 +287,31 @@ We begin by performing an analysis of the Permutation Game, defined by $n=k$ and
 	Thus there is no strategy that can identify any hidden sequence in $n-\log\log(n)$ turns or fewer. Therefore, in the Permutation Game variant of Mastermind, we have $f(n, n)\ge n - \log\log(n)$ for all sufficiently large $n$.
 	\end{proof}
 
+\subsection{Best Guesses and the Minimax Algorithm}
+We now move on to an analysis of the best possible queries and the Minimax algorithm. Here, we adopt Donald Knuth's definition of a ``best possible'' query in the context of Minimax\cite{DK76}: a query sequence $Q_t$ is the \textit{best possible query} if the maximum number of solutions remaining over all responses is minimized. This is the guess chosen by the minimax algorithm.
+
+We prove the following theorem.
+\begin{enumerate}[label=]
+	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback $\Delta(Q_t, H)$ produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.	
+\end{enumerate}
+\begin{proof}
+	We will again use the bucket terminology, and we add the notion of a \textit{sub-bucket}. A sub-bucket $D_i(j, B_t(s))\subseteq B_t(s)$ (indicating $j$ in position $i$) is defined to be the set of sequences $X = (x_1, x_2, \ldots, x_n)$ in $B_t(s)$ such that $x_i = j$. That is,
+	\begin{equation*}
+		D_i(j, B_t(s)) = \left\{(x_1, x_2, \ldots, x_n)\in B_t(s)\mid x_i = j\right\},
+	\end{equation*}
+	defined for all $i\in\mathcal{A}$.
+
+	We proceed by induction on $n$.
+	
+	\textit{Base Case.} When $n=1$, we have a single-element vector. So there are at most $k$ possible solutions remaining at any step, thus $|S_t|\le k$. If we guess one of the remaining solutions $X\in S_t$, this will eliminate $1$ solution ($X$ itself) if the response is $0$, and will eliminate $|S_t|-1$ solutions if the response is $1$. So we're guaranteed to eliminate at least $1/|S_t|\ge 1/(nk)$ solutions.
+		
+	\textit{Inductive Step.} Assume that for $n-1$ spots and any number of colors $\widehat{k}$ (where $n\ge 2$), we are guaranteed that there is a guess that eliminates a fraction at least $1/(n\widehat{k})$ of the solutions.
+		
+	Consider a guess vector $\sigma=\{\sigma_1, \sigma_2, \ldots, \sigma_n\}$. We will analyze the number of solutions eliminated from $S_t$ by guessing $\sigma$ in the worst-case. We partition $S_t$ into $n$ buckets $B_t(1), B_t(2), \ldots, B_t(n)$. Consider the response $j$ that eliminates as few possible solutions as possible from $S$, so $|B_t(j)| = \max\{|B_t(1)|, |B_t(2)|, \ldots, |B_t(n)|\}$.
+	% TODO: copy over inductive step with new notation.
+	
+	
+\end{proof}
 
 \clearpage
 \bibliographystyle{acm}
