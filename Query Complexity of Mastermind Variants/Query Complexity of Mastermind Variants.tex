@@ -121,7 +121,22 @@ Our third result relates to non-adaptive variants of Mastermind, which correspon
 		f(n, k, \Delta = b, R, A=F)\ge c\cdot n\log(k).
 	\end{equation*}
 \end{enumerate}
-% TODO: include previous work on problems related to third theorem.
+This theorem was proved by Ouali and Sutherland\cite{OS13} for the case $R = T$. They use an information-theoretic argument based on entropy by letting the hidden sequence be randomly chosen. 
+% TODO: insert more explanation
+ We use a similar argument to extend this to $R = F$. 
+
+% TODO: Perhaps we should emphasize somewhere in the intro that we're only looking at worst-case analysis but provide some references to expected-case papers
+\clearpage
+\section{Bounds on Individual Guesses}
+The work in this section is primarily motivated by Knuth's minimax algorithm\cite{DK76} \cite{VC83}. This algorithm, and its variants, are the only methods we have to solve small games in few steps. Despite this, there is not, to our knowledge, any analysis of Knuth's algorithm's asymptotic performance. For this, it is important to understand how the algorithm works.
+A response to a guess will eliminate some number of solutions. To choose a guess at each stage, the algorithm assigns each guess a score equal to the minimum number of solutions eliminated across all possible responses to that guess. The algorithm then selects a guess with the maximum score (the method of selection doesn't matter).
+% TODO: yeah I gotta work on this\
+% TODO: are we not going to use standard theorem formatting for this?
+\begin{enumerate}[label=]
+	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black hits only distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$. 
+\end{enumerate}
+For our proof of Theorem 1 in the case $R = T$, we have the additional restriction that $S_t$ must be % TODO explain this
+
 
 \clearpage
 \bibliographystyle{acm}
