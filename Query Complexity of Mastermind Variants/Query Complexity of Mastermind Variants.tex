@@ -133,7 +133,12 @@ On the other hand, Doerr et al. are able to extend a result of Chv\'atal to prov
 
 \section{Adaptive Variants of Mastermind}
 \subsection{The Permutation Game}
-We begin by performing an analysis of the Permutation Game, defined by $n=k$ and $R=F$. These parameters together imply $H=\sigma(\mathcal{A})$ for some permutation $\sigma\in S_k$ (recalling that $\mathcal{A}=\{1,2,\ldots, k\}$). As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log(n)$ was proved in 1986 by Ko and Teng, and again in 2013 for a smaller constant $c>0$ by Ouali and Sutherland. Here we establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
+We begin by performing an analysis of the Permutation Game, defined by $n=k$ and $R=F$. These parameters together imply $H=\overline{\sigma}(\mathcal{A})$ for some permutation $\overline{\sigma}\in S_k$ (recalling that $\mathcal{A}=\{1,2,\ldots, k\}$). Moreover, recalling the definition of the white-peg distance function
+\begin{equation*}
+w(Q_t, H) = \max_{\sigma\in S_{Q_t}}~b(\sigma(Q_t), H) - b(Q_t, H),
+\end{equation*}
+and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with $\sigma = \overline{\sigma}\circ \tau\inv$ we have $\sigma(Q_t) = \overline{\sigma}\circ\tau\inv\circ\tau(\mathcal A)$ which is just $H$, and then $b(\sigma(Q_t),H) = b(H,H)$  is necessarily maximized with a value of $n$. Then $w(Q_t,H) = n - b(Q_t,H)$ and is uniquely determined by $b(Q_t,H)$ and the information provided by white-peg responses is therefore irrelevant. As such, for the permutation game, we will let $\Delta = b$ as $\Delta = bw$ is precisely the same game. \\
+ As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log(n)$ was proved in 1986 by Ko and Teng, and again in 2013 for a smaller constant $c>0$ by Ouali and Sutherland. Here we establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
 
 	\subsubsection{Trivial Lower Bound}
 	We begin by establishing the trivial information-theoretic result that
@@ -311,7 +316,100 @@ We prove the following theorem.
 		
 	\textit{Inductive Step.} Assume that for $n-1$ spots and any number of colors $\widehat{k}$ (where $n\ge 2$), we are guaranteed that there is a guess that eliminates a fraction at least $1/(n\widehat{k})$ of the solutions.
 		
-	Consider a guess vector $\sigma=\{\sigma_1, \sigma_2, \ldots, \sigma_n\}$. We will analyze the number of solutions eliminated from $S_t$ by guessing $\sigma$ in the worst-case. We partition $S_t$ into $n$ buckets $B_t(1), B_t(2), \ldots, B_t(n)$. Consider the response $j$ that eliminates as few possible solutions as possible from $S$, so $|B_t(j)| = \max\{|B_t(1)|, |B_t(2)|, \ldots, |B_t(n)|\}$.
+	Consider a guess vector $\sigma=\{\sigma_1, \sigma_2, \ldots, \sigma_n\}$. We will analyze the number of solutions eliminated from $S_t$ by guessing $\sigma$ in the worst-case. We partition $S_t$ into $n$ buckets $B_t(1), B_t(2), \ldots, B_t(n)$. Consider the response $j$ that eliminates as few possible solutions as possible from $S_t$, so $|B_t(j)| = \max\{|B_t(1)|, |B_t(2)|, \ldots, |B_t(n)|\}$. 
+	
+	Suppose that
+	\begin{equation*}
+	|B_j|\le\frac{nk - 1}{nk}\cdot|S|.
+	\end{equation*}
+	Then by assumption this inequality holds for all $B_i$, and since for a given response $i$, $S_{t+1} = B_t(i)$, we conclude that regardless of the response $i$ we have $|S_{t+1}| \leq (1-1/(nk))|S_t|$ as desired.
+	
+	Otherwise we have
+	\begin{equation*}
+	|B_j|>\frac{nk - 1}{nk}\cdot|S|.
+	\end{equation*}
+	\textit{Case 1.} If $j>0$, the total number of hits among all vectors in
+	$B_j$ is $j\cdot |B_j|$. These hits are divided up among $n$ spots,
+	therefore by the pigeonhole principle, at least one position
+	must have at least
+	\begin{align*}
+	\frac{j}{n}\cdot|B_j|
+	\end{align*}
+	Vectors that match the guess at that spot. WLOG, we assume this is
+	position one. We now divide the bucket $B_j$ into sub-buckets $D_i$,
+	where permutation $s\in B_j$ is put into sub-bucket $D_{s_1}$. From above,
+	we have 
+	\begin{equation*}
+	|D_{\sigma_1}|\ge \frac{j}{n}\cdot|B_j|
+	\end{equation*}
+	We have two sub-cases:
+	\begin{enumerate}[label=\roman*.]
+		\item $|D_{\sigma_1}|\le \dfrac{n-1}{n}\cdot|B_j|$:\\
+		Then we apply the pigeonhole principle on the remaining solutions
+		in $B_j$ to find the second-largest sub-bucket:
+		By our assumption, there are at least $|B_j|/n$ solutions remaining
+		in $B_j$, and there are $k-1$ remaining sub-buckets $D_i$. By the
+		pigeonhole principle, there exists a $D_\alpha$ such that 
+		\begin{equation*}
+		|D_\alpha| \ge \frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|
+		\end{equation*}
+		If $\alpha$ is an element of $\sigma$, then WLOG
+		let the color be $\sigma_2$. Then in this case we consider the
+		guess vector
+		$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
+		Otherwise, consider the guess vector
+		$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
+		Consider the buckets $C_i$ formed from the guess vector
+		$\overline{\sigma}$. In either case, the vectors in $D_{\sigma_1}$ will
+		have at least one fewer hit with $\overline{\sigma}$ than with
+		$\sigma$, and the guess vectors in $D_{\alpha}$ will have at least
+		one more hit. Therefore, any response to $\overline{\sigma}$ which
+		corresponds to some vectors in $D_{\sigma_1}$ corresponds to none
+		of the vectors in $D_{\alpha}$ and vice versa. So we know that any
+		response to $\overline{\sigma}$ will entirely eliminate at least one
+		of those two sets. From above, we know
+		\begin{align*}
+		|D_{\sigma_1}| & \ge \frac{j}{n}\cdot|B_j|\\
+		& \ge \frac{j}{n}\cdot\frac{nk-1}{nk}\cdot|S|\\
+		& \ge \frac{1}{n}\cdot\frac{n}{nk}\cdot|S|\\
+		& = \frac{1}{nk}\cdot|S|
+		\end{align*}
+		And
+		\begin{align*}
+		|D_\alpha| & \ge\frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|\\
+		& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
+		& \ge \frac{1}{nk}\cdot|S|
+		\end{align*}
+		Since $\overline{\sigma}$ will always eliminate at least one of
+		these two sets, we also have that $\overline{\sigma}$ will eliminate
+		at least $|S|/(nk)$ vectors from $S$ with any response.
+		
+		\item $|D_{\sigma_1}|> \dfrac{n-1}{n}\cdot|B_j|$:\\
+		Consider the set of vectors in $D_{\sigma_1}$. By definition,
+		all of them have $\sigma_1$ as their first entry. Their remaining
+		$n-1$ entries are made up of the remaining $k-1$ colors, and no two of
+		them coincide in all spots $2, 3, \ldots, n$ (otherwise they would be
+		the same vector). Therefore, if we consider this new set of $n-1$
+		vectors formed by taking spots $2, 3, \ldots, n$ of each vector in
+		$D_{\sigma_1}$, they are a set of possible solutions for this
+		Mastermind game with $n-1$ spots and $k-1$ colors. By the induction
+		hypothesis, there is a guess of size $n-1$ that is guaranteed to
+		eliminate $1/((n-1)(k-1))$ of these vectors. If we add $\sigma_1$
+		to the
+		beginning of this guess, it becomes a guess of size $n$. For any
+		response $r$, any of the vectors in $D_{\sigma_1}$ will be eliminated
+		if and only if their vector of spots $2, 3, \ldots, n$ was eliminated
+		by the response $r-1$ in the smaller game of Mastermind. Therefore,
+		this guess still guarantees that we eliminate
+		\begin{align*}
+		\frac{1}{(n-1)(k-1)}|D_{\sigma_1}|
+		& \ge \frac{1}{(n-1)(k-1)}\cdot\frac{n-1}{n}\cdot|B_j|\\
+		& \ge \frac{1}{(k-1)}\cdot\frac{1}{n}
+		\cdot\frac{nk-1}{nk}\cdot|S|\\
+		& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
+		& \ge \frac{1}{nk}\cdot|S|
+		\end{align*}
+	\end{enumerate}
 	% TODO: copy over inductive step with new notation.
 	
 	
