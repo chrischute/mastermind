@@ -63,6 +63,7 @@
 
 \section{Introduction}
 
+% TODO: insert some history of mastermind?
 Variants of Mastermind are a family of two-player games centered around reconstruction of a hidden sequence. In all variants of the game, one player is given the role of ``codemaker,'' and the other is denoted the ``codebreaker.'' The codemaker begins the game by constructing a hidden sequence $H = (h_1, h_2, \ldots, h_n)$ where each component is selected from an alphabet $\mathcal{A} = \{1,2,\ldots,k\}$ of $k$ colors (that is, $h_i\in\mathcal{A}$ for all $i\in\{1,2,\ldots,n\}$). The goal of the codebreaker is to uniquely determine the hidden sequence $H$ through a series of queries, which are submissions of vectors of the form $Q_t = (q_1, q_2, \ldots, q_n)$. The codebreaker always seeks to determine $H$ with as few queries as possible, however the nature of these queries, the feedback received after a query, and the restrictions on $H$ differ between variants.
 
 The variants which we will study are differentiated by settings of the tuple $(n, k, \Delta, R, A)$. These parameters are defined as follows:
@@ -86,7 +87,7 @@ The variants which we will study are differentiated by settings of the tuple $(n
 		\item\textit{``Black-peg-only.''} When $\Delta$ is the black-peg-only distance function, it is defined by $\Delta(Q_t, H) = b(Q_t, H)$, where $b$ is defined as in equation (1).
 	\end{enumerate}
 	
-	\item($R$) \textit{Repetition.} The parameter $R$ is a Boolean restriction on the components of $H$. If $R$ is true, we say that the variant game is \textit{with repeats} or that repeats are allowed. In this case, the hidden vector $H$ may have repeated colors, that is, we allow $h_i = h_j$ for any $i,j\in\{1,2,\ldots, n\}$. When $R$ is false, we say that the variant is \textit{no repeats}, and we require $h_i\neq h_j$ when $i\neq j$. In particular, when $R$ is false and $k = n$, we have that $H$ must be a permutation of $(1, 2, \ldots, n)$, and we refer to this variant as the \textit{Permutation Game.}
+	\item($R$) \textit{Repetition.} The parameter $R$ is a Boolean restriction on the components of $H$. If $R$ is true, we say that the variant game is \textit{with repeats} or that repeats are allowed. In this case, the hidden vector $H$ may have repeated colors, that is, we allow $h_i = h_j$ for any $i,j\in\{1,2,\ldots, n\}$. When $R$ is false, we say that the variant is \textit{no repeats}, and we require $h_i\neq h_j$ when $i\neq j$, and so we necessarily require $k \geq n$. In particular, when $R$ is false and $k = n$, we have that $H$ must be a permutation of $(1, 2, \ldots, n)$, and we refer to this variant as the \textit{Permutation Game.}
 	
 	\item($A$) \textit{Adaptiveness.} The Boolean parameter $A$ determines whether the codebreaker receives feedback after each query. If $A$ is true, we say that the game is \textit{adaptive}. In this case the game consists of two-part turns: on the $t\nth$ turn, the codebreaker first submits a query sequence $Q_t$, and then receives feedback $\Delta(Q_t, H)$. The codebreaker may use the feedback to inform the query $Q_{t+1}$ made in turn $t+1$, and the game ends in turn $s$ if and only if $Q_s = H$.
 	
@@ -99,9 +100,9 @@ We prove three main results, each of which builds on the previous work related t
 \begin{enumerate}[label=]
 	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.
 \end{enumerate}
-This theorem facilitates analysis of a common variant of Mastermind, in which adaptive queries are made with feedback given by the black-peg-only distance function. To demonstrate the theorem's usefulness, suppose that the codebreaker is in turn $t$, hence has made queries $Q_1, Q_2 \ldots, Q_{t-1}$ and received feedback instances $\Delta(Q_1, H), \Delta(Q_2, H) \ldots, \Delta(Q_{t-1},H)$. Given this set of feedback, the codebreaker can eliminate a number of possibilities for $H$. For example, suppose that a sequence $\tilde{H} = (\tilde{h}_1, \tilde{h}_2 \ldots, \tilde{h}_n)$ satisfies $\Delta(\tilde{H}, H)\neq \Delta(Q_s, H)$ for some $s\in\{1,2,\ldots, t-1\}$. Then clearly $\tilde{H}\neq H$.
+This theorem facilitates analysis of Knuth's minimax algorithm described in \cite{DK76}. The algorithm and its variants perform near-optimally for small values of $n$ and $k$, but analyzing its asymptotic performance is made difficult by its computational nature, and to our knowledge there have been no upper bounds established for the algorithm's worst-case behavior. To demonstrate the theorem's usefulness, suppose that the codebreaker is in turn $t$, hence has made queries $Q_1, Q_2 \ldots, Q_{t-1}$ and received feedback instances $\Delta(Q_1, H), \Delta(Q_2, H) \ldots, \Delta(Q_{t-1},H)$. Given this set of feedback, the codebreaker can eliminate a number of possibilities for $H$. For example, suppose that a sequence $\tilde{H} = (\tilde{h}_1, \tilde{h}_2 \ldots, \tilde{h}_n)$ satisfies $\Delta(\tilde{H}, H)\neq \Delta(Q_s, H)$ for some $s\in\{1,2,\ldots, t-1\}$. Then clearly $\tilde{H}\neq H$.
 
-Using this process, the codebreaker may construct a set $S_t$ of possibilities for $H$ in turn $t$ after $t-1$ query-feedback interactions have occurred. That is, $S_t$ contains sequences of length $n$ with components from the alphabet $\mathcal{A}$ such that no member of $S_t$ has been eliminated by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. Theorem 1 then states that given $S_t$, there always exists a query $Q_t$ such that the response $\Delta(Q_t, H)$ will eliminate a fraction $1/(nk)$ of the members of $S_t$ as possibilities for $H$. By Theorem 1, $|S_{t+1}|\le (1-1/(nk))|S_{t}|$, which guarantees a quantifiable amount of progress at each turn of an adaptive, black-peg-only variant of mastermind.
+Using this process, the codebreaker may construct a set $S_t$ of possibilities for $H$ in turn $t$ after $t-1$ query-feedback interactions have occurred. That is, $S_t$ contains sequences of length $n$ with components from the alphabet $\mathcal{A}$ such that no member of $S_t$ has been eliminated by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. Theorem 1 then states that given $S_t$, there always exists a query $Q_t$ such that the response $\Delta(Q_t, H)$ will eliminate a fraction $1/(nk)$ of the members of $S_t$ as possibilities for $H$. By Theorem 1, $|S_{t+1}|\le (1-1/(nk))|S_{t}|$, which in particular guarantees a quantifiable amount of progress at each guess made by the minimax algorithm.
 
 Our second main result concerns the Permutation Game, in which $n=k$ and $R=F$, thus restricting the hidden sequence $H$ to be a permutation of the alphabet $\mathcal{A}$.
 \begin{enumerate}[label=]
@@ -121,19 +122,14 @@ Our third result relates to non-adaptive variants of Mastermind, which correspon
 		f(n, k, \Delta = b, R, A=F)\ge c\cdot n\log(k).
 	\end{equation*}
 \end{enumerate}
-This theorem was proved by Ouali and Sutherland\cite{OS13} for the case $R = T$. They use an information-theoretic argument based on entropy by letting the hidden sequence be randomly chosen. 
-% TODO: insert more explanation
+This theorem was proved by Doerr et. al.\cite{DS13} for the case $R = T$, $k \ge n$. They use an information-theoretic argument based on entropy by letting the hidden sequence be randomly chosen. 
+% TODO: insert more explanation?
  We use a similar argument to extend this to $R = F$. 
 
 % TODO: Perhaps we should emphasize somewhere in the intro that we're only looking at worst-case analysis but provide some references to expected-case papers
-\clearpage
+These lower bounds together cover the case $n \geq k$. For neither value of $R$ do we have tight upper bounds; when $R = T$ a corollary of a result by Doerr et al. \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the trivial $nk$ bound is known.
 
-To our knowledge, there have been no previous attempts to provide a lower bound for $f(n,k)$ in non-adaptive variants of Mastermind. With regard to an upper bound, we have the following result due to Vaclav Chvatal:\cite{VC83} \textit{For every positive $\epsilon$ there is an $n(\epsilon)$ with the following property: if $n>n(\epsilon)$ and if $k<n^{1-\epsilon}$ then}
-\begin{equation*}
-	f(n, k, \Delta = b, R, A=F)\le (2 + \epsilon)n\frac{1+2\log(k)}{\log(n) - \log(k)}.	
-\end{equation*}
-Chvatal's proof of the above result relies on a probabilistic argument, showing that there always exists a set of $(2 + \epsilon)(n)(1+2\log(k))/(\log(n) - \log(k))$ queries such that the responses (\textit{i.e.,} values of $\Delta(Q_t, H)$) will differentiate between each possible hidden vector $H$.
-% TODO: this was improved/extended by Doerr et. al. Fix this paragraph.
+On the other hand, Doerr et al. are able to extend a result of Chv\'atal to provide tight bounds for $n \le k$ with $R = T$. 
 
 \section{Adaptive Variants of Mastermind}
 \subsection{The Permutation Game}
