@@ -308,8 +308,13 @@ We prove the following theorem.
 	\begin{equation*}
 		D_i(j, B_t(s)) = \left\{(x_1, x_2, \ldots, x_n)\in B_t(s)\mid x_i = j\right\},
 	\end{equation*}
-	defined for all $i\in\mathcal{A}$.
-
+	defined for all $i\in\mathcal{A}$. 
+	
+	Note, for example, that since every vector $X \in B_t(s)$ satisfies $x_i = j$ for exactly one color $j \leq k$, we have
+	\begin{equation}\label{color-buck}
+	\sum_{j = 1}^k |D_i(j,B_t(s))| = |B_t(s)|.
+	\end{equation}
+	When the context is clear we will refer to a sub-bucket $D_i(j, B_t(s))$ as $D_i$.
 	We proceed by induction on $n$.
 	
 	\textit{Base Case.} When $n=1$, we have a single-element vector. So there are at most $k$ possible solutions remaining at any step, thus $|S_t|\le k$. If we guess one of the remaining solutions $X\in S_t$, this will eliminate $1$ solution ($X$ itself) if the response is $0$, and will eliminate $|S_t|-1$ solutions if the response is $1$. So we're guaranteed to eliminate at least $1/|S_t|\ge 1/(nk)$ solutions.
@@ -328,40 +333,51 @@ We prove the following theorem.
 	\begin{equation*}
 	|B_j|>\frac{nk - 1}{nk}\cdot|S|.
 	\end{equation*}
-	\textit{Case 1.} If $j>0$, the total number of hits among all vectors in
-	$B_j$ is $j\cdot |B_j|$. These hits are divided up among $n$ spots,
-	therefore by the pigeonhole principle, at least one position
-	must have at least
-	\begin{align*}
-	\frac{j}{n}\cdot|B_j|
-	\end{align*}
-	Vectors that match the guess at that spot. WLOG, we assume this is
-	position one. We now divide the bucket $B_j$ into sub-buckets $D_i$,
-	where permutation $s\in B_j$ is put into sub-bucket $D_{s_1}$. From above,
-	we have 
+	\textit{Case 1.} Assume $j>0$. For a particular guess vector $X$, recall that $X \in B_j$ if and only if the black-peg distance from $X$ to $H$ is $j$, and the sum of this black-peg distance over all vectors $X \in B_j$ is then $j|B_j|$. Recalling the definition of black-peg distance, this means 
+	\begin{equation}\label{subBuck}
+	j|B_j| = \left|\{i\in\Z, X \in B_j \mid x_i = \sigma_i,~ 1\le i\le n\}\right|.
+	\end{equation}
+	But recalling the definition of a sub-bucket, we also have that 
 	\begin{equation*}
-	|D_{\sigma_1}|\ge \frac{j}{n}\cdot|B_j|
+	|D_i(\sigma_i,B_j(S_t))| = \left|\{X \in B_j \mid x_i = \sigma_i\}\right|
 	\end{equation*}
-	We have two sub-cases:
+	and so we can rewrite \ref{subBuck} as
+	\begin{equation*}
+	j|B_j| = \sum_{i=1}^n |D_i(\sigma_i,B_j(S_t))|
+	\end{equation*}
+	therefore by the pigeonhole principle, there must be a sub-bucket $D_i$
+	that satisfies
+	\begin{align*}
+	|D_i| \geq \frac{j}{n}\cdot|B_j|.
+	\end{align*}
+	Informally, this means that in bucket $j$ there are $j$ spots per vector $X$ where $x_i = h_i$, out of $n$ spots total, and so there must be some spot $i$ with at least $j/n$ of the vectors in $B_j$ satisfying $x_i = h_i$. Without loss of generality, let $i = 1$. Since $j \geq 1$ we have
+	\begin{equation*}
+	|D_{1}(h_1, B_j)|\ge \frac{1}{n}\cdot|B_j|.
+	\end{equation*}
+	We now have two sub-cases:
 	\begin{enumerate}[label=\roman*.]
-		\item $|D_{\sigma_1}|\le \dfrac{n-1}{n}\cdot|B_j|$:\\
-		Then we apply the pigeonhole principle on the remaining solutions
-		in $B_j$ to find the second-largest sub-bucket:
-		By our assumption, there are at least $|B_j|/n$ solutions remaining
-		in $B_j$, and there are $k-1$ remaining sub-buckets $D_i$. By the
-		pigeonhole principle, there exists a $D_\alpha$ such that 
+		\item Assume $|D_{1}(h_1, B_j)|\le \dfrac{n-1}{n}\cdot|B_j|$.\\
+		Applying \ref{color-buck}, we have
 		\begin{equation*}
-		|D_\alpha| \ge \frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|
+		\sum_{i \neq h_1} |D_1(i,B_j)| \geq \frac{1}{n}|B_j|
 		\end{equation*}
-		If $\alpha$ is an element of $\sigma$, then WLOG
-		let the color be $\sigma_2$. Then in this case we consider the
+		We are summing over $k-1$ values of $i$, so by the
+		pigeonhole principle, there exists an $\alpha \neq i$ such that 
+		\begin{equation*}
+		|D_1(\alpha,B_j)| \ge \frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|
+		\end{equation*}
+		% TODO: fix the notation of buckets to indicate sigma is the guess vector.
+		With this new information, we want to find a new guess vector $\overline{\sigma}$ that is guaranteed to eliminate $1-1/(nk)$ of the vectors in $S_t$. If $\alpha$ is an element of $\sigma$, then without loss of generality let $\alpha = \sigma_2$.
+		let the color be $\sigma_2$. In this case we consider the
 		guess vector
 		$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
 		Otherwise, consider the guess vector
 		$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
 		Consider the buckets $C_i$ formed from the guess vector
-		$\overline{\sigma}$. In either case, the vectors in $D_{\sigma_1}$ will
-		have at least one fewer hit with $\overline{\sigma}$ than with
+		$\overline{\sigma}$. 
+		
+		% TODO finish up subcase i. I left off here.
+		In either case, the vectors in $D_1(\sigma_1,B_j)$ will no long with $\overline{\sigma}$ than with
 		$\sigma$, and the guess vectors in $D_{\alpha}$ will have at least
 		one more hit. Therefore, any response to $\overline{\sigma}$ which
 		corresponds to some vectors in $D_{\sigma_1}$ corresponds to none
@@ -384,31 +400,31 @@ We prove the following theorem.
 		these two sets, we also have that $\overline{\sigma}$ will eliminate
 		at least $|S|/(nk)$ vectors from $S$ with any response.
 		
-		\item $|D_{\sigma_1}|> \dfrac{n-1}{n}\cdot|B_j|$:\\
-		Consider the set of vectors in $D_{\sigma_1}$. By definition,
-		all of them have $\sigma_1$ as their first entry. Their remaining
+		\item Assume $|D_1(\sigma_1,B_j)|> \dfrac{n-1}{n}\cdot|B_j|$.\\
+		Consider the set of vectors in $D_1(\sigma_1, B_j)$. By definition,
+		all of them satisfy $x_1 = \sigma_1$. Their remaining
 		$n-1$ entries are made up of the remaining $k-1$ colors, and no two of
-		them coincide in all spots $2, 3, \ldots, n$ (otherwise they would be
-		the same vector). Therefore, if we consider this new set of $n-1$
-		vectors formed by taking spots $2, 3, \ldots, n$ of each vector in
-		$D_{\sigma_1}$, they are a set of possible solutions for this
-		Mastermind game with $n-1$ spots and $k-1$ colors. By the induction
+		these vectors coincide in all spots $2, 3, \ldots, n$ (otherwise they would be
+		the same vector). Therefore, if we consider a new set of $(n-1)$-vectors formed by taking spots $2, 3, \ldots, n$ of each vector in $D_1$, they form a set of possible solutions for a
+		Mastermind game with $n-1$ spots and $k-1$ colors, and hidden vector $(h_2, h_3, \ldots, h_n)$. By the induction
 		hypothesis, there is a guess of size $n-1$ that is guaranteed to
 		eliminate $1/((n-1)(k-1))$ of these vectors. If we add $\sigma_1$
 		to the
 		beginning of this guess, it becomes a guess of size $n$. For any
-		response $r$, any of the vectors in $D_{\sigma_1}$ will be eliminated
-		if and only if their vector of spots $2, 3, \ldots, n$ was eliminated
-		by the response $r-1$ in the smaller game of Mastermind. Therefore,
-		this guess still guarantees that we eliminate
+		response $r$, any of the vectors in $D_1$ will be eliminated
+		if and only if its truncation was eliminated
+		by the response $r-1$ in the smaller game of Mastermind. 
+		% TODO: reword above paragraph
+		Therefore, this guess guarantees that we eliminate
 		\begin{align*}
-		\frac{1}{(n-1)(k-1)}|D_{\sigma_1}|
+		\frac{1}{(n-1)(k-1)}|D_1(\sigma_1,B_j(S_t))|
 		& \ge \frac{1}{(n-1)(k-1)}\cdot\frac{n-1}{n}\cdot|B_j|\\
 		& \ge \frac{1}{(k-1)}\cdot\frac{1}{n}
 		\cdot\frac{nk-1}{nk}\cdot|S|\\
 		& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
 		& \ge \frac{1}{nk}\cdot|S|
 		\end{align*}
+		% TODO: need to mention that response 0 eliminates a bunch, conclude the paragraph.
 	\end{enumerate}
 	% TODO: copy over inductive step with new notation.
 	
