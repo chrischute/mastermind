@@ -289,7 +289,7 @@ We now move on to an analysis of the best possible queries and the Minimax algor
 
 We prove the following theorem.
 \begin{enumerate}[label=]
-	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback $\Delta(Q_t, H)$ produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.	
+	\item\textbf{Theorem 1.} Let $A=T$, $R = F$, and let $n$ and $k$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback $\Delta(Q_t, H)$ produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.	
 \end{enumerate}
 \begin{proof}
 	We will again use the bucket terminology, and we add the notion of a \textit{sub-bucket}. A sub-bucket $D_i(j, B_t(s))\subseteq B_t(s)$ (indicating $j$ in position $i$) is defined to be the set of sequences $X = (x_1, x_2, \ldots, x_n)$ in $B_t(s)$ such that $x_i = j$. That is,
@@ -464,6 +464,8 @@ We prove the following theorem.
 	
 	
 \end{proof}
+
+%TODO: talk about the with-repeats game, talk about corollaries/asymptotics.
 
 \clearpage
 \bibliographystyle{acm}
