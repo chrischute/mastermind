@@ -187,7 +187,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 		 Equivalently, the codebreaker chooses $Q_t$ such that the size of the largest bucket is as small as possible. By the discussion in Section (2.1.2), we know that $|B_t(s)|\le\binom{n}{s}D(n-s)$. The optimal query $Q_t$ will partition $S_t$ into buckets as evenly as possible, and some buckets will have size equal to their upper bound, while others will be partially filled. This best-possible partition will partition $S_t$ into two sets $X$ and $Y$ of buckets, such that $A\in X$ implies bucket $A$ is incompletely filled, $B\in Y$ implies bucket $B$ is completely filled, and $A\in X$, $B\in Y$ implies that the upper bound on $|A|$ is greater than the upper bound on $|B|$. Let $x = |X|$, so that $x$ is the number of incompletely filled buckets.
 		 
 		 We now give a recurrence which bounds $L(t)$. At the beginning of the $t$-th turn, we have at least $L(t-1)$ possible solutions remaining, so $|S_t|\ge L(t-1)$. Suppose that the codebreaker has selected the optimal query vector $Q_t$ for submission in turn $t$. We then have 
-		\begin{align}
+		\begin{align}\label{recur}
 			L(t-1)
 			& \le \sum_{i = 0}^{n}|B_i(t)|\nonumber\\
 			& = \sum_{i=0}^{x-1}|B_i(t)| + \sum_{i=x}^{n}|B_i(t)|\nonumber\\
@@ -195,7 +195,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 			\text{for optimal $x$}\nonumber\\
 			& = x\cdot L(t) + \sum_{i = x}^{n}\binom{n}{i}D(n-i).
 		\end{align}
-		Once we know $L(t)$, picking $x$ too large results in some of the smaller buckets being sub-optimally underfilled. Picking $x$ too small results in some of the larger buckets being overfilled. So adjustment of $x$ about its optimal value always increases the value of equation (2). Thus we have
+		Once we fix $L(t)$, we claim that the inequality in equation (\ref{recur}) holds for all $x$. Picking $x$ larger than its optimal value increases the contribution of some of the entirely filled, smaller buckets up to $L(t)$, thus increasing the total sum. Picking $x$ too small increases the contribution of some of the underfilled, larger buckets up to their full sizes, thereby increasing the total sum. So adjustment of $x$ about its optimal value always preserves the inequality. Thus for all $x$ we have
 		\begin{align*}
 			L(t-1) & \le x\cdot L(t) + \sum_{i=x}^n\binom{n}{i}D(n-i)\quad\forall x
 		\end{align*}
@@ -208,20 +208,8 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 				\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}
 			\end{equation*}
 			\begin{proof}
-				A combinatorial argument can be made as follows: The LHS	 denotes the number of permutations of an $n$-element vector which have	 at least $x$ fixed points. Suppose we choose $x$ fixed points and simply permute the rest of the vector. This gives $\binom{n}{x}(n-x)!=\frac{n!}{x!}$ possible permutations. Clearly this includes all vectors with at least $x$ fixed points (and over-counts by some margin), so the inequality holds.
+				A combinatorial argument can be made as follows: The left-hand side denotes the number of permutations of an $n$-element vector which have at least $x$ fixed points. Suppose we choose $x$ fixed points and simply permute the rest of the vector. This gives $\binom{n}{x}(n-x)!=\frac{n!}{x!}$ possible permutations. Clearly this includes all vectors with at least $x$ fixed points (and over-counts by some margin), so the inequality holds.
 				
-				One may also observe
-				\begin{align*}
-					\sum_{i=x}^n\binom{n}{i}D(n-i) & =
-					\frac{n!}{x!}\sum_{i=x}^{n}\frac{x!}{i!(n-i)!}D(n-i)\\
-					& \qquad\text{we use the fact that }\frac{x!}{i!}\le\frac{1}{(i-x)!}\\
-					& \le \frac{n!}{x!}\sum_{i=x}^{n}\frac{1}{(i-x)!(n-i)!}D(n-i)\\
-					& \qquad\text{let $k=i-x$}\\
-					& = \frac{n!}{x!}\sum_{k=0}^{n-x}\frac{1}{k!(n-x-k)!}D(n-x-k)\\
-					& = \frac{n!}{x!(n-x)!}\sum_{k=0}^{n-x}\binom{n-x}{k}D(n-x-k)\\
-					& = \frac{n!}{x!(n-x)!}(n-x)!\\
-					& = \frac{n!}{x!}.
-				\end{align*}
 			\end{proof}
 		\end{enumerate}
 		
@@ -321,87 +309,86 @@ We prove the following theorem.
 		
 	\textit{Inductive Step.} Assume that for $n-1$ spots and any number of colors $\widehat{k}$ (where $n\ge 2$), we are guaranteed that there is a guess that eliminates a fraction at least $1/(n\widehat{k})$ of the solutions.
 		
-	Consider a guess vector $\sigma=\{\sigma_1, \sigma_2, \ldots, \sigma_n\}$. We will analyze the number of solutions eliminated from $S_t$ by guessing $\sigma$ in the worst-case. We partition $S_t$ into $n$ buckets $B_t(1), B_t(2), \ldots, B_t(n)$. Consider the response $j$ that eliminates as few possible solutions as possible from $S_t$, so $|B_t(j)| = \max\{|B_t(1)|, |B_t(2)|, \ldots, |B_t(n)|\}$. 
+	Consider a guess vector $\sigma=\{\sigma_1, \sigma_2, \ldots, \sigma_n\}$. We will analyze the number of solutions eliminated from $S_t$ by guessing $\sigma$ in the worst-case. We partition $S_t$ into $n$ buckets $B_t(1), B_t(2), \ldots, B_t(n)$. Consider the response $j$ that eliminates as few possible solutions as possible from $S_t$, so $|B(j)| = \max\{|B(1)|, |B(2)|, \ldots, |B(n)|\}$. 
 	
 	Suppose that
 	\begin{equation*}
-	|B_j|\le\frac{nk - 1}{nk}\cdot|S|.
+	|B(j)|\le\frac{nk - 1}{nk}\cdot|S|.
 	\end{equation*}
-	Then by assumption this inequality holds for all $B_i$, and since for a given response $i$, $S_{t+1} = B_t(i)$, we conclude that regardless of the response $i$ we have $|S_{t+1}| \leq (1-1/(nk))|S_t|$ as desired.
+	Then by assumption this inequality holds for all $B(i)$, and since for a given response $i$, $S_{t+1} = B_t(i)$, we conclude that regardless of the response $i$ we have $|S_{t+1}| \leq (1-1/(nk))|S_t|$ as desired.
 	
 	Otherwise we have
 	\begin{equation*}
-	|B_j|>\frac{nk - 1}{nk}\cdot|S|.
+	|B(j)|>\frac{nk - 1}{nk}\cdot|S|.
 	\end{equation*}
-	\textit{Case 1.} Assume $j>0$. For a particular guess vector $X$, recall that $X \in B_j$ if and only if the black-peg distance from $X$ to $H$ is $j$, and the sum of this black-peg distance over all vectors $X \in B_j$ is then $j|B_j|$. Recalling the definition of black-peg distance, this means 
+	\textit{Case 1.} Assume $j>0$. For a particular guess vector $X$, recall that $X \in B(j)$ if and only if the black-peg distance from $X$ to $H$ is $j$, and the sum of this black-peg distance over all vectors $X \in B(j)$ is then $j|B(j)|$. Recalling the definition of black-peg distance, this means 
 	\begin{equation}\label{subBuck}
-	j|B_j| = \left|\{i\in\Z, X \in B_j \mid x_i = \sigma_i,~ 1\le i\le n\}\right|.
+	j|B(j)| = \left|\{i\in\Z, X \in B(j) \mid x_i = \sigma_i,~ 1\le i\le n\}\right|.
 	\end{equation}
 	But recalling the definition of a sub-bucket, we also have that 
 	\begin{equation*}
-	|D_i(\sigma_i,B_j(S_t))| = \left|\{X \in B_j \mid x_i = \sigma_i\}\right|
+	|D_i(\sigma_i,B(j))| = \left|\{X \in B(j) \mid x_i = \sigma_i\}\right|
 	\end{equation*}
-	and so we can rewrite \ref{subBuck} as
+	and so we can rewrite (\ref{subBuck}) as
 	\begin{equation*}
-	j|B_j| = \sum_{i=1}^n |D_i(\sigma_i,B_j(S_t))|
+	j|B(j)| = \sum_{i=1}^n |D_i(\sigma_i,B(j))|
 	\end{equation*}
 	therefore by the pigeonhole principle, there must be a sub-bucket $D_i$
 	that satisfies
 	\begin{align*}
-	|D_i| \geq \frac{j}{n}\cdot|B_j|.
+	|D_i| \geq \frac{j}{n}\cdot|B(j)|.
 	\end{align*}
-	Informally, this means that in bucket $j$ there are $j$ spots per vector $X$ where $x_i = h_i$, out of $n$ spots total, and so there must be some spot $i$ with at least $j/n$ of the vectors in $B_j$ satisfying $x_i = h_i$. Without loss of generality, let $i = 1$. Since $j \geq 1$ we have
-	\begin{equation*}
-	|D_{1}(h_1, B_j)|\ge \frac{1}{n}\cdot|B_j|.
-	\end{equation*}
+	Informally, this means that in bucket $j$ there are $j$ spots per vector $X$ where $x_i = h_i$, out of $n$ spots total, and so there must be some spot $i$ with at least $j/n$ of the vectors in $B(j)$ satisfying $x_i = h_i$. Without loss of generality, let $i = 1$. Since we assumed $j \geq 1$ we have
+	\begin{equation}\label{subBuckBound}
+	|D_{1}(\sigma_1, B(j))|\ge \frac{1}{n}\cdot|B(j)|.
+	\end{equation}
 	We now have two sub-cases:
 	\begin{enumerate}[label=\roman*.]
-		\item Assume $|D_{1}(h_1, B_j)|\le \dfrac{n-1}{n}\cdot|B_j|$.\\
-		Applying \ref{color-buck}, we have
+		\item Assume $|D_{1}(h_1, B(j))|\le \dfrac{n-1}{n}\cdot|B(j)|$.\\
+		Combining this with (\ref{color-buck}), we have
 		\begin{equation*}
-		\sum_{i \neq h_1} |D_1(i,B_j)| \geq \frac{1}{n}|B_j|
+		\sum_{i \neq h_1} |D_1(i,B(j))| \geq \frac{1}{n}|B(j)|
 		\end{equation*}
 		We are summing over $k-1$ values of $i$, so by the
 		pigeonhole principle, there exists an $\alpha \neq i$ such that 
-		\begin{equation*}
-		|D_1(\alpha,B_j)| \ge \frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|
-		\end{equation*}
-		% TODO: fix the notation of buckets to indicate sigma is the guess vector.
-		With this new information, we want to find a new guess vector $\overline{\sigma}$ that is guaranteed to eliminate $1-1/(nk)$ of the vectors in $S_t$. If $\alpha$ is an element of $\sigma$, then without loss of generality let $\alpha = \sigma_2$.
-		let the color be $\sigma_2$. In this case we consider the
-		guess vector
+		\begin{equation}\label{pigeon}
+		|D_1(\alpha,B(j))| \ge \frac{1}{n}\cdot\frac{1}{k-1}\cdot|B(j)|
+		\end{equation}
+		% TODO: perhaps fix the notation of buckets to make it more clear that sigma is the guess vector.
+		With this new information, we want to find a new guess vector $\overline{\sigma}$ that is guaranteed to eliminate $1-1/(nk)$ of the vectors in $S_t$. If $\alpha$ is an element of $\sigma$, then without loss of generality let $\alpha = \sigma_2$, and
+		we consider the new guess vector
 		$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
 		Otherwise, consider the guess vector
 		$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
 		Consider the buckets $C_i$ formed from the guess vector
 		$\overline{\sigma}$. 
 		
-		% TODO finish up subcase i. I left off here.
-		In either case, the vectors in $D_1(\sigma_1,B_j)$ will no long with $\overline{\sigma}$ than with
-		$\sigma$, and the guess vectors in $D_{\alpha}$ will have at least
-		one more hit. Therefore, any response to $\overline{\sigma}$ which
-		corresponds to some vectors in $D_{\sigma_1}$ corresponds to none
-		of the vectors in $D_{\alpha}$ and vice versa. So we know that any
+		% TODO can we make this more clear?
+		In either case, the vectors in $D_1(\sigma_1,B(j))$ will belong to either $C(j-1)$ or $C(j-2)$, whereas the vectors in $D_1(\alpha, B(j))$ will belong to either $C(j+1)$ or $C(j+2)$. 
+		% TODO: justify this statement XP
+		Therefore, any response to $\overline{\sigma}$ which
+		corresponds to some vectors in $D(\sigma_1)$ corresponds to none
+		of the vectors in $D(\alpha)$ and vice versa. So we know that any
 		response to $\overline{\sigma}$ will entirely eliminate at least one
-		of those two sets. From above, we know
+		of those two sets. From (\ref{subBuckBound}), we know
 		\begin{align*}
-		|D_{\sigma_1}| & \ge \frac{j}{n}\cdot|B_j|\\
-		& \ge \frac{j}{n}\cdot\frac{nk-1}{nk}\cdot|S|\\
+		|D(\sigma_1)| & \ge \frac{1}{n}\cdot|B(j)|\\
+		& \ge \frac{1}{n}\cdot\frac{nk-1}{nk}\cdot|S|\\
 		& \ge \frac{1}{n}\cdot\frac{n}{nk}\cdot|S|\\
-		& = \frac{1}{nk}\cdot|S|
+		& = \frac{1}{nk}\cdot|S|.
 		\end{align*}
-		And
+		And by (\ref{pigeon}) we have
 		\begin{align*}
-		|D_\alpha| & \ge\frac{1}{n}\cdot\frac{1}{k-1}\cdot|B_j|\\
+		|D(\alpha)| & \ge\frac{1}{n}\cdot\frac{1}{k-1}\cdot|B(j)|\\
 		& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
-		& \ge \frac{1}{nk}\cdot|S|
+		& \ge \frac{1}{nk}\cdot|S|.
 		\end{align*}
 		Since $\overline{\sigma}$ will always eliminate at least one of
-		these two sets, we also have that $\overline{\sigma}$ will eliminate
+		these two sets, we conclude that $\overline{\sigma}$ will eliminate
 		at least $|S|/(nk)$ vectors from $S$ with any response.
 		
-		\item Assume $|D_1(\sigma_1,B_j)|> \dfrac{n-1}{n}\cdot|B_j|$.\\
-		Consider the set of vectors in $D_1(\sigma_1, B_j)$. By definition,
+		\item Assume $|D_1(\sigma_1,B(j))|> \dfrac{n-1}{n}\cdot|B(j)|$.\\
+		Consider the set of vectors in $D_1(\sigma_1, B(j))$. By definition,
 		all of them satisfy $x_1 = \sigma_1$. Their remaining
 		$n-1$ entries are made up of the remaining $k-1$ colors, and no two of
 		these vectors coincide in all spots $2, 3, \ldots, n$ (otherwise they would be
@@ -417,16 +404,63 @@ We prove the following theorem.
 		% TODO: reword above paragraph
 		Therefore, this guess guarantees that we eliminate
 		\begin{align*}
-		\frac{1}{(n-1)(k-1)}|D_1(\sigma_1,B_j(S_t))|
-		& \ge \frac{1}{(n-1)(k-1)}\cdot\frac{n-1}{n}\cdot|B_j|\\
+		\frac{1}{(n-1)(k-1)}|D_1(\sigma_1,B(j))|
+		& \ge \frac{1}{(n-1)(k-1)}\cdot\frac{n-1}{n}\cdot|B(j)|\\
 		& \ge \frac{1}{(k-1)}\cdot\frac{1}{n}
 		\cdot\frac{nk-1}{nk}\cdot|S|\\
 		& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
 		& \ge \frac{1}{nk}\cdot|S|
 		\end{align*}
 		% TODO: need to mention that response 0 eliminates a bunch, conclude the paragraph.
+	
+	
+	\textit{Case 2.} If $j=0$, no vector in $B_0$ can contain $\sigma_1$ in the first position, so $|D_1(\sigma_1)| = 0$. 
+	% TODO: define black hits pls, to justify this
+	Combining this with (\ref{color-buck}), we have
+	\begin{equation*}
+	\sum_{j \neq \sigma_1} |D_i(j,B_t(s))| = |B(0)|.
+	\end{equation*}
+	%TODO: might want to use a different thing instead of j, idk.
+	By the pigeonhole principle, we can then find an $i$ such that
+	\begin{equation*}
+	|D_i(j,B(0))| = \frac{1}{k-1}\cdot|B(0)|.
+	\end{equation*}
+	Without loss of generality, we let $i = 1$. If $j$ appears in $\sigma$, without loss of generality we let $j = \sigma_2$, and
+	we consider the guess vector
+	$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
+	Otherwise, call this new color $\alpha$ and consider the guess vector
+	$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
+	Now consider the
+	buckets $C_i$ formed by the guess $\overline{\sigma}$. 
+	We have that the vectors in $D_1(j)$ belong to either $C(1)$ or $C(2)$.
+	%TODO: gotta justify this bby
+	Then we know
+	\begin{align*}
+	|C(1)|+|C(2)| & \ge |D_1(j)|\\
+	& \ge \frac{1}{k-1}\cdot |B_0|\\
+	& \ge \frac{1}{k-1}\cdot\frac{nk-1}{nk}\cdot|S|\\
+	& \ge \frac{1}{k-1}\cdot\frac{nk-n}{nk}\cdot|S|\\
+	& = \frac{n}{nk}\cdot|S|\\
+	& \ge \frac{2}{nk}\cdot|S|.
+	\end{align*}
+	Therefore we have either
+	\begin{equation*}
+	|C(1)|\ge\frac{1}{nk}\cdot|S|\qquad\text{or}
+	\qquad|C(2)|\ge\frac{1}{nk}\cdot|S|
+	\end{equation*}
+	Let this larger bucket be $C(\beta)$, and suppose
+	\begin{equation*}|C(\beta)|\le\frac{nk-1}{nk}|S|\end{equation*}.
+	Then getting the response $\beta$ will eliminate at least $|S|/(nk)$
+	possible solutions from $S$, and getting any other response will
+	eliminate at least $|C(\beta)|\ge |S|/(nk)$ possible solutions. Therefore
+	the guess $\overline{\sigma}$ is guaranteed to eliminate at least
+	$|S|/(nk)$ solutions from $S$.
+	
+	Otherwise we have
+	\begin{equation*}|C(\beta)|>\frac{nk-1}{nk}|S|\end{equation*}
+	Then, since $\beta$ is either 1 or 2, we have in particular that $\beta > 0$ so this satisfies the conditions for Case 1 above, which requires a
+	guess whose largest bucket is $B(j)$ with $j>0$, and we are therefore guaranteed a guess that eliminates $1/(nk)$ of the vectors from $S$ for any response.
 	\end{enumerate}
-	% TODO: copy over inductive step with new notation.
 	
 	
 \end{proof}
