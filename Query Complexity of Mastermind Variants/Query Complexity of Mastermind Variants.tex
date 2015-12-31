@@ -98,11 +98,10 @@ Throughout we define $f(n, k, \Delta, R, A)$ to be the smallest integer such tha
 
 We prove three main results, each of which builds on the previous work related to a given Mastermind variant.
 \begin{enumerate}[label=]
-	\item\textbf{Theorem 1.} Let $A=T$, let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.
+	\item\textbf{Theorem 1.} Knuth's minimax algorithm takes at most $nk+1$ turns to win Mastermind.
 \end{enumerate}
-This theorem facilitates analysis of Knuth's minimax algorithm described in \cite{DK76}. The algorithm and its variants perform near-optimally for small values of $n$ and $k$, but analyzing its asymptotic performance is made difficult by its computational nature, and to our knowledge there have been no upper bounds established for the algorithm's worst-case behavior. To demonstrate the theorem's usefulness, suppose that the codebreaker is in turn $t$, hence has made queries $Q_1, Q_2 \ldots, Q_{t-1}$ and received feedback instances $\Delta(Q_1, H), \Delta(Q_2, H) \ldots, \Delta(Q_{t-1},H)$. Given this set of feedback, the codebreaker can eliminate a number of possibilities for $H$. For example, suppose that a sequence $\tilde{H} = (\tilde{h}_1, \tilde{h}_2 \ldots, \tilde{h}_n)$ satisfies $\Delta(\tilde{H}, H)\neq \Delta(Q_s, H)$ for some $s\in\{1,2,\ldots, t-1\}$. Then clearly $\tilde{H}\neq H$.
-
-Using this process, the codebreaker may construct a set $S_t$ of possibilities for $H$ in turn $t$ after $t-1$ query-feedback interactions have occurred. That is, $S_t$ contains sequences of length $n$ with components from the alphabet $\mathcal{A}$ such that no member of $S_t$ has been eliminated by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. Theorem 1 then states that given $S_t$, there always exists a query $Q_t$ such that the response $\Delta(Q_t, H)$ will eliminate a fraction $1/(nk)$ of the members of $S_t$ as possibilities for $H$. By Theorem 1, $|S_{t+1}|\le (1-1/(nk))|S_{t}|$, which in particular guarantees a quantifiable amount of progress at each guess made by the minimax algorithm.
+Knuth's minimax algorithm is notable because it is, experimentally, the best method we have to solve small games of Mastermind in as few guesses as possible. However, by its nature, it is hard to analyze its asymptotic performance. Its behavior is determined by the distribution of solutions throughout the game, which proves very difficult to analyze \cite{KT86} \cite{OS13}. This bound is, to our knowledge, the first upper bound on the worst-case performance of the minimax algorithm, but if it performs near-optimally for large $n$ and $k$, we would expect this bound to be much smaller. We know, for example, that $f(n,k) = O(n \log k)$ for $k$ not too large \cite{DK76} \cite{KT86} %TODO: check these citations to see if correct.
+.
 
 Our second main result concerns the Permutation Game, in which $n=k$ and $R=F$, thus restricting the hidden sequence $H$ to be a permutation of the alphabet $\mathcal{A}$.
 \begin{enumerate}[label=]
@@ -122,12 +121,12 @@ Our third result relates to non-adaptive variants of Mastermind, which correspon
 		f(n, k, \Delta = b, R, A=F)\ge c\cdot n\log(k).
 	\end{equation*}
 \end{enumerate}
-This theorem was proved by Doerr et. al.\cite{DS13} for the case $R = T$, $k \ge n$. They use an information-theoretic argument based on entropy by letting the hidden sequence be randomly chosen. 
+This theorem was proved by Doerr et al for the case $R = T$ , $k \ge n$ \cite{DS13}. They use an information-theoretic argument based on Shannon entropy by letting the hidden sequence be randomly chosen. 
 % TODO: insert more explanation?
  We use a similar argument to extend this to $R = F$. 
 
 % TODO: Perhaps we should emphasize somewhere in the intro that we're only looking at worst-case analysis but provide some references to expected-case papers
-These lower bounds together cover the case $n \geq k$. For neither value of $R$ do we have tight upper bounds; when $R = T$ a corollary of a result by Doerr et al. \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the trivial $nk$ bound is known.
+These lower bounds together cover the case $n \geq k$. For neither choice of $R$ do we have tight upper bounds; when $R = T$ a corollary of a result by Doerr et al. \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the $nk$ bound is known.
 
 On the other hand, Doerr et al. are able to extend a result of Chv\'atal to provide tight bounds for $n \le k$ with $R = T$. 
 
@@ -272,7 +271,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 		\begin{equation*}
 			C_{n}! - (H_n - H_{C_{n}}) > 1.
 		\end{equation*}
-		When $C_{n}=\log\log n$, we have $C_{n}! - (H_n - H_{C_{n}}) > 1$ for $n\ge e^{198}$, and when $C_{n}=\log n$, this is true for $n\ge 10$.
+		When $C_{n}=\log\log n$, we have $C_{n}! - (H_n - H_{C_{n}}) > 1$ for $n\ge e^{198}$, and when $C_{n}=\log n$, thisu is true for $n\ge 10$.
 		
  	In conclusion, when $n$ is sufficiently large, the minimum number of remaining
 	possible solutions after $n - \log\log n$ guesses is at least
@@ -284,9 +283,20 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 	Thus there is no strategy that can identify any hidden sequence in $n-\log\log(n)$ turns or fewer. Therefore, in the Permutation Game variant of Mastermind, we have $f(n, n)\ge n - \log\log(n)$ for all sufficiently large $n$.
 	\end{proof}
 
-\subsection{Best Guesses and the Minimax Algorithm}
-We now move on to an analysis of the best possible queries and the Minimax algorithm. Here, we adopt Donald Knuth's definition of a ``best possible'' query in the context of Minimax\cite{DK76}: a query sequence $Q_t$ is the \textit{best possible query} if the maximum number of solutions remaining over all responses is minimized. This is the guess chosen by the minimax algorithm.
+\subsection{Linear Algebra and the Minimax Algorithm}
+We now move on to an analysis of the Minimax algorithm. In order to discuss it, we first change our notation. We can represent all guess vectors and hidden vectors as $(0,1)$-vectors in $\R^{n\times k}$, which, for convenience, we write as matrices. A standard vector is converted into a matrix in the following manner: the $i,j$-th entry is 1 if the $i$-th spot of the original vector is the $j$-th color, and 0 otherwise. As such, each row will have exactly one 1, as each spot is exactly one color.
 
+With this notation, the black-peg distance becomes the inner product of the representations of the guess and the solution, as there will be a contribution to the inner product exactly when both representations have a one in the same column in the same row, i.e. there is a color in the same spot. 
+
+As such, we want to find the (necessarily unique) valid matrix representation such that its inner product with the hidden vector is $n$, as this has to match in $n$ spots and therefore must be the hidden vector. By linearity of the inner product, once we know the value of the inner product of the hidden vector with some set of guess vectors, we know the value of the inner product of the hidden vector with any vector in the span of the guess vectors. Therefore, it is an immediate consequence that a winning strategy can be found by querying a basis for the span of the valid guess vectors, which, as a subspace of $\R^{n\times k}$, must be of size at most $nk$. Note that this strategy does not make use of adaptive feedback, of white-peg responses, or the condition on repeated colors. Thus, for any choice of $\Delta$, $A$, and $R$, we have $f(n,k) \leq nk$.
+
+However, this representation also allows us to bound the minimax algorithm. We claim that at each turn, the minimax either guesses the solution or guesses a vector whose representation is linearly independent of the previous guesses. 
+\begin{proof}
+	If the solution is known, the minimax algorithm will guess it. This will definitely occur when the solution's representation is a linear combination of the previous guess vectors, as by the logic above we can compute its inner product with the hidden vector, i.e. itself, so the inner product will be $n$. As there can be only one valid representation whose inner product with the hidden vector is $n$, we have found the solution.
+	
+	Otherwise, the solution is linearly independent from the previous guess vectors. Assume this is the case. If it is still uniquely determined, the algorithm will guess it. Regardless, guessing a vector $q$ that is a linear combination of the previous guesses returns no new information, as the response to that guess can already be computed. Since $q$ is linearly dependent on the previous guesses, it cannot, by our assumption, be the solution, and so guessing it eliminates 0 vectors and doesn't solve the game. If we can find a new query $r$ that is guaranteed to either eliminate at least 1 vector or solve the game, the minimax algorithm will choose $r$ over $q$. Since the solution must exist and by our assumption is linearly independent of the guess vectors, there is at least one vector linearly independent of the previous guesses. Guessing such a vector is guaranteed to win the game with a black-peg response of $n$, or eliminate itself with any other response. Thus, according to the minimax algorithm, guessing any vector linearly independent of the previous guesses will always be strictly better than guessing a linearly dependent vector, and so if the solution is unknown the best guess will be necessarily independent of the previous guesses.
+\end{proof}
+Since these representations are in $R^{n \times k}$, the minimax algorithm can make at most $nk$ linearly independent guesses. After that, the minimax cannot make a linearly independent guess and by the above lemma must then guess the solution, for an upper bound of $nk+1$ turns.
 
 \clearpage
 
