@@ -230,7 +230,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 			\end{equation*}
 			where $0\le t\le n-C_{n}$ and $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
 		\begin{proof}
-			While this equation holds for all $x$, to achieve a desirable bound, we will
+			This equation holds for all $x$, so to achieve a desirable bound, we will
 		let $x=t+C_{n}$ for any positive constant $C_{n}$. We have
 		\begin{enumerate}[label=]
 		\item\textit{Base Case.} When $t=0$, we have $S_n(0)= n!$ and
@@ -258,17 +258,17 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 			{(C_{n}+t)!}\right)\\
 			& \ge \left(\frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_{n}+t)!}\right)
 			\end{align*}
-			Then
-			\begin{align*}
-			L(n-C_{n}) & \ge n!\left(\frac{C_{n}! - (H_n - H_{C_{n}})}{n!}\right)\\
-			& \ge C_{n}! - (H_n-H_{C_{n}})
-			\end{align*}
-		Thus the inequality holds for all $n$.
+			
 		\end{enumerate}
 		\end{proof}
+
 	\end{enumerate}
-	We choose $C_{n}$ by the following reasoning: we want to achieve a lower bound
-		of $n-C_{n}$ turns. Thus, we want
+	Then for $t = n-C_n$ we have
+	\begin{align*}
+	L(n-C_{n}) & \ge n!\left(\frac{C_{n}! - (H_n - H_{C_{n}})}{n!}\right)\\
+	& \ge C_{n}! - (H_n-H_{C_{n}}).
+	\end{align*}
+	We choose $C_{n}$ by the following reasoning: we want to achieve a lower bound of $n-C_{n}$ turns to solve the game. This would occur if $L(n-C_n)$ were greater than 1, as there would still be at least 2 possible solutions after $n-C_n$ turns, and thus the game would not yet be solved. Thus, we want
 		\begin{equation*}
 			C_{n}! - (H_n - H_{C_{n}}) > 1.
 		\end{equation*}
@@ -287,220 +287,86 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 \subsection{Best Guesses and the Minimax Algorithm}
 We now move on to an analysis of the best possible queries and the Minimax algorithm. Here, we adopt Donald Knuth's definition of a ``best possible'' query in the context of Minimax\cite{DK76}: a query sequence $Q_t$ is the \textit{best possible query} if the maximum number of solutions remaining over all responses is minimized. This is the guess chosen by the minimax algorithm.
 
-We prove the following theorem.
-\begin{enumerate}[label=]
-	\item\textbf{Theorem 1.}\label{thm1} Let $A=T$, $R = F$, and let $n$ and $k$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback $\Delta(Q_t, H)$ produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.	
-\end{enumerate}
-\begin{proof}
-	We will again use the bucket terminology, and we add the notion of a \textit{sub-bucket}. A sub-bucket $D_i(j, B_t(s))\subseteq B_t(s)$ (indicating $j$ in position $i$) is defined to be the set of sequences $X = (x_1, x_2, \ldots, x_n)$ in $B_t(s)$ such that $x_i = j$. That is,
-	\begin{equation*}
-		D_i(j, B_t(s)) = \left\{(x_1, x_2, \ldots, x_n)\in B_t(s)\mid x_i = j\right\},
-	\end{equation*}
-	defined for all $i\in\mathcal{A}$. 
-	
-	Note, for example, that since every vector $X \in B_t(s)$ satisfies $x_i = j$ for exactly one color $j \leq k$, we have
-	\begin{equation}\label{color-buck}
-	\sum_{j = 1}^k |D_i(j,B_t(s))| = |B_t(s)|.
-	\end{equation}
-	When the context is clear we will refer to a sub-bucket $D_i(j, B_t(s))$ as $D_i$.
-	
-	For the proof, we proceed by induction on $n$. We will, in the course of the proof, analyze two possibilities for the distribution of solutions. When the solutions are distributed evenly enough among the responses, it is easy to show that we are guaranteed to eliminate $1/(nk)$ of the solutions. When the solutions are unevenly distributed, we can find a spot at which a significant fraction of the solutions must coincide, and induct on the remaining $n-1$ spots.
-	% TODO: I've added in a few sentences explaining the proof. Thoughts?
-	
-	\textit{Base Case.} When $n=1$, we have a single-element vector. So there are at most $k$ possible solutions remaining at any step, thus $|S_t|\le k$. If we guess one of the remaining solutions $X\in S_t$, this will eliminate $1$ solution ($X$ itself) if the response is $0$, and will eliminate $|S_t|-1$ solutions if the response is $1$. So we're guaranteed to eliminate at least $1/|S_t|\ge 1/(nk)$ solutions.
-		
-	\textit{Inductive Step.} Assume that for $n-1$ spots and any number of colors $\widehat{k}$ (where $n\ge 2$), we are guaranteed that there is a guess that eliminates a fraction at least $1/(n\widehat{k})$ of the solutions.
-		
-	Consider a guess vector $\sigma=\{\sigma_1, \sigma_2, \ldots, \sigma_n\}$. We will analyze the number of solutions eliminated from $S_t$ by guessing $\sigma$ in the worst-case. We partition $S_t$ into $n$ buckets $B_t(1), B_t(2), \ldots, B_t(n)$. Consider the response $j$ that eliminates as few possible solutions as possible from $S_t$, so $|B(j)| = \max\{|B(1)|, |B(2)|, \ldots, |B(n)|\}$. 
-	
-	Suppose that
-	\begin{equation*}
-	|B(j)|\le\frac{nk - 1}{nk}\cdot|S|.
-	\end{equation*}
-	Then by assumption this inequality holds for all $B(i)$, and since for a given response $i$, $S_{t+1} = B_t(i)$, we conclude that regardless of the response $i$ we have $|S_{t+1}| \leq (1-1/(nk))|S_t|$ as desired.
-	
-	Otherwise we have
-	\begin{equation*}
-	|B(j)|>\frac{nk - 1}{nk}\cdot|S|.
-	\end{equation*}
-	\textit{Case 1.} Assume $j>0$. For a particular guess vector $X$, recall that $X \in B(j)$ if and only if the black-peg distance from $X$ to $H$ is $j$, and the sum of this black-peg distance over all vectors $X \in B(j)$ is then $j|B(j)|$. Recalling the definition of black-peg distance, this means 
-	\begin{equation}\label{subBuck}
-	j|B(j)| = \left|\{i\in\Z, X \in B(j) \mid x_i = \sigma_i,~ 1\le i\le n\}\right|.
-	\end{equation}
-	But recalling the definition of a sub-bucket, we also have that 
-	\begin{equation*}
-	|D_i(\sigma_i,B(j))| = \left|\{X \in B(j) \mid x_i = \sigma_i\}\right|
-	\end{equation*}
-	and so we can rewrite (\ref{subBuck}) as
-	\begin{equation*}
-	j|B(j)| = \sum_{i=1}^n |D_i(\sigma_i,B(j))|
-	\end{equation*}
-	therefore by the pigeonhole principle, there must be a sub-bucket $D_i$
-	that satisfies
-	\begin{align*}
-	|D_i| \geq \frac{j}{n}\cdot|B(j)|.
-	\end{align*}
-	Informally, this means that in bucket $j$ there are $j$ spots per vector $X$ where $x_i = h_i$, out of $n$ spots total, and so there must be some spot $i$ with at least $j/n$ of the vectors in $B(j)$ satisfying $x_i = h_i$. Without loss of generality, let $i = 1$. Since we assumed $j \geq 1$ we have
-	\begin{equation}\label{subBuckBound}
-	|D_{1}(\sigma_1, B(j))|\ge \frac{1}{n}\cdot|B(j)|.
-	\end{equation}
-	We now have two sub-cases:
-	\begin{enumerate}[label=\roman*.]
-		\item Assume $|D_{1}(h_1, B(j))|\le \dfrac{n-1}{n}\cdot|B(j)|$.\\
-		Combining this with (\ref{color-buck}), we have
-		\begin{equation*}
-		\sum_{i \neq h_1} |D_1(i,B(j))| \geq \frac{1}{n}|B(j)|
-		\end{equation*}
-		We are summing over $k-1$ values of $i$, so by the
-		pigeonhole principle, there exists an $\alpha \neq i$ such that 
-		\begin{equation}\label{pigeon}
-		|D_1(\alpha,B(j))| \ge \frac{1}{n}\cdot\frac{1}{k-1}\cdot|B(j)|
-		\end{equation}
-		% TODO: perhaps fix the notation of buckets to make it more clear that sigma is the guess vector.
-		With this new information, we want to find a new guess vector $\overline{\sigma}$ that is guaranteed to eliminate $1-1/(nk)$ of the vectors in $S_t$. If $\alpha$ is an element of $\sigma$, then without loss of generality let $\alpha = \sigma_2$, and
-		we consider the new guess vector
-		$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
-		Otherwise, consider the guess vector
-		$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
-		Consider the buckets $C_i$ formed from the guess vector
-		$\overline{\sigma}$. 
-		
-		% TODO can we make this more clear?
-		In either case, the vectors in $D_1(\sigma_1,B(j))$ will belong to either $C(j-1)$ or $C(j-2)$, whereas the vectors in $D_1(\alpha, B(j))$ will belong to either $C(j+1)$ or $C(j+2)$. 
-		% TODO: justify this statement XP
-		Therefore, any response to $\overline{\sigma}$ which
-		corresponds to some vectors in $D(\sigma_1)$ corresponds to none
-		of the vectors in $D(\alpha)$ and vice versa. So we know that any
-		response to $\overline{\sigma}$ will entirely eliminate at least one
-		of those two sets. From (\ref{subBuckBound}), we know
-		\begin{align*}
-		|D(\sigma_1)| & \ge \frac{1}{n}\cdot|B(j)|\\
-		& \ge \frac{1}{n}\cdot\frac{nk-1}{nk}\cdot|S|\\
-		& \ge \frac{1}{n}\cdot\frac{n}{nk}\cdot|S|\\
-		& = \frac{1}{nk}\cdot|S|.
-		\end{align*}
-		And by (\ref{pigeon}) we have
-		\begin{align*}
-		|D(\alpha)| & \ge\frac{1}{n}\cdot\frac{1}{k-1}\cdot|B(j)|\\
-		& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
-		& \ge \frac{1}{nk}\cdot|S|.
-		\end{align*}
-		Since $\overline{\sigma}$ will always eliminate at least one of
-		these two sets, we conclude that $\overline{\sigma}$ will eliminate
-		at least $|S|/(nk)$ vectors from $S$ with any response.
-		
-		\item Assume $|D_1(\sigma_1,B(j))|> \dfrac{n-1}{n}\cdot|B(j)|$.\\
-		Consider the set of vectors in $D_1(\sigma_1, B(j))$. By definition,
-		all of them satisfy $x_1 = \sigma_1$. Their remaining
-		$n-1$ entries are made up of the remaining $k-1$ colors, and no two of
-		these vectors coincide in all spots $2, 3, \ldots, n$ (otherwise they would be
-		the same vector). Therefore, if we consider a new set of $(n-1)$-vectors formed by taking spots $2, 3, \ldots, n$ of each vector in $D_1$, they form a set of possible solutions for a
-		Mastermind game with $n-1$ spots and $k-1$ colors, and hidden vector $(h_2, h_3, \ldots, h_n)$. By the induction
-		hypothesis, there is a guess of size $n-1$ that is guaranteed to
-		eliminate $1/((n-1)(k-1))$ of these vectors. If we add $\sigma_1$
-		to the
-		beginning of this guess, it becomes a guess of size $n$. For any
-		response $r$, any of the vectors in $D_1$ will be eliminated
-		if and only if its truncation was eliminated
-		by the response $r-1$ in the smaller game of Mastermind. 
-		% TODO: reword above paragraph
-		Therefore, this guess guarantees that we eliminate
-		\begin{align*}
-		\frac{1}{(n-1)(k-1)}|D_1(\sigma_1,B(j))|
-		& \ge \frac{1}{(n-1)(k-1)}\cdot\frac{n-1}{n}\cdot|B(j)|\\
-		& \ge \frac{1}{(k-1)}\cdot\frac{1}{n}
-		\cdot\frac{nk-1}{nk}\cdot|S|\\
-		& \ge \frac{1}{nk-n}\cdot\frac{nk-1}{nk}\cdot|S|\\
-		& \ge \frac{1}{nk}\cdot|S|
-		\end{align*}
-		% TODO: need to mention that response 0 eliminates a bunch, conclude the paragraph.
-	
-	
-	\textit{Case 2.} If $j=0$, no vector in $B_0$ can contain $\sigma_1$ in the first position, so $|D_1(\sigma_1)| = 0$. 
-	% TODO: define black hits pls, to justify this
-	Combining this with (\ref{color-buck}), we have
-	\begin{equation*}
-	\sum_{j \neq \sigma_1} |D_i(j,B_t(s))| = |B(0)|.
-	\end{equation*}
-	%TODO: might want to use a different thing instead of j, idk.
-	By the pigeonhole principle, we can then find an $i$ such that
-	\begin{equation*}
-	|D_i(j,B(0))| = \frac{1}{k-1}\cdot|B(0)|.
-	\end{equation*}
-	Without loss of generality, we let $i = 1$. If $j$ appears in $\sigma$, without loss of generality we let $j = \sigma_2$, and
-	we consider the guess vector
-	$\overline{\sigma}=\{\sigma_2, \sigma_1, \sigma_3, \ldots, \sigma_n\}$.
-	Otherwise, call this new color $\alpha$ and consider the guess vector
-	$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
-	Now consider the
-	buckets $\overline{B}$ formed by the guess $\overline{\sigma}$. 
-	We have that the vectors in $D_1(j)$ belong to either $\overline{B(1)}$ or $\overline{B(2)}$.
-	%TODO: gotta justify this bby
-	Then we know
-	\begin{align*}
-	|\overline{B(1)}|+|\overline{B(2)}| & \ge |D_1(j,B(0))|\\
-	& \ge \frac{1}{k-1}\cdot |B(0)|\\
-	& \ge \frac{1}{k-1}\cdot\frac{nk-1}{nk}\cdot|S|\\
-	& \ge \frac{1}{k-1}\cdot\frac{nk-n}{nk}\cdot|S|\\
-	& = \frac{n}{nk}\cdot|S|\\
-	& \ge \frac{2}{nk}\cdot|S|.
-	\end{align*}
-	Therefore we have either
-	\begin{equation*}
-	|\overline{B(1)}|\ge\frac{1}{nk}\cdot|S|\qquad\text{or}
-	\qquad|\overline{B(2)}|\ge\frac{1}{nk}\cdot|S|
-	\end{equation*}
-	Let this larger bucket be $\overline{B(\beta)}$, and suppose
-	\begin{equation*}|\overline{B(\beta)}|\le\frac{nk-1}{nk}|S|\end{equation*}.
-	Then getting the response $\beta$ will eliminate at least $|S|/(nk)$
-	possible solutions from $S$, and getting any other response will
-	eliminate at least $|\overline{B(\beta)}|\ge |S|/(nk)$ possible solutions. Therefore
-	the guess $\overline{\sigma}$ is guaranteed to eliminate at least
-	$|S|/(nk)$ solutions from $S$.
-	
-	Otherwise we have
-	\begin{equation*}|\overline{B(\beta)}|>\frac{nk-1}{nk}|S|\end{equation*}
-	Then, since $\beta$ is either 1 or 2, we have in particular that $\beta > 0$ so this satisfies the conditions for Case 1 above, which requires a
-	guess whose largest bucket is $B(j)$ with $j>0$, and we are therefore guaranteed a guess that eliminates $1/(nk)$ of the vectors from $S$ for any response.
-	\end{enumerate}
-	
-\end{proof}
-\subsubsection{The Minimax Algorithm} Recall the minimax algorithm described by Knuth in \cite{DK76}.
-At each turn, the algorithm assigns each of the possible guesses a score equal
-to the minimum number of solutions that they would eliminate over all
-possible responses from the codemaker. It then picks the guess with the maximum
-score.\\\\
-\begin{enumerate}[label=]
-	\item\textbf{Corollary 1.1} Let $A=T$, $R = F$, and let $n$ and $k$ be fixed. Then the minimax algorithm takes at most 
-	\begin{equation*}\label{logs}
-	\frac{\log\left(\frac{k!}{(k-n)!}\right)}{\log\left(\frac{nk}{nk-1}\right)}
-	\end{equation*}
-	turns to find the hidden vector.	
-\end{enumerate}
-
-\begin{proof}
-	By iterating \ref{thm1},  %TODO: fix this reference
-	we have $|S_t| \leq (1-1/(nk))^t|S_0|$. When $|S_t|$ is 1, then the game is solved, as there is only one solution remaining. We have $S_0$ contains every solution, of which there are $(k!)/(k-n)!$. Plugging in these quantities and solving for $t$ tells us that we are guaranteed a win in   
-	\begin{equation*}
-	t = \log_{\left(\frac{nk-1}{nk}\right)}\left(\frac{1}{\frac{k!}{(k-n)!}}\right)
-	\end{equation*}
-	turns, which is equivalent to the claim.
-\end{proof}
-Applying Stirling's approximation to \ref{logs} gives us the following asymptotic bounds:
-\begin{enumerate}[label=\roman*.]
-	\item The minimax algorithm for Mastermind with $n$ spots, $k$
-	colors, and no repeats takes at most $O(n^2k\log k)$ turns to find the
-	hidden vector.
-	
-	\item In the same game where $n=k$, the minimax algorithm takes at most
-	$O(n^3\log n)$ turns to find the hidden vector.
-\end{enumerate}
-We do not expect these bounds to be tight. 
-
-
-%TODO: talk about the with-repeats game, talk about corollaries/asymptotics.
 
 \clearpage
+
+%TODO: We never actually introduce entropy. That needs to be done.
+\section{Non-Adaptive Variants}
+This section follows closely the reasoning of \cite{DS13} as they analyze non-adaptive games. 
+We perform an analysis of the Black-Peg, NO-REPEATS game to get a similar bound to their original
+Black-Peg lower bound using Shannon entropy. Then, we perform a small extension of one of their proofs to 
+provide an upper bound on non-adaptive strategies for $k \geq n$.
+\subsection{Lower Bound on Black-Peg NO-REPEATS game}
+\begin{enumerate}[label=]
+	\item\textbf{Theorem 3.} Consider non-adaptive Mastermind, defined by $A=F$. Let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Then
+	\begin{equation*}
+	f(n, k, \Delta = b, R, A=F)= \Omega( n\log(k)).
+	\end{equation*}
+\end{enumerate}
+
+\begin{proof}
+	Our proof follows along similar lines as \cite{DS13}. Consider a non-adaptive strategy of length $s$ such that all
+	$k!/(k-n)!$ codes are uniquely determined by the responses to the queries $q_1, q_2, \ldots, q_s$. That is, if two possible hidden vectors $H_1$ and $H_2$ satisfy $b(q_i, H_1) = b(q_i, H_2)$ for all $i$, then $H_1 = H_2$.
+	
+	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then
+	consider the random variables $Y_i = b(Z, q_i)$ be the responses for each guess.
+	Then the vector $Y = (Y_1,Y_2,\ldots,Y_s)$ is a random variable and always uniquely determines, and is uniquely
+	determined by, $Z$. So by Property 1, $H(Z) = H(Y)$. Since $Z$ is a random
+	variable with $k!/(k-n)!$ outcomes of equal probability, we know
+	\begin{equation}\label{equalEntropy}
+	H(Z) = \log_2\left(\frac{k!}{(k-n)!}\right).
+	\end{equation}
+	
+	By Property 2, we know
+	\begin{equation}\label{entropySum}
+	H(Y) \leq \sum_{i=1}^s H(Y_i).
+	\end{equation}
+	So now we bound $H(Y_i)$. By its definition,
+	\begin{equation}\label{entropyDef}
+	H(Y_i)=-\sum_{x=0}^n \textnormal{Pr}[Y_i=x]\cdot\log_2(\textnormal{Pr}[Y_{i}=x]).
+	\end{equation}
+	What is Pr$[Y_i = x]$? This is the probability that $X$ is a solution vector with $x$
+	fixed points with respect to the query $q_i$. Using our previous terminology, this is
+	the probability that $X$ is in bucket $x$.
+	Using the same logic as in Lemma 1 to bound the $|B(x)|$, we have
+	\begin{align*}
+	\textnormal{Pr}[Y_i = x] &= \frac{|B(x)|}{\left(\frac{k!}{(k-n)!}\right)}\\
+	&\leq \frac{\binom{n}{x}\frac{(k-x)!}{(k-n)!}}{\left(\frac{k!}{(k-n)!}\right)}\\
+	& = \frac{1}{x!}\cdot
+	\frac{\left(\frac{n!}{(n-x)!}\right)}{\left(\frac{k!}{(k-x)!}\right)}\\
+	&= \frac{1}{x!}\cdot\frac{n(n-1)\cdots(n-x+1)}{k(k-1)\cdots(k-x+1)}\\
+	&\leq \frac{1}{x!}.
+	\end{align*}
+	We want to plug this upper bound into (\ref{entropyDef}).
+	For $\alpha<1/e$, $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function.
+	So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and
+	still have an upper bound. For the first three values, we will use the upper bound
+	$f(\alpha)\le 1/(e\log 2)$. 
+	\begin{align*}
+	H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2(\frac{1}{x!})\\
+	&= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{\log_2(x!)}{x!}\\
+	&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x \log_2 x}{x!}\\
+	&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x (x-1)}{x!}\\
+	&= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{1}{(x-2)!}\\
+	&\leq \frac{3}{e\log 2}+e-1\\
+	& < 4.
+	\end{align*}
+	Combining this with (\ref{entropySum}) gives $H(Y) \leq 4s$, and since $H(Z) = H(Y)$ we have $H(Z) \leq 4s$. Substituting in (\ref{equalEntropy}) as a lower bound for $H(Z)$ and solving for $s$ gives
+	\begin{equation*}
+	s \geq \frac{1}{4}\log_2\left(\frac{k!}{(k-n)!}\right)
+	\end{equation*}
+	
+	By Stirling's approximation, the right-hand side is $O(n\log k)$, so this gives us a lower bound of $O(n \log k)$ turns for any non-adaptive strategy for
+	Mastermind with no repeats.
+\end{proof}
+\subsection{Upper Bound for Original Game}
+First, we note that \cite{DS13} showed the existence of an $O(n \log n)$ strategy for
+$k = n$. When $k>n$, we add 'imaginary spots' until $n = k$, and fill them in with any
+arbitrary colors. Then, when we make our guesses, we adjust the responses accordingly
+to account for the imaginary spots. By \cite{DS13}'s result, we have a strategy that
+takes $O(k \log k)$ guesses.
+
+
 \bibliographystyle{acm}
 \bibliography{QCMV_Bibliography.bib}
 
