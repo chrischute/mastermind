@@ -289,7 +289,7 @@ We now move on to an analysis of the best possible queries and the Minimax algor
 
 We prove the following theorem.
 \begin{enumerate}[label=]
-	\item\textbf{Theorem 1.} Let $A=T$, $R = F$, and let $n$ and $k$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback $\Delta(Q_t, H)$ produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.	
+	\item\textbf{Theorem 1.}\label{thm1} Let $A=T$, $R = F$, and let $n$ and $k$ be fixed. Given a set $S_{t}$ of sequences which is known to contain $H$, there exists a query whose feedback $\Delta(Q_t, H)$ produces a smaller set $S_{t+1}$ such that $H\in S_{t+1}$ and $|S_{t+1}|\le (1-1/(nk))|S|$.	
 \end{enumerate}
 \begin{proof}
 	We will again use the bucket terminology, and we add the notion of a \textit{sub-bucket}. A sub-bucket $D_i(j, B_t(s))\subseteq B_t(s)$ (indicating $j$ in position $i$) is defined to be the set of sequences $X = (x_1, x_2, \ldots, x_n)$ in $B_t(s)$ such that $x_i = j$. That is,
@@ -303,7 +303,9 @@ We prove the following theorem.
 	\sum_{j = 1}^k |D_i(j,B_t(s))| = |B_t(s)|.
 	\end{equation}
 	When the context is clear we will refer to a sub-bucket $D_i(j, B_t(s))$ as $D_i$.
-	We proceed by induction on $n$.
+	
+	For the proof, we proceed by induction on $n$. We will, in the course of the proof, analyze two possibilities for the distribution of solutions. When the solutions are distributed evenly enough among the responses, it is easy to show that we are guaranteed to eliminate $1/(nk)$ of the solutions. When the solutions are unevenly distributed, we can find a spot at which a significant fraction of the solutions must coincide, and induct on the remaining $n-1$ spots.
+	% TODO: I've added in a few sentences explaining the proof. Thoughts?
 	
 	\textit{Base Case.} When $n=1$, we have a single-element vector. So there are at most $k$ possible solutions remaining at any step, thus $|S_t|\le k$. If we guess one of the remaining solutions $X\in S_t$, this will eliminate $1$ solution ($X$ itself) if the response is $0$, and will eliminate $|S_t|-1$ solutions if the response is $1$. So we're guaranteed to eliminate at least $1/|S_t|\ge 1/(nk)$ solutions.
 		
@@ -431,13 +433,13 @@ We prove the following theorem.
 	Otherwise, call this new color $\alpha$ and consider the guess vector
 	$\overline{\sigma}=\{\alpha, \sigma_2, \sigma_3, \ldots, \sigma_n\}$.
 	Now consider the
-	buckets $C_i$ formed by the guess $\overline{\sigma}$. 
-	We have that the vectors in $D_1(j)$ belong to either $C(1)$ or $C(2)$.
+	buckets $\overline{B}$ formed by the guess $\overline{\sigma}$. 
+	We have that the vectors in $D_1(j)$ belong to either $\overline{B(1)}$ or $\overline{B(2)}$.
 	%TODO: gotta justify this bby
 	Then we know
 	\begin{align*}
-	|C(1)|+|C(2)| & \ge |D_1(j)|\\
-	& \ge \frac{1}{k-1}\cdot |B_0|\\
+	|\overline{B(1)}|+|\overline{B(2)}| & \ge |D_1(j,B(0))|\\
+	& \ge \frac{1}{k-1}\cdot |B(0)|\\
 	& \ge \frac{1}{k-1}\cdot\frac{nk-1}{nk}\cdot|S|\\
 	& \ge \frac{1}{k-1}\cdot\frac{nk-n}{nk}\cdot|S|\\
 	& = \frac{n}{nk}\cdot|S|\\
@@ -445,25 +447,56 @@ We prove the following theorem.
 	\end{align*}
 	Therefore we have either
 	\begin{equation*}
-	|C(1)|\ge\frac{1}{nk}\cdot|S|\qquad\text{or}
-	\qquad|C(2)|\ge\frac{1}{nk}\cdot|S|
+	|\overline{B(1)}|\ge\frac{1}{nk}\cdot|S|\qquad\text{or}
+	\qquad|\overline{B(2)}|\ge\frac{1}{nk}\cdot|S|
 	\end{equation*}
-	Let this larger bucket be $C(\beta)$, and suppose
-	\begin{equation*}|C(\beta)|\le\frac{nk-1}{nk}|S|\end{equation*}.
+	Let this larger bucket be $\overline{B(\beta)}$, and suppose
+	\begin{equation*}|\overline{B(\beta)}|\le\frac{nk-1}{nk}|S|\end{equation*}.
 	Then getting the response $\beta$ will eliminate at least $|S|/(nk)$
 	possible solutions from $S$, and getting any other response will
-	eliminate at least $|C(\beta)|\ge |S|/(nk)$ possible solutions. Therefore
+	eliminate at least $|\overline{B(\beta)}|\ge |S|/(nk)$ possible solutions. Therefore
 	the guess $\overline{\sigma}$ is guaranteed to eliminate at least
 	$|S|/(nk)$ solutions from $S$.
 	
 	Otherwise we have
-	\begin{equation*}|C(\beta)|>\frac{nk-1}{nk}|S|\end{equation*}
+	\begin{equation*}|\overline{B(\beta)}|>\frac{nk-1}{nk}|S|\end{equation*}
 	Then, since $\beta$ is either 1 or 2, we have in particular that $\beta > 0$ so this satisfies the conditions for Case 1 above, which requires a
 	guess whose largest bucket is $B(j)$ with $j>0$, and we are therefore guaranteed a guess that eliminates $1/(nk)$ of the vectors from $S$ for any response.
 	\end{enumerate}
 	
-	
 \end{proof}
+\subsubsection{The Minimax Algorithm} Recall the minimax algorithm described by Knuth in \cite{DK76}.
+At each turn, the algorithm assigns each of the possible guesses a score equal
+to the minimum number of solutions that they would eliminate over all
+possible responses from the codemaker. It then picks the guess with the maximum
+score.\\\\
+\begin{enumerate}[label=]
+	\item\textbf{Corollary 1.1} Let $A=T$, $R = F$, and let $n$ and $k$ be fixed. Then the minimax algorithm takes at most 
+	\begin{equation*}\label{logs}
+	\frac{\log\left(\frac{k!}{(k-n)!}\right)}{\log\left(\frac{nk}{nk-1}\right)}
+	\end{equation*}
+	turns to find the hidden vector.	
+\end{enumerate}
+
+\begin{proof}
+	By iterating \ref{thm1},  %TODO: fix this reference
+	we have $|S_t| \leq (1-1/(nk))^t|S_0|$. When $|S_t|$ is 1, then the game is solved, as there is only one solution remaining. We have $S_0$ contains every solution, of which there are $(k!)/(k-n)!$. Plugging in these quantities and solving for $t$ tells us that we are guaranteed a win in   
+	\begin{equation*}
+	t = \log_{\left(\frac{nk-1}{nk}\right)}\left(\frac{1}{\frac{k!}{(k-n)!}}\right)
+	\end{equation*}
+	turns, which is equivalent to the claim.
+\end{proof}
+Applying Stirling's approximation to \ref{logs} gives us the following asymptotic bounds:
+\begin{enumerate}[label=\roman*.]
+	\item The minimax algorithm for Mastermind with $n$ spots, $k$
+	colors, and no repeats takes at most $O(n^2k\log k)$ turns to find the
+	hidden vector.
+	
+	\item In the same game where $n=k$, the minimax algorithm takes at most
+	$O(n^3\log n)$ turns to find the hidden vector.
+\end{enumerate}
+We do not expect these bounds to be tight. 
+
 
 %TODO: talk about the with-repeats game, talk about corollaries/asymptotics.
 
