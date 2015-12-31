@@ -8,47 +8,51 @@ I was expecting a `,' or a `}'---line 11 of file ../QCMV_Bibliography.bib.bib
  :  title = Mastermind,
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
+Name 1 in "Benjamin Doerr, Reto Spohel, Henning Thomas, and Carola Winzen" has a comma at the end for entry DS13
+while executing---line 1092 of file acm.bst
+Name 1 in "Benjamin Doerr, Reto Spohel, Henning Thomas, and Carola Winzen" has a comma at the end for entry DS13
+while executing---line 1133 of file acm.bst
 Warning--empty title in VC83
 Warning--empty journal in VC83
-You've used 4 entries,
+You've used 5 entries,
             2253 wiz_defined-function locations,
-            553 strings with 4600 characters,
-and the built_in function-call counts, 1082 in all, are:
-= -- 108
-> -- 38
+            559 strings with 4794 characters,
+and the built_in function-call counts, 1403 in all, are:
+= -- 142
+> -- 50
 < -- 0
-+ -- 17
-- -- 12
-* -- 92
-:= -- 185
-add.period$ -- 10
-call.type$ -- 4
-change.case$ -- 17
++ -- 22
+- -- 16
+* -- 117
+:= -- 237
+add.period$ -- 13
+call.type$ -- 5
+change.case$ -- 22
 chr.to.int$ -- 0
-cite$ -- 6
-duplicate$ -- 35
-empty$ -- 89
-format.name$ -- 12
-if$ -- 213
+cite$ -- 7
+duplicate$ -- 44
+empty$ -- 116
+format.name$ -- 16
+if$ -- 279
 int.to.chr$ -- 0
-int.to.str$ -- 4
-missing$ -- 4
-newline$ -- 21
-num.names$ -- 8
-pop$ -- 15
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 26
+num.names$ -- 10
+pop$ -- 18
 preamble$ -- 1
-purify$ -- 14
+purify$ -- 18
 quote$ -- 0
-skip$ -- 18
+skip$ -- 24
 stack$ -- 0
-substring$ -- 78
-swap$ -- 7
+substring$ -- 108
+swap$ -- 9
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 16
+type$ -- 20
 warning$ -- 2
-while$ -- 14
-width$ -- 5
-write$ -- 37
-(There was 1 error message)
+while$ -- 18
+width$ -- 6
+write$ -- 47
+(There were 3 error messages)

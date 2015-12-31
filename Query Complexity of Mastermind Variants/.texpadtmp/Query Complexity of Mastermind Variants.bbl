@@ -1,5 +1,11 @@
 \begin{thebibliography}{1}
 
+\bibitem{DS13}
+{\sc Benjamin~Doerr, Reto~Spohel, H.~T., and Winzen, C.}
+\newblock Playing mastermind with many colors.
+\newblock {\em Proceedings of the Twenty-Fourth Annual ACM-SIAM Symposium on
+  Discrete Algorithms\/} (2013), 695--704.
+
 \bibitem{VC83}
 {\sc Chvátal, V.}
 

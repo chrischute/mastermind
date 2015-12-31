@@ -1,7 +1,7 @@
 % Author and Title Information
 \newcommand*{\thetitle}{Query Complexity of Mastermind Variants}
 \newcommand*{\theauthor}{Aaron Berger\quad Christopher Chute\quad Matthew Stone}
-\newcommand*{\duedate}{December 26, 2015}
+\newcommand*{\duedate}{December 31, 2015}
 
 % Document Settings
 \documentclass[12pt, a4paper]{article}
@@ -63,7 +63,7 @@
 
 \section{Introduction}
 
-% TODO: insert some history of mastermind?
+% TODO: Possibly add some history of Mastermind.
 Variants of Mastermind are a family of two-player games centered around reconstruction of a hidden sequence. In all variants of the game, one player is given the role of ``codemaker,'' and the other is denoted the ``codebreaker.'' The codemaker begins the game by constructing a hidden sequence $H = (h_1, h_2, \ldots, h_n)$ where each component is selected from an alphabet $\mathcal{A} = \{1,2,\ldots,k\}$ of $k$ colors (that is, $h_i\in\mathcal{A}$ for all $i\in\{1,2,\ldots,n\}$). The goal of the codebreaker is to uniquely determine the hidden sequence $H$ through a series of queries, which are submissions of vectors of the form $Q_t = (q_1, q_2, \ldots, q_n)$. The codebreaker always seeks to determine $H$ with as few queries as possible, however the nature of these queries, the feedback received after a query, and the restrictions on $H$ differ between variants.
 
 The variants which we will study are differentiated by settings of the tuple $(n, k, \Delta, R, A)$. These parameters are defined as follows:
@@ -100,8 +100,8 @@ We prove three main results, each of which builds on the previous work related t
 \begin{enumerate}[label=]
 	\item\textbf{Theorem 1.} Knuth's minimax algorithm takes at most $nk+1$ turns to win Mastermind.
 \end{enumerate}
-Knuth's minimax algorithm is notable because it is, experimentally, the best method we have to solve small games of Mastermind in as few guesses as possible. However, by its nature, it is hard to analyze its asymptotic performance. Its behavior is determined by the distribution of solutions throughout the game, which proves very difficult to analyze \cite{KT86} \cite{OS13}. This bound is, to our knowledge, the first upper bound on the worst-case performance of the minimax algorithm, but if it performs near-optimally for large $n$ and $k$, we would expect this bound to be much smaller. We know, for example, that $f(n,k) = O(n \log k)$ for $k$ not too large \cite{DK76} \cite{KT86} %TODO: check these citations to see if correct.
-.
+Knuth's minimax algorithm is notable because it is, experimentally, the best method we have to solve small games of Mastermind in as few guesses as possible. However, by its nature, it is hard to analyze its asymptotic performance. Its behavior is determined by the distribution of solutions throughout the game, which proves very difficult to analyze \cite{KT86} \cite{OS13}. This bound is, to our knowledge, the first upper bound on the worst-case performance of the minimax algorithm, but if it performs near-optimally for large $n$ and $k$, we would expect this bound to be much smaller. We know, for example, that $f(n,k) = O(n \log k)$ for $k$ not too large. \cite{DK76} \cite{KT86}
+% TODO: Check the above citations to see if correct.
 
 Our second main result concerns the Permutation Game, in which $n=k$ and $R=F$, thus restricting the hidden sequence $H$ to be a permutation of the alphabet $\mathcal{A}$.
 \begin{enumerate}[label=]
@@ -122,7 +122,7 @@ Our third result relates to non-adaptive variants of Mastermind, which correspon
 	\end{equation*}
 \end{enumerate}
 This theorem was proved by Doerr et al for the case $R = T$ , $k \ge n$ \cite{DS13}. They use an information-theoretic argument based on Shannon entropy by letting the hidden sequence be randomly chosen. 
-% TODO: insert more explanation?
+% TODO: Insert more explanation?
  We use a similar argument to extend this to $R = F$. 
 
 % TODO: Perhaps we should emphasize somewhere in the intro that we're only looking at worst-case analysis but provide some references to expected-case papers
@@ -300,82 +300,77 @@ Since these representations are in $R^{n \times k}$, the minimax algorithm can m
 
 \clearpage
 
-%TODO: We never actually introduce entropy. That needs to be done.
 \section{Non-Adaptive Variants}
-This section follows closely the reasoning of \cite{DS13} as they analyze non-adaptive games. 
-We perform an analysis of the Black-Peg, NO-REPEATS game to get a similar bound to their original
-Black-Peg lower bound using Shannon entropy. Then, we perform a small extension of one of their proofs to 
-provide an upper bound on non-adaptive strategies for $k \geq n$.
-\subsection{Lower Bound on Black-Peg NO-REPEATS game}
+This section follows closely the reasoning of Doerr et al. \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to Doerr et al. to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
+\subsection{Non-Adaptive, No Repeats, and Black-peg-only Distance Function}
+
+\subsubsection{Shannon Entropy}
+First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. Shannon entropy is intuitively the ``expected level of surprise'' of an event, and hence is based upon the definition of a surprise function $S$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. Then we define a surprise function $S$ which satisfies that $S(X=x) = 0$ if $\mathbb{P}[x] = 1$, $S(X=x) = 1$ if $\mathbb{P}[x] = 1/2$, $S(X=x)$ is decreasing in $\mathbb{P}[x]$, and $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$. These four properties together uniquely determine that $S(X=x) = -\log_2(\mathbb{P}[x])$.
+
+Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $N(X)$ of the random variable $X$ is defined to be
+\begin{align*}
+	N(X)
+	& = \mathbb{E}[S(X)]\\
+	& = \sum_{x\in D}\mathbb{P}[X=x]\cdot (-\log_2(\mathbb{P}[X=x])).
+\end{align*}
+We will use Shannon entropy in the following proofs.
+
+\subsubsection{Lower Bound: $f(n, k, \Delta=b, R=F, A=F)$}
 \begin{enumerate}[label=]
 	\item\textbf{Theorem 3.} Consider non-adaptive Mastermind, defined by $A=F$. Let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Then
 	\begin{equation*}
-	f(n, k, \Delta = b, R, A=F)= \Omega( n\log(k)).
+	f(n, k, \Delta = b, R, A=F)=\Omega(n\log(k)).
 	\end{equation*}
 \end{enumerate}
 
 \begin{proof}
-	Our proof follows along similar lines as \cite{DS13}. Consider a non-adaptive strategy of length $s$ such that all
-	$k!/(k-n)!$ codes are uniquely determined by the responses to the queries $q_1, q_2, \ldots, q_s$. That is, if two possible hidden vectors $H_1$ and $H_2$ satisfy $b(q_i, H_1) = b(q_i, H_2)$ for all $i$, then $H_1 = H_2$.
-	
-	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then
-	consider the random variables $Y_i = b(Z, q_i)$ be the responses for each guess.
-	Then the vector $Y = (Y_1,Y_2,\ldots,Y_s)$ is a random variable and always uniquely determines, and is uniquely
-	determined by, $Z$. So by Property 1, $H(Z) = H(Y)$. Since $Z$ is a random
-	variable with $k!/(k-n)!$ outcomes of equal probability, we know
+	Our proof draws substantially from techniques used in \cite{DS13}. Consider a set $\{Q_1, Q_2, \ldots, Q_s\}$ of $s$ query sequences such that all $k!/(k-n)!$ possible hidden sequences are uniquely determined by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_s, H)$. That is, assume that if two possible hidden vectors $H$ and $H'$ satisfy $\Delta(Q_i, H) = \Delta(Q_i, H')$ for all $i$, then $H = H'$.
+
+	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then consider the random variables $Y_i = b(Z, q_i)$ be the responses for each guess. Then the vector $Y = (Y_1,Y_2,\ldots,Y_s)$ is a random variable and always uniquely determines, and is uniquely determined by, $Z$. So by Property 1, $N(Z) = N(Y)$. Since $Z$ is a random variable with $k!/(k-n)!$ outcomes of equal probability, we have
 	\begin{equation}\label{equalEntropy}
-	H(Z) = \log_2\left(\frac{k!}{(k-n)!}\right).
+		N(Z) = \log_2\left(\frac{k!}{(k-n)!}\right).
 	\end{equation}
 	
-	By Property 2, we know
+	By Property 2 of Shannon entropy, we know
 	\begin{equation}\label{entropySum}
-	H(Y) \leq \sum_{i=1}^s H(Y_i).
+		H(Y) \leq \sum_{i=1}^s H(Y_i).
 	\end{equation}
-	So now we bound $H(Y_i)$. By its definition,
+	So now we bound $N(Y_i)$. By its definition,
 	\begin{equation}\label{entropyDef}
-	H(Y_i)=-\sum_{x=0}^n \textnormal{Pr}[Y_i=x]\cdot\log_2(\textnormal{Pr}[Y_{i}=x]).
+		N(Y_i)=-\sum_{x=0}^n \textnormal{Pr}[Y_i=x]\cdot\log_2(\textnormal{Pr}[Y_{i}=x]).
 	\end{equation}
-	What is Pr$[Y_i = x]$? This is the probability that $X$ is a solution vector with $x$
-	fixed points with respect to the query $q_i$. Using our previous terminology, this is
-	the probability that $X$ is in bucket $x$.
+	We now compute $\mathbb{P}[Y_i=x]$, namely the probability that $X$ is a solution vector with $x$ fixed points with respect to the query $q_i$. Using our previous terminology, this is the probability that $X$ is in bucket $x$.
 	Using the same logic as in Lemma 1 to bound the $|B(x)|$, we have
 	\begin{align*}
-	\textnormal{Pr}[Y_i = x] &= \frac{|B(x)|}{\left(\frac{k!}{(k-n)!}\right)}\\
-	&\leq \frac{\binom{n}{x}\frac{(k-x)!}{(k-n)!}}{\left(\frac{k!}{(k-n)!}\right)}\\
-	& = \frac{1}{x!}\cdot
-	\frac{\left(\frac{n!}{(n-x)!}\right)}{\left(\frac{k!}{(k-x)!}\right)}\\
-	&= \frac{1}{x!}\cdot\frac{n(n-1)\cdots(n-x+1)}{k(k-1)\cdots(k-x+1)}\\
-	&\leq \frac{1}{x!}.
+		\textnormal{Pr}[Y_i = x] &= \frac{|B(x)|}{\left(\frac{k!}{(k-n)!}\right)}\\
+		&\leq \frac{\binom{n}{x}\frac{(k-x)!}{(k-n)!}}{\left(\frac{k!}{(k-n)!}\right)}\\
+		& = \frac{1}{x!}\cdot
+		\frac{\left(\frac{n!}{(n-x)!}\right)}{\left(\frac{k!}{(k-x)!}\right)}\\
+		&= \frac{1}{x!}\cdot\frac{n(n-1)\cdots(n-x+1)}{k(k-1)\cdots(k-x+1)}\\
+		&\leq \frac{1}{x!}.
 	\end{align*}
-	We want to plug this upper bound into (\ref{entropyDef}).
-	For $\alpha<1/e$, $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function.
-	So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and
-	still have an upper bound. For the first three values, we will use the upper bound
-	$f(\alpha)\le 1/(e\log 2)$. 
+	We want to plug this upper bound into (\ref{entropyDef}). For $\alpha<1/e$, $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function. So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and still have an upper bound. For the first three values, we will use the upper bound $f(\alpha)\le 1/(e\log 2)$. 
 	\begin{align*}
-	H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2(\frac{1}{x!})\\
-	&= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{\log_2(x!)}{x!}\\
-	&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x \log_2 x}{x!}\\
-	&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x (x-1)}{x!}\\
-	&= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{1}{(x-2)!}\\
-	&\leq \frac{3}{e\log 2}+e-1\\
-	& < 4.
+		H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2(\frac{1}{x!})\\
+		&= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{\log_2(x!)}{x!}\\
+		&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x \log_2 x}{x!}\\
+		&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x (x-1)}{x!}\\
+		&= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{1}{(x-2)!}\\
+		&\leq \frac{3}{e\log 2}+e-1\\
+		& < 4.
 	\end{align*}
 	Combining this with (\ref{entropySum}) gives $H(Y) \leq 4s$, and since $H(Z) = H(Y)$ we have $H(Z) \leq 4s$. Substituting in (\ref{equalEntropy}) as a lower bound for $H(Z)$ and solving for $s$ gives
 	\begin{equation*}
 	s \geq \frac{1}{4}\log_2\left(\frac{k!}{(k-n)!}\right)
 	\end{equation*}
 	
-	By Stirling's approximation, the right-hand side is $O(n\log k)$, so this gives us a lower bound of $O(n \log k)$ turns for any non-adaptive strategy for
-	Mastermind with no repeats.
+	By Stirling's approximation, the right-hand side is $O(n\log k)$, so this gives us a lower bound of $O(n \log k)$ turns for any non-adaptive strategy for Mastermind with no repeats.
 \end{proof}
-\subsection{Upper Bound for Original Game}
-First, we note that \cite{DS13} showed the existence of an $O(n \log n)$ strategy for
-$k = n$. When $k>n$, we add 'imaginary spots' until $n = k$, and fill them in with any
-arbitrary colors. Then, when we make our guesses, we adjust the responses accordingly
-to account for the imaginary spots. By \cite{DS13}'s result, we have a strategy that
-takes $O(k \log k)$ guesses.
+\subsubsection{Extension to an Upper Bound for Non-Adaptive Variants with Repeats}
+First, we note that \cite{DS13} showed the existence of an $O(n \log n)$ strategy for $k = n$. When $k>n$, we add ``imaginary spots'' until $n = k$, and fill them in with any arbitrary colors. Then, when we make our guesses, we adjust the responses accordingly to account for the imaginary spots. By \cite{DS13}'s result, we have a strategy that takes $O(k \log k)$ guesses.
+% TODO: We should probably formalize this argument.
 
+% TODO: Add a conclusion.
 
 \bibliographystyle{acm}
 \bibliography{QCMV_Bibliography.bib}
