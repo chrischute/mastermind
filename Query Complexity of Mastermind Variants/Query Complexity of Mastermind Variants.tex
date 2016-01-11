@@ -158,7 +158,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 	\end{equation*}
 	for the bucket implied by response $\Delta(Q_1, H) = s$. Clearly the buckets $B_1(1), B_1(2), \ldots, B_1(n)$ partition the set $S_1$ of $n!$ possible hidden vectors.
 	
-	The above computation tells us the \textit{initial} size of each bucket, which is independent of the initial query $Q_1$. Now consider the evolution of bucket sizes, \textit{i.e.,} the sequence $|B_1(s)|, |B_2(s)|, |B_3(s)|, \ldots$ over the course of an instance of the Permutation Game. We claim that this is a non-increasing sequence. Since $|B_1(s)|$ is independent of $Q_1$, assume that $Q_1 = Q_t$. Then the query $Q_t$, together with response $\Delta(Q_t, H)$, produces a bucket $B_t(s)$ defined by $B_1(s)\intersect S_t$. Since $|S_1|, |S_2|, |S_3|, \ldots$ is clearly a non-increasing sequence, it must be the case that $|B_{t}(s)| = |B_{1}(s)\intersect S_{t}|\ge |B_{1}(s)\intersect S_{t+1}| = |B_{t+1}(s)|$. Hence bucket sizes are bounded above by their initial size, \textit{i.e.,}
+	The above computation tells us the \textit{initial} size of each bucket, which is independent of the initial query $Q_1$. Now consider the evolution of bucket sizes, \textit{i.e.,} the sequence $|B_1(s)|, |B_2(s)|, |B_3(s)|, \ldots$ over the course of an instance of the Permutation Game. We claim that each of these is bounded by $|B_1(s)|$. Since $|B_1(s)|$ is independent of $Q_1$, assume that $Q_1 = Q_t$. Then the query $Q_t$, together with response $\Delta(Q_t, H)$, produces a bucket $B_t(s)$ defined by $B_1(s)\intersect S_t$. Since $|S_1|, |S_2|, |S_3|, \ldots$ is clearly a non-increasing sequence, it must be the case that $|B_{t}(s)| = |B_{1}(s)\intersect S_{t}|\ge |B_{1}(s)\intersect S_{t+1}| = |B_{t+1}(s)|$. Hence bucket sizes are bounded above by their initial size, \textit{i.e.,}
 	\begin{equation*}
 		|B_t(s)|\le |B_1(s)| = \binom{n}{s}D(n-s).
 	\end{equation*}
@@ -172,7 +172,8 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 		\end{equation*}
 	\end{enumerate}
 	\begin{proof}
-		 Let $n$ be fixed. We give a proof which analyzes the evolution of $L(t)$, which we define to be a lower bound on $|S_t|$. We recall that $S_t$ is the minimal set of sequences guaranteed to contain $H$ given the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. We compute this lower bound by using a hypothetical set of queries $\{Q_1, Q_2, \ldots, Q_{t-1}\}$, constructed such that $Q_i$ maximizes the difference $|S_{i}| - |S_{i-1}|$. That is, each $Q_i$ guarantees we ``rule out'' the maximal number possibilities for $H$ in the $i\nth$ turn. The least rapidly decreasing sequence $|S_1|, |S_2|, |S_3|, \ldots$ for this set of queries will converge to $|S_i| = |S_{i+1}| = 1$, and the turn in which this convergence is initially reached will provide a lower bound for $f(n, n)$. Our approach is to find a number $r$ such that that $t\ge r$ implies $L(t) = 1$. We proceed by induction on $t$.
+		 Let $n$ be fixed. We will construct a sequence $L(t)$ that, for any possible guessing strategy, satisfies $L(t) \leq |S_t|$ for some hidden code $H$. We recall that $S_t$ is the minimal set of sequences guaranteed to contain $H$ given the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. We construct $L(t)$ inductively from $L(t-1)$ by guaranteeing that when proceeding from $L(t-1)$ to $L(t)$, we eliminate at least as many solutions as any possible guess would eliminate. That is, $L(t-1)-L(t) \geq |S_{t-1}| - |S_{t}|$. This, combined with the assumption that $L(t-1) \le |S_{t-1}|$, guarantees $L(t) \leq |S_t|$, as desired. Once we have determined the sequence $L(t)$, we find the largest $t$ such that $L(t) > 1$. This would guarantee that for each guessing strategy, there is some hidden code for which $t$ turns of the strategy would still leave at least 2 codes as possibilities, and so the game would not be solved. This minimal $t$ would therefore be a lower bound on the guessing effectiveness of all strategies. 
+		 %TODO: I've reworked this paragraph a bit. Maybe could still use a bit more, idk.
 		 
 		 Consider the $t\nth$ turn in an instance of the Permutation Game. In the terminology of buckets, the codebreaker constructs the set $S_t$ in turn $t$ by setting $S_t = B_{t-1}(\Delta(Q_{t-1}, H))$. To choose an ``optimal'' query sequence $Q_t$ (in the sense described above, which maximizes $|S_{t+1}| - |S_{t}|$), the codebreaker therefore must choose a sequence $Q_t$ which minimizes
 		 \begin{equation*}
@@ -189,11 +190,8 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 			\text{for optimal $x$}\nonumber\\
 			& = x\cdot L(t) + \sum_{i = x}^{n}\binom{n}{i}D(n-i).
 		\end{align}
-		Once we fix $L(t)$, we claim that the inequality in equation (\ref{recur}) holds for all $x$. Picking $x$ larger than its optimal value increases the contribution of some of the entirely filled, smaller buckets up to $L(t)$, thus increasing the total sum. Picking $x$ too small increases the contribution of some of the underfilled, larger buckets up to their full sizes, thereby increasing the total sum. So adjustment of $x$ about its optimal value always preserves the inequality. Thus for all $x$ we have
-		\begin{equation*}
-			L(t-1) \le x\cdot L(t) + \sum_{i=x}^n\binom{n}{i}D(n-i),
-		\end{equation*}
-		where $t$ is the number of turns taken, $L(t)$ is a lower bound on $|S_{t+1}|$ (the number of possible solutions remaining after the $t^\text{th}$ turn), and $D$ is the derangements function.
+		Now we find the $x$ that generates this optimal distribution and solve for $L(t)$. Once we know $L(t)$, we claim that the inequality in equation (\ref{recur}) holds for all $x$. Picking $x$ larger than its optimal value increases the contribution of some of the entirely filled, smaller buckets up to $L(t)$, thus increasing the total sum. Picking $x$ too small increases the contribution of some of the underfilled, larger buckets up to their full sizes, thereby increasing the total sum. So adjustment of $x$ about its optimal value always preserves the inequality. Thus (\ref{recur}) holds for all $x$.
+		
 		
 		We now prove the following lemma.
 		\begin{enumerate}[label=]
@@ -206,7 +204,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 			\end{proof}
 		\end{enumerate}
 		
-		Using Lemma 1, we have
+		From Lemma 1 and (\ref{recur}), we have
 		\begin{equation*}
 			L(t-1) \le x\cdot L(t) + \frac{n!}{x!},
 		\end{equation*}
@@ -224,7 +222,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 			where $0\le t\le n-C_{n}$ and $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
 		\begin{proof}
 			This equation holds for all $x$, so to achieve a desirable bound, we will
-		let $x=t+C_{n}$ for any positive constant $C_{n}$. We have
+		let $x=t+C_{n}$ for some positive constant $C_{n}$. We have
 		\begin{enumerate}[label=]
 		\item\textit{Base Case.} When $t=0$, we have $S_n(0)= n!$ and
 			\begin{equation*}
@@ -256,7 +254,7 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 		\end{proof}
 
 	\end{enumerate}
-	Then for $t = n-C_n$ we have
+	Now, for $t = n-C_n$ we have
 	\begin{align*}
 	L(n-C_{n}) & \ge n!\left(\frac{C_{n}! - (H_n - H_{C_{n}})}{n!}\right)\\
 	& \ge C_{n}! - (H_n-H_{C_{n}}).
@@ -349,7 +347,7 @@ We will use Shannon entropy in the following proofs.
 	\end{align*}
 	We want to determine when we can plug this upper bound into (\ref{entropyDef}). For $\alpha<1/e$, $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function. So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and still have an upper bound. For the first three values of $x$, we will use the trivial upper bound $f(\alpha)\le 1/(e\log 2)$. 
 	\begin{align*}
-		H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2(\frac{1}{x!})\\
+		H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2\left(\frac{1}{x!}\right)\\
 		&= \frac{3}{e\log 2}+\sum_{x=3}^n \frac{\log_2(x!)}{x!}\\
 		&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x \log_2 x}{x!}\\
 		&\leq \frac{3}{e\log 2}+\sum_{x=3}^n \frac{x (x-1)}{x!}\\
