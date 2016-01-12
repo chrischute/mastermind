@@ -133,7 +133,13 @@ We begin by performing an analysis of the Permutation Game, defined by $n=k$ and
 and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with $\sigma = \overline{\sigma}\circ \tau\inv$ we have $\sigma(Q_t) = \overline{\sigma}\circ\tau\inv\circ\tau(\mathcal A)$ which is just $H$, and then $b(\sigma(Q_t),H) = b(H,H)$ achieves the maximum possible value of $n$. Then $w(Q_t,H) = n - b(Q_t,H)$ and is uniquely determined by $b(Q_t,H)$ and so no new information is provided from white-peg responses. As such, for the permutation game we will let $\Delta = b$, as $\Delta = bw$ is precisely the same game.
 
  As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log(n)$ was proved in 1986 by Ko and Teng, and again in 2013 for a smaller constant $c>0$ by Ouali and Sutherland \cite{KT86, OS13}. Here we establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
-
+ 
+ In this section we will reference the derangements function, denoted $D(n)$ in this paper and $!n$ in some sources. It counts the number of permutations $\sigma$ of $\{1,2,\ldots n\}$ with no fixed points $i$ where $\sigma(i) = i$. The precise number of such permutations is
+ \begin{equation}\label{derangements}
+ D(n) = n!\sum_{i=0}^n \frac{(-1)^i}{i!},
+ \end{equation}
+which is the nearest integer to $n!/e$  \cite{MH03}. 
+%TODO: maybe insert a sentence to close this paragraph?
 	\subsubsection{Trivial Lower Bound}
 	We begin by establishing the trivial information-theoretic result that
 	\begin{equation*}
@@ -152,13 +158,13 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 	\end{equation*}
 	Such a construct is useful in that if $\Delta(Q_t, H) = s$, the codebreaker may deduce that if a sequence $X\in S_t$ satisfies $\Delta(Q_t, X)\neq s$, then $X\neq H$. Therefore the codebreaker may construct the set $S_{t+1}$ of possible solutions after the $t\nth$ turn is complete by setting $S_{t+1} = B_t(s)$.
 	
-	We now compute the size of a bucket $B_1(s)$ produced in the first turn of an instance of the Permutation Game. First we choose the $s$ colors that are fixed points with respect to the query sequence $Q_1$. We then permute the remaining $n-s$ colors without any fixed points, giving $D(n - s)$, the number of derangements of an $(n-s)$-element vector. Hence we have
+	We now compute the size of a bucket $B_1(s)$ produced in the first turn of an instance of the Permutation Game. First we choose the $s$ colors that are fixed points with respect to the query sequence $Q_1$. We then permute the remaining $n-s$ colors without any fixed points, which can be done in $D(n - s)$ ways, with $D(i)$ as defined in (\ref{derangements}). Hence we have
 	\begin{equation*}
 		|B_1(s)| = \binom{n}{s}D(n-s),
 	\end{equation*}
 	for the bucket implied by response $\Delta(Q_1, H) = s$. Clearly the buckets $B_1(1), B_1(2), \ldots, B_1(n)$ partition the set $S_1$ of $n!$ possible hidden vectors.
 	
-	The above computation tells us the \textit{initial} size of each bucket, which is independent of the initial query $Q_1$. Now consider the evolution of bucket sizes, \textit{i.e.,} the sequence $|B_1(s)|, |B_2(s)|, |B_3(s)|, \ldots$ over the course of an instance of the Permutation Game. We claim that each of these is bounded by $|B_1(s)|$. Since $|B_1(s)|$ is independent of $Q_1$, assume that $Q_1 = Q_t$. Then the query $Q_t$, together with response $\Delta(Q_t, H)$, produces a bucket $B_t(s)$ defined by $B_1(s)\intersect S_t$. Since $|S_1|, |S_2|, |S_3|, \ldots$ is clearly a non-increasing sequence, it must be the case that $|B_{t}(s)| = |B_{1}(s)\intersect S_{t}|\ge |B_{1}(s)\intersect S_{t+1}| = |B_{t+1}(s)|$. Hence bucket sizes are bounded above by their initial size, \textit{i.e.,}
+	The above computation tells us the \textit{initial} size of each bucket, which is independent of the initial query $Q_1$. Now consider the evolution of bucket sizes, \textit{i.e.,} the sequence $|B_1(s)|, |B_2(s)|, |B_3(s)|, \ldots$ over the course of an instance of the Permutation Game. We claim that each of these is bounded by $|B_1(s)|$. Since $|B_1(s)|$ is independent of $Q_1$, assume that $Q_1 = Q_t$. Then the query $Q_t$, together with response $\Delta(Q_t, H)$, produces a bucket $B_t(s)$ defined by $B_1(s)\intersect S_t$ and so $B_t(s) \subseteq B_1(s)$. Hence bucket sizes are bounded above by their initial size, \textit{i.e.,}
 	\begin{equation*}
 		|B_t(s)|\le |B_1(s)| = \binom{n}{s}D(n-s).
 	\end{equation*}
@@ -215,18 +221,18 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 		
 		The following lemma will also be of use.
 		\begin{enumerate}[label=]
-			\item\textit{Lemma 2.} We recall that $n$ is fixed in defining $L(t)$. For any constant $C_n$, we have
+			\item\textit{Lemma 2.} We recall that $n$ is fixed in defining $L(t)$. For any positive integer $C_n < n$, we have
 			\begin{equation*}
 				\frac{L(t)}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
 			\end{equation*}
-			where $0\le t\le n-C_{n}$ and $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
+			for all $0\le t\le n-C_{n}$, where $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
 		\begin{proof} We prove inductively. With $t=0$, we have $L(0) = n!$. Then
 			\begin{equation*}
 			1 =\frac{L(0)}{n!}\ge \frac{C_{n}! - (H_{C_{n}}-H_{C_{n}})}{C_{n}!} = 1,
 			\end{equation*}
 			and the inequality is satisfied. Now we move to the general case.
 			Recalling that (\ref{recur}) holds for all $x$, we will
-		let $x=t+C_{n}$ for some positive constant $C_{n}$. Solving for $L(t)$ gives us
+		let $x=t+C_{n}$. Solving for $L(t)$ gives us
 		
 			\begin{equation*}
 			\frac{L(t)}{n!}
@@ -255,17 +261,18 @@ and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with
 		\begin{equation*}
 			C_{n}! - (H_n - H_{C_{n}}) > 1.
 		\end{equation*}
-		When $C_{n}=\log\log n$, we have $C_{n}! - (H_n - H_{C_{n}}) > 1$ for $n\ge e^{198}$, and when $C_{n}=\log n$, this is true for $n\ge 10$.
+		Noting that $H(n)$ is asymptotic to $\log n$, as long as $\log n = o(C_n!)$ we will eventually have that $C_n!-H_n > 1$. Since we have, for example, that $\log x = o((\log \log x)!)$, we have that with $C_n = \lceil \log \log n \rceil$ the above inequality will eventually be satisfied.
 		
  	In conclusion, when $n$ is sufficiently large, the minimum number of remaining
-	possible solutions after $n - \log\log n$ guesses is at least
+	possible solutions after $n - \lceil \log\log n \rceil$ guesses is at least
 		\begin{equation*}
-		L(n-\log\log n)
+		S_{n - \lceil \log\log n \rceil} \geq L(n - \lceil \log\log n \rceil)
 		 \ge (\log\log n)! - (H_n - H_{\log\log n})
-		 > 1
+		 > 1.
 		\end{equation*}
-	Thus there is no strategy that can identify any hidden sequence in $n-\log\log(n)$ turns or fewer, and so in the Permutation Game variant of Mastermind, we have $f(n, n)\ge n - \log\log(n)$ for all sufficiently large $n$.
+	Thus there is no strategy that can identify any hidden sequence in fewer than $n-\log\log(n)$ turns, and so in the Permutation Game variant of Mastermind, we have $f(n, n)\ge n - \log\log(n)$ for all sufficiently large $n$.
 	\end{proof}
+	%TODO: I reworked it a bit to add in the ceiling functions. Might need a bit of revision now.
 
 \subsection{Linear Algebra and the Minimax Algorithm}
 We now move on to an analysis of the Minimax algorithm. In order to discuss it, we first change our notation. We can represent all guess vectors and hidden vectors as $(0,1)$-vectors in $\R^{n\times k}$, which, for convenience, we write as matrices. A standard vector is converted into a matrix in the following manner: the $i,j$-th entry of the matrix is 1 if the $i$-th spot of the original vector is the $j$-th color, and 0 otherwise. As such, each row will have exactly one 1, as each spot is exactly one color.
