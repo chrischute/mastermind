@@ -295,15 +295,15 @@ This section follows closely the reasoning of Doerr et al. \cite{DS13} as they a
 \subsubsection{Shannon Entropy}\label{sssec:shannonEntropy}
 First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. Then we will define a surprise function $S$ which satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$. It turns out that, with a few added assumptions, the only natural choice for $S$ is $S(x) = -\log_2(\mathbb{P}[X = x])$ \cite{DG14}.
 
-Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $N(X)$ of the random variable $X$ is defined to be
+Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $H(X)$ of the random variable $X$ is defined to be
 \begin{align*}
-	N(X)
+	H(X)
 	& = \mathbb{E}[S(x)]\\
 	& = \sum_{x\in D}\mathbb{P}[X=x]\cdot (-\log_2(\mathbb{P}[X=x])).
 \end{align*}
 One can easily show that Shannon entropy is \textit{subadditive} \cite{DG14}. That is, if $X_1, X_2, \ldots, X_n$ are random variables, then
 	\begin{equation}\label{subadditivityDefinition}
-			N(X_1, X_2, \ldots, X_n)\le \sum_{i=1}^{n}N(X_i).
+			H(X_1, X_2, \ldots, X_n)\le \sum_{i=1}^{n}H(X_i).
 	\end{equation}
 We will use Shannon entropy in the following proofs.
 
@@ -314,17 +314,17 @@ We will use Shannon entropy in the following proofs.
 \begin{proof}[Proof of Theorem 3]
 	We prove theorem 3 in the case $R = F$, noting that \cite{DS13} have already proved the case $R=T$. We will be drawing substantially from the techniques they use in their proof. Consider a set $\{Q_1, Q_2, \ldots, Q_s\}$ of $s$ query sequences such that all $k!/(k-n)!$ possible hidden sequences are uniquely determined by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_s, H)$. That is, assume that if two possible hidden vectors $H$ and $H'$ satisfy $\Delta(Q_i, H) = \Delta(Q_i, H')$ for all $i$, then $H = H'$.
 
-	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then the responses $Y_i = b(Z, q_i)$ are now random variables, and the vector $Y = (Y_1, Y_2, \ldots, Y_s)$ is also a random variable. By our assumptions, $Y$ always uniquely determines, and is uniquely determined by, $Z$. Therefore $N(Z) = N(Y)$ (which follows from the bijection of events $Z=z$ with events $Y=y$). Since $Z$ is a random variable with $k!/(k-n)!$ outcomes of equal probability, we compute
+	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then the responses $Y_i = b(Z, q_i)$ are now random variables, and the vector $Y = (Y_1, Y_2, \ldots, Y_s)$ is also a random variable. By our assumptions, $Y$ always uniquely determines, and is uniquely determined by, $Z$. Therefore $H(Z) = H(Y)$ (which follows from the bijection of events $Z=z$ with events $Y=y$). Since $Z$ is a random variable with $k!/(k-n)!$ outcomes of equal probability, we compute
 	\begin{equation}\label{equalEntropy}
-		N(Z) = \log_2\left(\frac{k!}{(k-n)!}\right).
+		H(Z) = \log_2\left(\frac{k!}{(k-n)!}\right).
 	\end{equation}
 	By (\ref{subadditivityDefinition}), we have
 	\begin{equation}\label{entropySum}
 		H(Y)\le\sum_{i=1}^s H(Y_i).
 	\end{equation}
-	Now we bound $N(Y_i)$. We recall that by assumption, $\Delta = b$ so $Y_i$ is precisely the black-peg distance between $Q_i$ and $Z$. By definition,
+	Now we bound $H(Y_i)$. We recall that by assumption, $\Delta = b$ so $Y_i$ is precisely the black-peg distance between $Q_i$ and $Z$. By definition,
 	\begin{equation}\label{entropyDef}
-		N(Y_i)=-\sum_{x=0}^n \mathbb{P}[Y_i=x]\cdot\log_2(\mathbb{P}[Y_{i}=x]).
+		H(Y_i)=-\sum_{x=0}^n \mathbb{P}[Y_i=x]\cdot\log_2(\mathbb{P}[Y_{i}=x]).
 	\end{equation}
 	We now compute $\mathbb{P}[Y_i=x]$, namely the probability that $X$ is a solution vector with $x$ fixed points with respect to the query $q_i$. Using our previous terminology, this is the probability that $X$ is in bucket $x$.
 	Using the same logic as in Lemma 1 to bound the $|B(x)|$, we have
