@@ -114,15 +114,15 @@ Via a basic information-theoretic argument, one can show that the Permutation Ga
 
 Our third result relates to non-adaptive variants of Mastermind, which correspond to $A=F$ in our notation.
 \begin{enumerate}[label=]
-	\item\textbf{Theorem 3.} Consider non-adaptive Mastermind, defined by $A=F$. Let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Then there exists a constant $c>0$ such that
+	\item\textbf{Theorem 3.} Consider non-adaptive Mastermind, defined by $A=F$. Let $\Delta = b$, and let $n$, $k \ge n$, and $R$ be fixed. Then
 	\begin{equation*}
-		f(n, k, \Delta = b, R, A=F)\ge c\cdot n\log(k).
+		f(n, k) = \Omega\left( n\log(k)\right).
 	\end{equation*}
 \end{enumerate}
-This theorem was proved by Doerr, Sp\"ohel, Thomas, and Winzen in \cite{DS13} for the case $R = T$ , $k \ge n$. They use an information-theoretic argument based on Shannon entropy by letting the hidden sequence be randomly chosen. Shannon entropy is discussed briefly in Section (\ref{sssec:shannonEntropy}).
+The case $R = T$ was proved by Doerr, Sp\"ohel, Thomas, and Winzen in \cite{DS13}. They use an information-theoretic argument based on Shannon entropy by letting the hidden sequence be randomly chosen. Shannon entropy is discussed briefly in Section (\ref{sssec:shannonEntropy}).
 We use a similar argument to extend this to $R = F$, and
 % TODO: Need to define our usage of "tight" in the following paragraph.
-these lower bounds together cover the case $n \geq k$. For neither choice of $R$ do we have provably optimal upper bounds; when $R = T$ a corollary of a result by Doerr et al. in \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the $nk$ bound is known. On the other hand, Doerr et al. are able to extend a result of Chv\'atal \cite{VC83} to provide tight bounds for $n \le k$ with $R = T$.
+these lower bounds together cover the case $n \geq k$. For neither choice of $R$ do we have provably optimal upper bounds; when $R = T$ a corollary of a result by Doerr et al. in \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the $nk$ bound is known. On the other hand, Doerr et al. are able to extend a result of Chv\'atal in \cite{VC83} to provide tight bounds for $n \le k$ with $R = T$.
 
 \section{Adaptive Variants of Mastermind}
 \subsection{The Permutation Game}
@@ -171,13 +171,7 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 
 	\subsubsection{Improved Lower Bound for the Permutation Game}
 	We now employ the notion of a bucket to improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game.
-	\begin{enumerate}[label=]
-		\item\textbf{Theorem 2.} Consider the Permutation Game defined by $n = k$ and $R = F$. Let $\Delta = b$ (black-peg-only distance function) and let $A$ be fixed. Then for all sufficiently large $n$, we have
-		\begin{equation*}
-			f(n, k = n, \Delta = b, R = F, A) \ge n - \log\log(n).
-		\end{equation*}
-	\end{enumerate}
-	\begin{proof}
+	\begin{proof}[Proof of Theorem 2]
 		 Let $n$ be fixed. We will construct a sequence $L(t)$ that, for any possible guessing strategy, satisfies $L(t) \leq |S_t|$ for some hidden code $H$. We recall that $S_t$ is the minimal set of sequences guaranteed to contain $H$ given the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$. From this definition, we can set $L(0) = n!$ because $S_0$ must contain all $n!$ possible solutions, since no guesses have been made. Next, we construct $L(t)$ inductively from $L(t-1)$ by guaranteeing that when proceeding from $L(t-1)$ to $L(t)$, we eliminate at least as many solutions as any possible guess would eliminate. That is, $L(t-1)-L(t) \geq |S_{t-1}| - |S_{t}|$. This, combined with the assumption that $L(t-1) \le |S_{t-1}|$, guarantees $L(t) \leq |S_t|$, as desired. Once we have determined the sequence $L(t)$, we find the largest $t$ such that $L(t) > 1$. This would guarantee that for each guessing strategy, there is some hidden code for which $t$ turns of the strategy would still leave at least 2 codes as possibilities, and so the game would not be solved. This minimal $t$ would therefore be a lower bound on the guessing effectiveness of all strategies. 
 		 %TODO: I've reworked this paragraph a bit. Maybe could still use a bit more, idk.
 		 
@@ -275,20 +269,23 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 	%TODO: I reworked it a bit to add in the ceiling functions. Might need a bit of revision now.
 
 \subsection{Linear Algebra and the Minimax Algorithm}
-We now move on to an analysis of the Minimax algorithm. In order to discuss it, we first change our notation. We can represent all guess vectors and hidden vectors as $(0,1)$-vectors in $\R^{n\times k}$, which, for convenience, we write as matrices. A standard vector is converted into a matrix in the following manner: the $i,j$-th entry of the matrix is 1 if the $i$-th spot of the original vector is the $j$-th color, and 0 otherwise. As such, each row will have exactly one 1, as each spot is exactly one color.
+We now move on to an analysis of the Minimax algorithm. To perform this analysis, we first change our notation. We can represent all guess vectors and hidden vectors as $(0,1)$-vectors in $\R^{n\times k}$, which, for convenience, we write as matrices. These matrices are constructed in the following manner: a matrix with a 1 as the $(i,j)^\text{th}$ entry represents a guess where the $i^\text{th}$ position is the $j^\text{th}$ color. As such, each row will have exactly one 1, as each position is exactly one color. We refer to these matrices as \textit{representations} of the guess and hidden vectors.
 
-With this notation, the black-peg distance becomes the dot product of the vectors representing the guess and the hidden vector, as there will be a contribution to the dot product exactly when both representations have a one in the same column in the same row, i.e. there is a color in the same spot of both vectors. 
+With this notation, the black-peg distance becomes the dot product of the representations of the guess and the hidden vector, as there will be a contribution to the dot product exactly when both representations have a one in the same column in the same row, i.e. there is a color in the same spot of both vectors. 
 
-The goal of Mastermind is then to find the (necessarily unique) valid matrix representation such that its dot product with the hidden vector is $n$, as this has to match in $n$ spots and therefore must be the hidden vector. By linearity of the dot product, once we know the value of the dot product of the hidden vector with some set of guess vectors, we know the value of the dot product of the hidden vector with any vector in the span of these guesses. Therefore, it is an immediate consequence that a winning strategy can be found by querying a basis for the span of the valid guess vectors, which, as a subspace of $\R^{n\times k}$, must be of size at most $nk$. Note that this strategy does not make use of adaptive feedback, of white-peg responses, or the condition on repeated colors. Thus, for any choice of $\Delta$, $A$, and $R$, we have $f(n,k) \leq nk$.
+The goal of Mastermind is then to find the (necessarily unique) valid representation such that its dot product with the hidden vector is $n$. By linearity of the dot product, once we know the value of the dot product of the hidden vector with some set of guess vectors, we know the value of the dot product of the hidden vector with any vector in the span of these guesses. Therefore, it is an immediate consequence that a winning strategy can be found by querying a basis for the span of the valid guess vectors, which, as a subspace of $\R^{n\times k}$, must be of size at most $nk$. Note that this strategy does not make use of adaptive feedback, of white-peg responses, or the condition on repeated colors. Thus, for any choice of $\Delta$, $A$, and $R$, we have $f(n,k) \leq nk$.
 
-This representation also allows us to bound the minimax algorithm of \cite{DK76}. We claim that at each turn, the minimax either guesses the hidden vector or guesses a vector whose representation is linearly independent of the previous guesses. 
-%TODO: Format this as a proper lemma
-\begin{proof}
-	If the hidden vector is known, the minimax algorithm will guess it. This will definitely occur when the hidden vector's representation is a linear combination of the previous guess vectors, as by the logic above we can compute its dot product with the hidden vector, i.e. itself, so the dot product will be $n$. As there can be only one valid representation whose dot product with the hidden vector is $n$, we have found the hidden vector.
+This representation also allows us to bound the minimax algorithm of \cite{DK76}. The bulk of the proof is the following lemma:
+\begin{enumerate}
+	\item[] \textit{Lemma 3.} 
+	At each turn, the minimax algorithm either guesses the hidden vector or guesses a vector whose representation is linearly independent of the previous guesses' representations.
+\end{enumerate}
+Theorem 2 follows as an immediate corollary from this lemma: Since these representations are in $\R^{n \times k}$, the minimax algorithm can make at most $nk$ linearly independent guesses. After that, the minimax cannot make a linearly independent guess and by the above lemma must then guess the hidden vector, for an upper bound of $nk+1$ turns.
+\begin{proof}[Proof of Lemma 3]
+	If the hidden vector is known, the minimax algorithm will guess it. This will definitely occur when the hidden vector's representation is a linear combination of the previous guess vectors' representations, as by the logic above we can compute the dot products of the hidden vector with every possibility in the span of the previous guesses, and we would find the guess with a dot product of $n$.
 	
 	Otherwise, the hidden vector is linearly independent from the previous guess vectors. Assume this is the case. If it is still uniquely determined, the algorithm will guess it. Regardless, guessing a vector $q$ that is a linear combination of the previous guesses returns no new information, as the response to that guess can already be computed. Since $q$ is linearly dependent on the previous guesses, it cannot, by our assumption, be the hidden vector, and so guessing it eliminates 0 vectors and doesn't solve the game. If we can find a new query $r$ that is guaranteed to either eliminate at least 1 vector or solve the game, the minimax algorithm will choose $r$ over $q$. Since the hidden vector must exist and by our assumption is linearly independent of the guess vectors, there is at least one vector linearly independent of the previous guesses. Guessing such a vector will win the game with a black-peg response of $n$, and eliminate at least one vector (itself) with any other response. Thus, according to the minimax algorithm, guessing any vector linearly independent of the previous guesses will always be strictly better than guessing a linearly dependent vector, and so if the hidden vector is unknown the best guess will be necessarily independent of the previous guesses.
 \end{proof}
-Theorem 2 follows as an immediate corollary from this lemma: Since these representations are in $\R^{n \times k}$, the minimax algorithm can make at most $nk$ linearly independent guesses. After that, the minimax cannot make a linearly independent guess and by the above lemma must then guess the hidden vector, for an upper bound of $nk+1$ turns.
 
 
 \section{Non-Adaptive Variants}
@@ -296,12 +293,12 @@ This section follows closely the reasoning of Doerr et al. \cite{DS13} as they a
 \subsection{Non-Adaptive, No Repeats, and Black-peg-only Distance Function}
 
 \subsubsection{Shannon Entropy}\label{sssec:shannonEntropy}
-First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. Then we define a surprise function $S$ which satisfies that $S(X=x) = 0$ if $\mathbb{P}[x] = 1$, $S(X=x) = 1$ if $\mathbb{P}[x] = 1/2$, $S(X=x)$ is decreasing in $\mathbb{P}[x]$, and $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$. These four properties together uniquely determine that $S(X=x) = -\log_2(\mathbb{P}[x])$ \cite{DG14}.
+First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. Then we will define a surprise function $S$ which satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$. It turns out that, with a few added assumptions, the only natural choice for $S$ is $S(x) = -\log_2(\mathbb{P}[X = x])$ \cite{DG14}.
 
 Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $N(X)$ of the random variable $X$ is defined to be
 \begin{align*}
 	N(X)
-	& = \mathbb{E}[S(X)]\\
+	& = \mathbb{E}[S(x)]\\
 	& = \sum_{x\in D}\mathbb{P}[X=x]\cdot (-\log_2(\mathbb{P}[X=x])).
 \end{align*}
 One can easily show that Shannon entropy is \textit{subadditive} \cite{DG14}. That is, if $X_1, X_2, \ldots, X_n$ are random variables, then
@@ -311,19 +308,13 @@ One can easily show that Shannon entropy is \textit{subadditive} \cite{DG14}. Th
 We will use Shannon entropy in the following proofs.
 
 \subsubsection{Lower Bound: $f(n, k, \Delta=b, R=F, A=F)$}
-\begin{enumerate}[label=]
-	\item\textbf{Theorem 3.} Consider non-adaptive Mastermind, defined by $A=F$. Let $\Delta$ be the black-peg-only distance function, and let $n$, $k$, and $R$ be fixed. Then
-	\begin{equation*}
-	f(n, k, \Delta = b, R, A=F)=\Omega(n\log(k)).
-	\end{equation*}
-\end{enumerate}
 
 %TODO: IMPORTANT! Consistancy for entropy: either N or H. Why switch from H to N?
 
-\begin{proof}
-	Our proof draws substantially from techniques used in \cite{DS13}. Consider a set $\{Q_1, Q_2, \ldots, Q_s\}$ of $s$ query sequences such that all $k!/(k-n)!$ possible hidden sequences are uniquely determined by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_s, H)$. That is, assume that if two possible hidden vectors $H$ and $H'$ satisfy $\Delta(Q_i, H) = \Delta(Q_i, H')$ for all $i$, then $H = H'$.
+\begin{proof}[Proof of Theorem 3]
+	We prove theorem 3 in the case $R = F$, noting that \cite{DS13} have already proved the case $R=T$. We will be drawing substantially from the techniques they use in their proof. Consider a set $\{Q_1, Q_2, \ldots, Q_s\}$ of $s$ query sequences such that all $k!/(k-n)!$ possible hidden sequences are uniquely determined by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_s, H)$. That is, assume that if two possible hidden vectors $H$ and $H'$ satisfy $\Delta(Q_i, H) = \Delta(Q_i, H')$ for all $i$, then $H = H'$.
 
-	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then the responses $Y_i = b(Z, q_i)$ are now random variables, and the vector $Y = (Y_1, Y_2, \ldots, Y_s)$ is also a random variable. By our assumptions, $Y$ always uniquely determines, and is uniquely determined by, $Z$. Therefore $N(Z) = N(Y)$ (which follows from the fourth property of the surprise function $S$). Since $Z$ is a random variable with $k!/(k-n)!$ outcomes of equal probability, we have
+	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then the responses $Y_i = b(Z, q_i)$ are now random variables, and the vector $Y = (Y_1, Y_2, \ldots, Y_s)$ is also a random variable. By our assumptions, $Y$ always uniquely determines, and is uniquely determined by, $Z$. Therefore $N(Z) = N(Y)$ (which follows from the bijection of events $Z=z$ with events $Y=y$). Since $Z$ is a random variable with $k!/(k-n)!$ outcomes of equal probability, we compute
 	\begin{equation}\label{equalEntropy}
 		N(Z) = \log_2\left(\frac{k!}{(k-n)!}\right).
 	\end{equation}
@@ -331,7 +322,7 @@ We will use Shannon entropy in the following proofs.
 	\begin{equation}\label{entropySum}
 		H(Y)\le\sum_{i=1}^s H(Y_i).
 	\end{equation}
-	Now we bound $N(Y_i)$. By its definition,
+	Now we bound $N(Y_i)$. We recall that by assumption, $\Delta = b$ so $Y_i$ is precisely the black-peg distance between $Q_i$ and $Z$. By definition,
 	\begin{equation}\label{entropyDef}
 		N(Y_i)=-\sum_{x=0}^n \mathbb{P}[Y_i=x]\cdot\log_2(\mathbb{P}[Y_{i}=x]).
 	\end{equation}
@@ -354,9 +345,19 @@ We will use Shannon entropy in the following proofs.
 	s \geq \frac{1}{3}\log_2\left(\frac{k!}{(k-n)!}\right)
 	\end{equation*}
 	
-	By Stirling's approximation, the right-hand side is $O(n\log k)$, so this gives us a lower bound of $O(n \log k)$ turns for any non-adaptive strategy for Mastermind with no repeats.
+	We can show that the right-hand side is $\Omega(n\log k)$. This is immediate for large $k$ relative to $n$ by bounding the ratio by $(k-n)^n$; for small $k$ (e.g. $k \leq 2n$) we bound the ratio by $n!$ and the claim follows from Stirling's approximation. So this gives us a lower bound of $\Omega(n \log k)$ turns for any non-adaptive strategy for Mastermind with no repeats and black-peg responses.
+	%TODO: add more perhaps?
 \end{proof}
-\subsubsection{Extension to an Upper Bound for Non-Adaptive Variants with Repeats}
+\subsubsection{Extension to white-peg responses}
+We can also extend the $R=T$ case of Theorem 3, as proved in $\cite{DS13}$, to include $\Delta = bw$. We do this by showing that any black-white strategy must submit $\Omega(k)$ queries, and that we can convert a black and white-peg strategy into a black-peg-only strategy by adding $O(k)$ queries. 
+Then changing a black-white strategy to a black-only strategy changes the number of queries by at most some absolute constant factor. So we have $f(\Delta = b) = O(f(\Delta = bw))$. Combining this with Theorem 3 implies the theorem for black-white responses as well.
+
+First we describe the conversion. Take a black-white strategy and append, for each color, a query where every spot is that color. As a black-peg only strategy, we can deduce from these queries exactly how many times each color appears in the hidden vector, from which we can determine the white-peg responses to any of the original queries. Therefore, if the old strategy had enough information to determine the hidden vector with black-white responses, this new strategy can determine the hidden vector with just black-peg responses. Since there are $k$ colors, we have appended $k$ queries in this conversion. 
+
+Lastly, we just need that any non-adaptive black-white strategy must submit $\Omega(k)$ queries. This follows from the following reasoning: assume that there are two colors $a$ and $b$ such that a non-adaptive strategy guesses neither $a$ nor $b$ in either spot 1 or 2. Then this strategy would not be able to distinguish between a hidden vector starting $a,b$ and one starting $b,a$. Then by contradiction any non-adaptive strategy must guess at least $k-1$ colors in these two spots. It can guess 2 colors in these spots per turn, for a total of at least $(k-1)/2 = \Omega(k)$ turns required to solve the game. Thus, by the above logic, we conclude $f(n,k) = \Omega(n \log k)$ in this case as well.
+
+
+\subsection{An Upper Bound for Non-Adaptive Variants with Repeats}
 Consider non-adaptive variants of Mastermind in which repetitions are allowed. First we note that when $k=n$, \cite{DS13} showed the existence of a set of $O(n \log n)$ queries which uniquely identify any hidden sequence $H$. When $k > n$, one can simply extend $H$ and all queries $Q_t$ by $k - n$ ``auxiliary'' positions until $n = k$. We fill these auxiliary positions with arbitrary colors, and we adjust the responses accordingly to account for the auxiliary positions. By the results of \cite{DS13}, there exists a set of $O(k \log k)$ queries which will uniquely identify any hidden sequence.
 
 % TODO: Add a conclusion or remarks.
