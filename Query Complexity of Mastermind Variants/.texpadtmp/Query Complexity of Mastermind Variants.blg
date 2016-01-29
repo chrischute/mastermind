@@ -14,45 +14,46 @@ Name 1 in "Benjamin Doerr, Reto Spohel, Henning Thomas, and Carola Winzen" has a
 while executing---line 1133 of file acm.bst
 Warning--empty title in VC83
 Warning--empty journal in VC83
-You've used 5 entries,
+Warning--empty journal in DG14
+You've used 7 entries,
             2253 wiz_defined-function locations,
-            559 strings with 4794 characters,
-and the built_in function-call counts, 1403 in all, are:
-= -- 142
-> -- 50
+            571 strings with 4948 characters,
+and the built_in function-call counts, 1788 in all, are:
+= -- 178
+> -- 64
 < -- 0
-+ -- 22
-- -- 16
-* -- 117
-:= -- 237
-add.period$ -- 13
-call.type$ -- 5
-change.case$ -- 22
++ -- 28
+- -- 20
+* -- 141
+:= -- 307
+add.period$ -- 18
+call.type$ -- 7
+change.case$ -- 30
 chr.to.int$ -- 0
-cite$ -- 7
-duplicate$ -- 44
-empty$ -- 116
-format.name$ -- 16
-if$ -- 279
+cite$ -- 10
+duplicate$ -- 61
+empty$ -- 148
+format.name$ -- 20
+if$ -- 355
 int.to.chr$ -- 0
-int.to.str$ -- 5
-missing$ -- 5
-newline$ -- 26
-num.names$ -- 10
-pop$ -- 18
+int.to.str$ -- 7
+missing$ -- 7
+newline$ -- 35
+num.names$ -- 14
+pop$ -- 25
 preamble$ -- 1
-purify$ -- 18
+purify$ -- 24
 quote$ -- 0
-skip$ -- 24
+skip$ -- 34
 stack$ -- 0
-substring$ -- 108
-swap$ -- 9
+substring$ -- 118
+swap$ -- 12
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 20
-warning$ -- 2
-while$ -- 18
-width$ -- 6
-write$ -- 47
+type$ -- 28
+warning$ -- 3
+while$ -- 22
+width$ -- 8
+write$ -- 63
 (There were 3 error messages)
