@@ -1,10 +1,5 @@
 \begin{thebibliography}{10}
 
-\bibitem{AC04}
-{\sc Angluin, D., and Chen, J.}
-\newblock Learning a hidden graph using o(logn) queries per edge.
-\newblock {\em Journal of Computer and System Sciences 74\/} (2004), 546--556.
-
 \bibitem{NB09}
 {\sc Bshouty, N.~H.}
 \newblock Optimal algorithms for the coin weighing problem with a spring scale.
@@ -43,6 +38,11 @@
   results.
 \newblock {\em Information Processing Letters 109\/} (2009), 675--678.
 
+\bibitem{GK00}
+{\sc Grebinsky, V., and Kucherov, G.}
+\newblock Optimal reconstruction of graphs under the additive model.
+\newblock {\em Algorithmica 1\/} (2000), 104--124.
+
 \bibitem{MH03}
 {\sc Hassani, M.}
 \newblock Derangements and applications.
@@ -57,11 +57,6 @@
 {\sc Ko, K.-I., and Teng, S.-C.}
 \newblock On the number of queries necessary to identify a permutation.
 \newblock {\em Journal of Algorithms 7\/} (7 1986), 449--462.
-
-\bibitem{HM09}
-{\sc Mazzawi, H.}
-\newblock Optimally reconstructing weighted graphs using queries.
-\newblock {\em COLT 1\/} (2009), 18--35.
 
 \bibitem{OS13}
 {\sc Ouali, M.~E., and Sauerland, V.}
