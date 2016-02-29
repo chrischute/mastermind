@@ -1,17 +1,47 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{AC04}
+{\sc Angluin, D., and Chen, J.}
+\newblock Learning a hidden graph using o(logn) queries per edge.
+\newblock {\em Journal of Computer and System Sciences 74\/} (2004), 546--556.
+
+\bibitem{NB09}
+{\sc Bshouty, N.~H.}
+\newblock Optimal algorithms for the coin weighing problem with a spring scale.
+\newblock {\em COLT 1\/} (2009).
+
+\bibitem{CC05}
+{\sc Chen, Z., Cunha, C., and Homer, S.}
+\newblock Finding a hidden code by asking questions.
+\newblock {\em Lecture Notes in Computer Science 1\/} (2005), 50--55.
+
+\bibitem{VC83}
+{\sc Chvátal, V.}
+\newblock Mastermind.
+\newblock {\em Combinatorica 3\/} (1983), 325--329.
 
 \bibitem{DS13}
-{\sc Benjamin~Doerr, Reto~Spohel, H.~T., and Winzen, C.}
+{\sc Doerr, B., Spohel, R., Thomas, H., and Winzen, C.}
 \newblock Playing mastermind with many colors.
 \newblock {\em Proceedings of the Twenty-Fourth Annual ACM-SIAM Symposium on
   Discrete Algorithms\/} (2013), 695--704.
 
-\bibitem{VC83}
-{\sc Chvátal, V.}
+\bibitem{ER63}
+{\sc Erdos, P., and Renyi, A.}
+\newblock On two problems of information theory.
+\newblock 229--243.
 
 \bibitem{DG14}
 {\sc Galvin, D.}
 \newblock Three tutorial lectures on entropy and counting.
+\newblock {\em First Lake Michigan Workshop on Combinatorics and Graph
+  Theory\/} (3 2014).
+
+\bibitem{MG12}
+{\sc Goodrich, M.~T.}
+\newblock On the algorithmic complexity of the mastermind game with black-peg
+  results.
+\newblock {\em Information Processing Letters 109\/} (2009), 675--678.
 
 \bibitem{MH03}
 {\sc Hassani, M.}
@@ -27,6 +57,11 @@
 {\sc Ko, K.-I., and Teng, S.-C.}
 \newblock On the number of queries necessary to identify a permutation.
 \newblock {\em Journal of Algorithms 7\/} (7 1986), 449--462.
+
+\bibitem{HM09}
+{\sc Mazzawi, H.}
+\newblock Optimally reconstructing weighted graphs using queries.
+\newblock {\em COLT 1\/} (2009), 18--35.
 
 \bibitem{OS13}
 {\sc Ouali, M.~E., and Sauerland, V.}
