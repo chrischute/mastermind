@@ -57,11 +57,12 @@
 \newcommand{\nth}{^{\text{th}}}       % Superscript n-th
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-	We study variants of Mastermind, a popular board game in which the objective is sequence reconstruction. In this two-player game, the so-called \textit{codemaker} constructs a hidden sequence $H = (h_1, h_2, \ldots, h_n)$ of colors selected from an alphabet $\mathcal{A} = \{1,2,\ldots, k\}$ (\textit{i.e.,} $h_i\in\mathcal{A}$ for all $i\in\{1,2,\ldots, n\}$). The game then proceeds in turns, each of which consists of two parts: in turn $t$, the second player (the \textit{codebreaker}) first submits a query sequence $Q_t = (q_1, q_2, \ldots, q_n)$ with $q_i\in \mathcal{A}$ for all $i$, and second receives feedback $\Delta(Q_t, H)$, where $\Delta$ is some agreed-upon function of distance between two sequences with $n$ components. The game terminates when $Q_t = H$, and the codebreaker seeks to end the game in as few turns as possible. Throughout we let $f(n,k)$ denote the smallest integer such that the codebreaker can determine any $H$ in $f(n,k)$ turns. We prove three main results: First, when $H$ is known to be a permutation of $\{1,2,\ldots, n\}$, we prove that $f(n, n)\ge n - \log\log(n)$ for all sufficiently large $n$. Second, we show that Knuth's Minimax algorithm identifies any $H$ in at most $nk$ queries. Third, when feedback is not received until all queries have been submitted, we show that $f(n,k)=\Omega(n\log k)$.
+	We study variants of Mastermind, a popular board game in which the objective is sequence reconstruction. In this two-player game, the so-called \textit{codemaker} constructs a hidden sequence $H = (h_1, h_2, \ldots, h_n)$ of colors selected from an alphabet $\mathcal{A} = \{1,2,\ldots, k\}$ (\textit{i.e.,} $h_i\in\mathcal{A}$ for all $i\in\{1,2,\ldots, n\}$). The game then proceeds in turns, each of which consists of two parts: in turn $t$, the second player (the \textit{codebreaker}) first submits a query sequence $Q_t = (q_1, q_2, \ldots, q_n)$ with $q_i\in \mathcal{A}$ for all $i$, and second receives feedback $\Delta(Q_t, H)$, where $\Delta$ is some agreed-upon function of distance between two sequences with $n$ components. The game terminates when $Q_t = H$, and the codebreaker seeks to end the game in as few turns as possible. Throughout we let $f(n,k)$ denote the smallest integer such that the codebreaker can determine any $H$ in $f(n,k)$ turns. We prove three main results: First, when $H$ is known to be a permutation of $\{1,2,\ldots, n\}$, we prove that $f(n, n)\ge n - \log\log n$ for all sufficiently large $n$. Second, we show that Knuth's Minimax algorithm identifies any $H$ in at most $nk$ queries. Third, when feedback is not received until all queries have been submitted, we show that $f(n,k)=\Omega(n\log k)$.
 \end{abstract}
 
 \section{Introduction}
@@ -91,7 +92,7 @@ The variants of Mastermind which we study are defined by settings of the tuple $
 	
 	\item($R$) \textit{Repetition.} The parameter $R$ is a Boolean restriction on the components of $H$. If $R$ is true, we say that the variant game is \textit{with repeats} or that repeats are allowed. In this case, the hidden vector $H$ may have repeated colors, that is, we allow $h_i = h_j$ for any $i,j\in\{1,2,\ldots, n\}$. When $R$ is false, we say that the variant is \textit{no repeats}, and we require $h_i\neq h_j$ when $i\neq j$, and so we necessarily require $k \geq n$. In particular, when $R$ is false and $k = n$, we have that $H$ must be a permutation of $\{1, 2, \ldots, n\}$, and we refer to this variant as the \textit{Permutation Game.}
 	
-	\item($A$) \textit{Adaptiveness.} The Boolean parameter $A$ determines whether the codebreaker receives feedback after each query. If $A$ is true, we say that the game is \textit{adaptive}. In this case the game consists of two-part turns: on the $t\nth$ turn, the codebreaker first submits a query sequence $Q_t$, and then receives feedback $\Delta(Q_t, H)$. The codebreaker may use the feedback to inform the query $Q_{t+1}$ made in turn $t+1$, and the game ends in turn $s$ if and only if $Q_s = H$.
+	\item($A$) \textit{Adaptiveness.} The Boolean parameter $A$ determines whether the codebreaker receives feedback after each query. If $A$ is true, we say that the game is \textit{adaptive}. In this case the game consists of two-part turns. On the $t\nth$ turn, the codebreaker first submits a query sequence $Q_t$, and then receives feedback $\Delta(Q_t, H)$. The codebreaker may use the feedback to inform the query $Q_{t+1}$ made in turn $t+1$, and the game ends in turn $s$ if and only if $Q_s = H$.
 	
 	When $A$ is false, we say that the game is \textit{non-adaptive}. In this case the codebreaker submits $m$ queries $Q_1, Q_2, \ldots, Q_m$ all at once (where the codebreaker chooses $m$). The codemaker then reports a feedback vector of the form $(\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_m, H))$, after which the codebreaker must submit the final query $\overline{Q}$. The codebreaker wins if and only if $\overline{Q} = H$.
 \end{enumerate}
@@ -104,13 +105,13 @@ Our first main result concerns the Permutation Game, in which $n=k$ and $R=F$, t
 \begin{theorem}\label{permutationGameTheorem}
 	 Consider the Permutation Game defined by $n = k$ and $R = F$. Let $\Delta = b$. Then for all sufficiently large $n$, we have	
  	\begin{equation*}
-		f(n, k = n, \Delta = b, R = F, A) \ge n - \log\log(n).
+		f(n, k = n, \Delta = b, R = F, A) \ge n - \log\log n.
 	\end{equation*}
 \end{theorem}
 
-Explicit algorithms that take $O(n \log(n))$ turns to solve this variant were developed by Ko and Teng in \cite{KT86}, and Ouali and Sutherland in \cite{OS13}. Ko and Teng approach the problem with an algorithm akin to binary search. The algorithm queries a sequence $Q_t$, swaps two components, and queries again, doing so repeatedly until a previously unknown component of $H$ is determined by the values of the distance function across these repeated queries. Ouali and Sutherland improve this algorithm primarily by altering the search routine after a single component of $H$ has been identified. They also extend their results to variants with $k\ge n$. In this way, they achieve an average factor of two reduction in the number of queries needed to identify $H$. In our notation, these results state that $f(n, k=n, \Delta=b, R = F, A = T)\le O(n\log(n))$.
+Explicit algorithms that take $O(n \log n)$ turns to solve this variant were developed by Ko and Teng in \cite{KT86}, and Ouali and Sutherland in \cite{OS13}. Ko and Teng approach the problem with an algorithm akin to binary search. The algorithm queries a sequence $Q_t$, swaps two components, and queries again, doing so repeatedly until a previously unknown component of $H$ is determined by the values of the distance function across these repeated queries. Ouali and Sutherland improve this algorithm primarily by altering the search routine after a single component of $H$ has been identified. They also extend their results to variants with $k\ge n$. In this way, they achieve an average factor of two reduction in the number of queries needed to identify $H$. In our notation, these results state that $f(n, k=n, \Delta=b, R = F, A = T)\le O(n\log n)$.
 
-Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n, n)\ge n - n/\log(n) + c$ for some constant $c>0$. We improve this lower bound to $f(n, n)\ge n- \log \log(n)$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
+Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n, n)\ge n - n/\log n + c$ for some constant $c>0$. We improve this lower bound to $f(n, n)\ge n- \log \log n$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
 
 Our second result concern's Donald Knuth's Minimax algorithm, which was first introduced in 1976.
 \begin{theorem}\label{minimaxTheorem}
@@ -130,28 +131,30 @@ We use a similar argument to extend this to $R = F$, and
 % TODO: Need to define our usage of "tight" in the following paragraph.
 these lower bounds together cover the case $n \geq k$. For neither choice of $R$ do we have provably optimal upper bounds; when $R = T$ a corollary of a result by Doerr et al. in \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the $nk$ bound is known. On the other hand, Doerr et al. are able to extend a result of Chv\'atal in \cite{VC83} to provide tight bounds for $n \le k$ with $R = T$.
 \subsection{Structure of the Paper}
-Section 2 is dedicated to Theorem 1, and the proof is found in 2.2. Theorem 2 is proved in section 3, and section 4 deals with Theorem 3, with the proof in 4.2.
+In Section 2 we prove Theorem 1, and the proof is found in 2.2. In Section 3 we prove Theorem 3, and in Section 4 we discuss Theorem 3, with the proof in 4.2.
 \section{Adaptive Variants of Mastermind}
 \subsection{The Permutation Game}
-Here we introduce notation and reasoning used in the proof of Theorem 1. We recall that this deals with the Permutation Game, defined by $n=k$ and $R=F$. We can first show that the information from white-peg responses is irrelevant: These parameters together imply $H=\overline{\sigma}(\mathcal{A})$ for some permutation $\overline{\sigma}\in S_k$ (recalling that $\mathcal{A}=\{1,2,\ldots, k\}$). Moreover, recalling the definition of the white-peg distance function
+We introduce notation and reasoning used in the proof of Theorem 1. We recall that this deals with the Permutation Game, defined by $n=k$ and $R=F$. We can first show that the information from white-peg responses is irrelevant. These parameters together imply $H=\overline{\sigma}(\mathcal{A})$ for some permutation $\overline{\sigma}\in S_k$. We recall the definition of the white-peg distance function as
 \begin{equation*}
-	w(Q_t, H) = \max_{\sigma\in S_{Q_t}}~b(\sigma(Q_t), H) - b(Q_t, H),
+	w(Q_t, H) = \max_{\sigma\in S_{Q_t}}~b(\sigma(Q_t), H) - b(Q_t, H).
 \end{equation*}
-and letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with $\sigma = \overline{\sigma}\circ \tau\inv$ we have $\sigma(Q_t) = \overline{\sigma}\circ\tau\inv\circ\tau(\mathcal A)$ which is just $H$, and then $b(\sigma(Q_t),H) = b(H,H)$ achieves the maximum possible value of $n$. Then $w(Q_t,H) = n - b(Q_t,H)$ and is uniquely determined by $b(Q_t,H)$ and so no new information is provided from white-peg responses. As such, for the permutation game we will let $\Delta = b$, as $\Delta = bw$ is precisely the same game.
+% TODO: Nathan does not like the following paragraph, thinks it could be simpler.
+Letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with $\sigma = \overline{\sigma}\circ \tau\inv$. So we have $\sigma(Q_t) = \overline{\sigma}\circ\tau\inv\circ\tau(\mathcal A)$ which is just $H$, and then $b(\sigma(Q_t),H) = b(H,H)$ achieves the maximum possible value of $n$. Then $w(Q_t,H) = n - b(Q_t,H)$ and is uniquely determined by $b(Q_t,H)$ and so no new information is provided from white-peg responses. As such, for the permutation game we will let $\Delta = b$, as $\Delta = bw$ is precisely the same game.
 
- As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log(n)$ was proved in 1986 by Ko and Teng, and in 2013 Ouali and Sutherland improved this constant \cite{KT86, OS13}. Here we establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
+ As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log n$ was proved in 1986 by Ko and Teng, and in 2013 Ouali and Sutherland improved this constant \cite{KT86, OS13}. We establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
  
- In this section we will reference the derangements function, denoted $D(n)$ in this paper and $!n$ in some sources. It counts the number of $\{\sigma \in S_n \mid \sigma(i) \neq i,~\forall i\}$. The precise number of such permutations is
- \begin{equation}\label{derangements}
- D(n) = n!\sum_{i=0}^n \frac{(-1)^i}{i!},
- \end{equation}
-which is the nearest integer to $n!/e$  \cite{MH03}. 
-%TODO: maybe insert a sentence to close this paragraph?
+ In this section we reference the derangements function, denoted $D(n)$, which counts the number of permutations in $S_n$ with no fixed points. That is,
+\begin{equation}\label{derangements}
+	D(n) = n!\sum_{i=0}^n \frac{(-1)^i}{i!},
+\end{equation}
+which is the nearest integer to $n!/e$  \cite{MH03}.
 	\subsubsection{Trivial Lower Bound}
-	To motivate the result, we begin by establishing the trivial information-theoretic result that
-	\begin{equation*}
-		f(n, n)\ge \log_{n}(n!) = n-\frac{n}{\ln(n)}+O(1).
-	\end{equation*}
+	To motivate the proof of Theorem 1, we prove the following easier result.
+	\begin{proposition}
+		\begin{equation*}
+			f(n, n)\ge \log_{n}(n!) = n-\frac{n}{\ln(n)}+O(1).		
+		\end{equation*}
+	\end{proposition}
 	\begin{proof}
 		Consider an instance of the Permutation Game with the black-peg-only distance function $\Delta$. To uniquely identify $H$ after $m$ turns, the query response vector $(\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_m, H))$ must distinguish between all $n!$ permutations of the alphabet $\mathcal{A}$. In the $t\nth$ turn, the codebreaker submits a query sequence $Q_t$, which has $n$ possible associated responses given by $\Delta(Q_t, H)\in\{0, 1, \ldots, n-2, n\}$. We note that it is not possible to get $\Delta(Q_t, H)=n-1$ in the Permutation Game. Therefore there are $n^m$ possible query response vectors of length $m$, hence to identify $H$ in $m$ queries requires that $n^m\ge n!$. This implies $m\ge\log_n(n!)$, and the result follows immediately.
 	\end{proof}
@@ -177,7 +180,7 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 	\end{equation*}
 
 	\subsection{Proof of Theorem 1}
-	Using buckets, we now improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game. For the proof, we require two technical lemmas. The first bounds the sums of sizes of the buckets defined above:
+	Using buckets, we now improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game. For the proof, we require two technical lemmas. The first bounds the sums of sizes of the buckets defined above.
 		 \begin{lemma}  For any positive integer $n$, we have:
 		 	\begin{equation*}
 		 	\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}.
@@ -204,16 +207,16 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		 \begin{equation*}
 		 C_{n}! - (H_n - H_{C_{n}}) > 1.
 		 \end{equation*}
-		 Noting that $H_n$ is asymptotic to $\log(n)$ and both grow to infinity, as long as $\log(n) = o(C_n!)$ we will eventually have that $C_n!-H_n > 1$. Since we have, for example, that $\log x = o((\log \log x)!)$, we have that with $C_n = \lceil \log \log(n) \rceil$ the above inequality will eventually be satisfied.
+		 Noting that $H_n$ is asymptotic to $\log n$ and both grow to infinity, as long as $\log n = o(C_n!)$ we will eventually have that $C_n!-H_n > 1$. Since we have, for example, that $\log x = o((\log \log x)!)$, we have that with $C_n = \lceil \log \log n \rceil$ the above inequality will eventually be satisfied.
 		 
 		 In conclusion, when $n$ is sufficiently large, the minimum number of remaining
-		 possible solutions after $n - \lceil \log\log(n) \rceil$ guesses is at least
+		 possible solutions after $n - \lceil \log\log n \rceil$ guesses is at least
 		 \begin{equation*}
-		 S_{n - \lceil \log\log(n) \rceil} 
-		 \ge (\log\log(n))! - (H_n - H_{\log\log(n)})
+		 S_{n - \lceil \log\log n \rceil} 
+		 \ge (\log\log n)! - (H_n - H_{\log\log n})
 		 > 1.
 		 \end{equation*}
-		 Thus there is no strategy that can identify any hidden sequence in fewer than $n-\log\log(n)$ turns, and so in the Permutation Game variant of Mastermind, we have $f(n, n)\ge n - \log\log(n)$ for all sufficiently large $n$.
+		 Thus there is no strategy that can identify any hidden sequence in fewer than $n-\log\log n$ turns, and so in the Permutation Game variant of Mastermind, we have $f(n, n)\ge n - \log\log n$ for all sufficiently large $n$.
 		\end{proof}
 		%TODO: I reworked it a bit to add in the ceiling functions. Might need a bit of revision now.
 		 
@@ -264,9 +267,6 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 			\end{align*}
 			which completes the induction.
 		\end{proof}
-
-	\clearpage
-
 \section{Linear Algebra and the Minimax Algorithm}
 This section is dedicated to the proof of Theorem 2, which deals with the Minimax algorithm. To perform this analysis, we first change our notation. We can represent all guess vectors and hidden vectors as $(0,1)$-vectors in $\R^{nk}$, which for convenience we write with two indices $A_{ij} = A_{(i-1)n+j}$, with $i$ ranging from $1$ to $n$ and $j$ from $1$ to $k$.  These vectors are constructed in the following manner: 
 $$
@@ -295,10 +295,9 @@ The bulk of the proof lies in the following lemma:
 Theorem \ref{minimaxTheorem} follows as an immediate corollary from this lemma: Since these representations are in $\R^{nk}$, the minimax algorithm can make at most $nk$ linearly independent guesses. After that, the minimax cannot make a linearly independent guess and by the above lemma must then guess the hidden vector, for an upper bound of $nk$ turns to determine the hidden vector and one more turn to guess it.
 
 \section{Non-Adaptive Variants}
-This section follows closely the reasoning of Doerr et al. \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to Doerr et al. to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
+This section follows closely the reasoning of \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to \cite{DS13} to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
 \subsection{Shannon Entropy}\label{ssec:shannonEntropy}
-First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. Our presentation %TODO wrong word
- borrows from \cite{DG14}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. For random variable $X$, and possible event $X=x$, we define $S(x)=-\log_2(\mathbb{P}[X=x])$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. The surprise function $S$ then satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$ \cite{DG14}.
+First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. This section borrows from \cite{DG14}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. For random variable $X$, and possible event $X=x$, we define $S(x)=-\log_2(\mathbb{P}[X=x])$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. The surprise function $S$ then satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$ \cite{DG14}.
 
 Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $H(X)$ of the random variable $X$ is defined to be
 \begin{align*}
@@ -360,7 +359,7 @@ First we describe the conversion. Take a black-white strategy and append, for ea
 Lastly, we show that any non-adaptive black-white strategy must submit $\Omega(k)$ queries. Assume that there are two colors $a$ and $b$ such that a non-adaptive strategy guesses neither $a$ nor $b$ in either spot 1 or 2. Then this strategy would not be able to distinguish between a hidden vector starting $a,b$ and one starting $b,a$. Then by contradiction any non-adaptive strategy must guess at least $k-1$ colors in these two spots. It can guess 2 colors in these spots per turn, for a total of at least $(k-1)/2 = \Omega(k)$ turns required to solve the game. Thus, by the above logic, we conclude $f(n,k) = \Omega(n \log k)$ in this case as well.
 
 \subsection{An Upper Bound for Non-Adaptive Variants with Repeats}
-Consider non-adaptive variants of Mastermind in which repetitions are allowed. First we note that when $k=n$, \cite{DS13} showed the existence of a set of $O(n \log(n))$ queries which uniquely identify any hidden sequence $H$. When $k > n$, one can simply extend $H$ and all queries $Q_t$ by $k - n$ ``auxiliary'' positions until $n = k$. We fill these auxiliary positions with arbitrary colors, and we adjust the responses accordingly to account for the auxiliary positions. By the results of \cite{DS13}, there exists a set of $O(k \log k)$ queries which will uniquely identify any hidden sequence.
+Consider non-adaptive variants of Mastermind in which repetitions are allowed. First we note that when $k=n$, \cite{DS13} showed the existence of a set of $O(n \log n)$ queries which uniquely identify any hidden sequence $H$. When $k > n$, one can simply extend $H$ and all queries $Q_t$ by $k - n$ ``auxiliary'' positions until $n = k$. We fill these auxiliary positions with arbitrary colors, and we adjust the responses accordingly to account for the auxiliary positions. By the results of \cite{DS13}, there exists a set of $O(k \log k)$ queries which will uniquely identify any hidden sequence.
 
 \section{Acknowledgments}
 We would like to thank Daniel Montealegre for supervising and assisting our work throughout the summer, and Nathan Kaplan for both creating and guiding our project and for his invaluable assistance in editing this paper. 
