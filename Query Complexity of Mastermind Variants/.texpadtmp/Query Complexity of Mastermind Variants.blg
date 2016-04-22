@@ -1,31 +1,28 @@
 This is BibTeX, Version 0.99d (TeX Live 2015)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: /Users/christopherchute/Documents/mastermindProject/sumry_mastermind/Query Complexity of Mastermind Variants/.texpadtmp/Query Complexity of Mastermind Variants.aux
+The top-level auxiliary file: /Users/christopherchute/Desktop/SUMRY_Mastermind/Query Complexity of Mastermind Variants/.texpadtmp/Query Complexity of Mastermind Variants.aux
 The style file: acm.bst
-Database file #1: ../QCMV_Bibliography.bib.bib
-Warning--string name "zentralblatt" is undefined
---line 68 of file ../QCMV_Bibliography.bib.bib
-Warning--empty journal in ER63
+Database file #1: ../QCMV_Bibliography.bib
 You've used 12 entries,
             2253 wiz_defined-function locations,
-            610 strings with 5648 characters,
-and the built_in function-call counts, 3447 in all, are:
-= -- 351
+            611 strings with 5662 characters,
+and the built_in function-call counts, 3401 in all, are:
+= -- 342
 > -- 129
 < -- 0
 + -- 55
 - -- 42
-* -- 280
-:= -- 578
+* -- 278
+:= -- 571
 add.period$ -- 36
 call.type$ -- 12
 change.case$ -- 57
 chr.to.int$ -- 0
-cite$ -- 13
-duplicate$ -- 107
+cite$ -- 12
+duplicate$ -- 108
 empty$ -- 287
 format.name$ -- 42
-if$ -- 695
+if$ -- 688
 int.to.chr$ -- 0
 int.to.str$ -- 12
 missing$ -- 12
@@ -37,14 +34,13 @@ purify$ -- 45
 quote$ -- 0
 skip$ -- 61
 stack$ -- 0
-substring$ -- 262
-swap$ -- 23
+substring$ -- 243
+swap$ -- 24
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 48
-warning$ -- 1
-while$ -- 42
+warning$ -- 0
+while$ -- 40
 width$ -- 14
 write$ -- 118
-(There were 2 warnings)
