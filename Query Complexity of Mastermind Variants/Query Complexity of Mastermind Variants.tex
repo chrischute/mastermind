@@ -110,7 +110,7 @@ Our first main result concerns the Permutation Game, in which $n=k$ and $R=F$, t
 
 Explicit algorithms that take $O(n \log(n))$ turns to solve this variant were developed by Ko and Teng in \cite{KT86}, and Ouali and Sutherland in \cite{OS13}. Ko and Teng approach the problem with an algorithm akin to binary search. The algorithm queries a sequence $Q_t$, swaps two components, and queries again, doing so repeatedly until a previously unknown component of $H$ is determined by the values of the distance function across these repeated queries. Ouali and Sutherland improve this algorithm primarily by altering the search routine after a single component of $H$ has been identified. They also extend their results to variants with $k\ge n$. In this way, they achieve an average factor of two reduction in the number of queries needed to identify $H$. In our notation, these results state that $f(n, k=n, \Delta=b, R = F, A = T)\le O(n\log(n))$.
 
-Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n, n)\ge n - n/\log(n) + c$ for some constant $c>0$. We improve this lower bound to $f(n, n)\ge n - \log(n)$ for small $n$, and $f(n, n)\ge n- \log \log(n)$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
+Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n, n)\ge n - n/\log(n) + c$ for some constant $c>0$. We improve this lower bound to $f(n, n)\ge n- \log \log(n)$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
 
 Our second result concern's Donald Knuth's Minimax algorithm.
 \begin{theorem}\label{minimaxTheorem}
@@ -177,42 +177,39 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 	\end{equation*}
 
 	\subsection{Proof of Theorem 1}
-	We now employ the notion of a bucket to improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game.
-	\begin{proof}[Proof]
-		 Let $n$ be fixed. We will construct a sequence $L(t)$ that, for any possible guessing strategy, satisfies $L(t) \leq |S_t|$ for some hidden code $H$. 
-		 
-		 For the proof, we require two technical lemmas: \\
-		 The first bounds the sums of sizes of the buckets defined above:
-		 \begin{lemma}
+	Using buckets, we now improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game. For the proof, we require two technical lemmas. The first bounds the sums of sizes of the buckets defined above:
+		 \begin{lemma}  For any positive integer $n$, we have:
 		 	\begin{equation*}
 		 	\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}.
 		 	\end{equation*}
 		 \end{lemma}
-		 
-		 Using this, we construct a sequence $L(t)$, and then prove the following bound on the sequence:
-		 \begin{lemma} We recall that $n$ is fixed in defining $L(t)$. For any positive integer $C_n < n$, we have
+		 	\begin{proof}
+		 		We give a combinatorial proof. The left-hand side denotes the number of permutations of an $n$-element vector which have at least $x$ fixed points. The right-hand side denotes the number of ways to choose $x$ fixed points and simply permute the rest of the vector. This includes all vectors with at least $x$ fixed points and over-counts by some margin, so the inequality holds.
+		 	\end{proof}
+		 Using this, we will prove the following bound on $|S_n|$:
+		 \begin{lemma} For any positive integer $C_n < n$, we have
 		 	\begin{equation*}
-		 	\frac{L(t)}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
+		 	\frac{|S_t|}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
 		 	\end{equation*}
 		 	for all $0\le t\le n-C_{n}$, where $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
 		 \end{lemma}
-		 Proofs of both are provided at the end of the section.\\
-		 
-		 Now, for $t = n-C_n$ we have
+		 A proof of lemma 2 provided at the end of the section.\\
+		 \begin{proof}[Proof of Theorem 1]
+		 Apply Lemma 2 for $t = n-C_n$. Then we have
 		 \begin{equation*}
-		 L(n-C_{n})  \ge n!\left(\frac{C_{n}! - (H_n - H_{C_{n}})}{n!}\right)
+		 |S_{n-C_{n}}|  \ge n!\left(\frac{C_{n}! - (H_n - H_{C_{n}})}{n!}\right)
 		 = C_{n}! - (H_n-H_{C_{n}}).
 		 \end{equation*}
-		 We choose $C_{n}$ by the following reasoning: we want to achieve a lower bound of $n-C_{n}$ turns to solve the game. This would occur if $L(n-C_n)$ were greater than 1, as there would still be at least 2 possible solutions after $n-C_n$ turns, and thus the game would not yet be solved. Thus, we want
+		 We choose a $C_{n}$ as small as possible such that the above bound gives $|S_{n-C_n}| > 1$. This would mean that after $n-C_n$ guesses and responses of any guessing strategy, there are at least 2 solutions that match every response, in the worst case. Consequently, the codebreaker would not be able to uniquely identify the hidden code after $n-C_n$ turns. Thus, we want
 		 \begin{equation*}
 		 C_{n}! - (H_n - H_{C_{n}}) > 1.
 		 \end{equation*}
-		 Noting that $H(n)$ is asymptotic to $\log(n)$, as long as $\log(n) = o(C_n!)$ we will eventually have that $C_n!-H_n > 1$. Since we have, for example, that $\log x = o((\log \log x)!)$, we have that with $C_n = \lceil \log \log(n) \rceil$ the above inequality will eventually be satisfied.
+		 Noting that $H_n$ is asymptotic to $\log(n)$ and both grow to infinity, as long as $\log(n) = o(C_n!)$ we will eventually have that $C_n!-H_n > 1$. Since we have, for example, that $\log x = o((\log \log x)!)$, we have that with $C_n = \lceil \log \log(n) \rceil$ the above inequality will eventually be satisfied.
 		 
 		 In conclusion, when $n$ is sufficiently large, the minimum number of remaining
 		 possible solutions after $n - \lceil \log\log(n) \rceil$ guesses is at least
 		 \begin{equation*}
-		 S_{n - \lceil \log\log(n) \rceil} \geq L(n - \lceil \log\log(n) \rceil)
+		 S_{n - \lceil \log\log(n) \rceil} 
 		 \ge (\log\log(n))! - (H_n - H_{\log\log(n)})
 		 > 1.
 		 \end{equation*}
@@ -221,68 +218,44 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		%TODO: I reworked it a bit to add in the ceiling functions. Might need a bit of revision now.
 		 
 		 
-		 \subsection{Proofs of Lemmas 1 and 2}
-		 	We begin with Lemma 1:
-		 	
-		 		\begin{equation*}
-		 		\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}.
-		 		\end{equation*}
+		 \subsection{Proof of Lemma 2}
 		 
-		 	\begin{proof}
-		 		We give a combinatorial proof: The left-hand side denotes the number of permutations of an $n$-element vector which have at least $x$ fixed points. Suppose we choose $x$ fixed points and simply permute the rest of the vector. This gives $\binom{n}{x}(n-x)!=\frac{n!}{x!}$ possible permutations. Clearly this includes all vectors with at least $x$ fixed points (and over-counts by some margin), so the inequality holds.
-		 	\end{proof}
-		 We will now construct $L(t)$ and prove Lemma 2. We recall that $S_t$ is the minimal set of sequences guaranteed to contain $H$ given the responses\\ $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_t, H)$. From this definition, we can set $L(0) = n!$ because $S_0$ must contain all $n!$ possible solutions, since no guesses have been made. Next, we construct $L(t)$ inductively from $L(t-1)$ by guaranteeing that when proceeding from $L(t-1)$ to $L(t)$, we eliminate at least as many solutions as any possible guess would eliminate. That is, $L(t-1)-L(t) \geq |S_{t-1}| - |S_{t}|$. This, combined with the assumption that $L(t-1) \le |S_{t-1}|$, guarantees $L(t) \leq |S_t|$, as desired. 
-		 %TODO: I've reworked this paragraph a bit. Maybe could still use a bit more, idk.
+		 Recall that $S_t$ is the set of sequences that match the responses to the first $t$ questions of some fixed deterministic guessing strategy, given some hidden code $H$. Since all queries are possible when 0 questions have been asked, we have $|S_0| = n!$.
 		 
-		 Consider the $t\nth$ turn in an instance of the Permutation Game. In the terminology of buckets, the codebreaker constructs the set $S_{t-1}$ by setting $S_{t-1} = B_{t-1}(\Delta(Q_{t-1}, H))$. To choose an ``optimal'' query sequence $Q_t$ (in the sense described above, which maximizes $|S_{t}| - |S_{t-1}|$), the codebreaker therefore must choose a sequence $Q_t$ which minimizes
+		 Consider the $t\nth$ turn in an instance of the Permutation Game. There have been $t-1$ guesses made so far, and the set of remaining solutions is $S_{t-1}$. Say the codebreaker is considering making a guess $Q$. To analyze the worst-case performance of this guess, the codebreaker could partition the set $S_{t-1}$ into buckets $ B_{t}(s)$ for each possible response $s$, where each bucket, as defined previously, contains the subset of $S_t$ that match the response $r$ to question $Q$. In the worst case, the codebreaker will receive the response $s$ corresponding to the largest bucket $B_t(s)$, thereby leaving a large number of solutions remaining. To choose an ``optimal'' query sequence $Q_t$, the codebreaker therefore must choose a sequence $Q_t$ which minimizes
 		 \begin{equation*}
 			\max_{s\in\{1,2,\ldots,n\}}|B_{t}(s)|.
 		 \end{equation*}
-		 Equivalently, the codebreaker chooses $Q_t$ such that the size of the largest bucket is as small as possible. By the discussion in Section (2.1.2), we know that $|B_t(s)|\le\binom{n}{s}D(n-s)$. The optimal query $Q_t$ will partition $S_{t-1}$ into buckets as evenly as possible, and some buckets will have size equal to their upper bound, while others will be partially filled. This best-possible partition will partition $S_{t-1}$ into two sets $X$ and $Y$ of buckets, such that $A\in X$ implies bucket $A$ is incompletely filled, $B\in Y$ implies bucket $B$ is completely filled, and $A\in X$, $B\in Y$ implies that the upper bound on $|A|$ is greater than the upper bound on $|B|$. Let $x = |X|$, so that $x$ is the number of incompletely filled buckets.
+		 The optimal query $Q$ will then partition $S_{t-1}$ into buckets as evenly as possible. In the optimal distribution of this type, some small buckets will have size equal to their upper bound, while others will be partially filled, but to a greater amount than any of the small buckets. Noting that the buckets are decreasing in size, this means that with $|S_{t-1}|$ solutions remaining, there is an optimal $x$ such that completely filling buckets $x$ through $n$ and splitting the remaining solutions among buckets 0 through $x-1$ will give us this best distribution. The size of the large buckets in this optimal hypothetical distribution is then a lower bound on $|S_t|$ in the worst case, for any possible guessing strategy.
 		 
-		 We now give a recurrence which bounds $L(t)$. At the beginning of the $t^\text{th}$ turn, we have at least $L(t-1)$ possible solutions remaining, so $|S_{t-1}|\ge L(t-1)$. Suppose that the codebreaker has selected the optimal query vector $Q_t$ for submission in turn $t$. We then have 
-		\begin{align}\label{recur}
-			L(t-1)
-			& \le \sum_{i = 0}^{n}|B_i(t)|\nonumber\\
-			& = \sum_{i=0}^{x-1}|B_i(t)| + \sum_{i=x}^{n}|B_i(t)|\nonumber\\
-			& \le \sum_{i = 0}^{x-1}L(t) + \sum_{i=x}^{n}\binom{n}{i}D(n-i)\quad
-			\text{for optimal $x$}\nonumber\\
-			& = x\cdot L(t) + \sum_{i = x}^{n}\binom{n}{i}D(n-i).
-		\end{align}
-		Now we find the $x$ that generates this optimal distribution and solve for $L(t)$. Once we know $L(t)$, we claim that the inequality in equation (\ref{recur}) holds for all $x$. Picking $x$ larger than its optimal value increases the contribution of some of the entirely filled, smaller buckets up to $L(t)$, thus increasing the total sum. Picking $x$ too small increases the contribution of some of the under-filled, larger buckets up to their full sizes, thereby increasing the total sum. So adjustment of $x$ about its optimal value always preserves the inequality. Thus (\ref{recur}) holds for all $x$.
-
-		
-		From Lemma 1 and (\ref{recur}), we have
+		We now use this logic to bound $|S_t|$ recursively. Assume now that the codebreaker makes some query $Q$, receives some response $s$, and eliminates some number of possible solutions, leaving $S_t$ as the set of possible solutions remaining. We now claim that for all $x$,
 		\begin{equation*}
-			L(t-1) \le x\cdot L(t) + \frac{n!}{x!},
+			|S_{t-1}|\le  x\cdot |S_t| + \sum_{i = x}^{n}\binom{n}{i}D(n-i).
 		\end{equation*}
-		which gives
-		\begin{equation*}
-			L(t)\ge \frac{1}{x}\left(L(t-1)-\frac{n!}{x!}\right).
-		\end{equation*}
+		By the above logic, we know this inequality holds for the optimal value of $x$, as it becomes an equality when $|S_t|$ is replaced by its theoretical lower bound. Picking $x$ larger than this optimal value increases the contribution of some of the entirely filled, smaller buckets up to $|S_t|$, thus increasing the right-hand side. Picking $x$ too small increases the contribution of some of the under-filled, larger buckets up to their full sizes, which increases the right-hand side as well. So adjustment of $x$ away from its optimal value always preserves the inequality. Thus (\ref{recur}) holds for all $x$.
 		
-		We are now ready to prove Lemma 3: \\
-		For any positive integer $C_n < n$, we have
+		We apply Lemma 1 to bound the rightmost term, and solve the inequality for $|S_t|$ to get 
+		\begin{equation}\label{recur}
+			|S_t| \ge \frac{1}{x}\left(|S_{t-1}|-\frac{n!}{x!}\right).
+		\end{equation}
+		We now exhibit a solution to this recurrence relation to prove Lemma 2.
+		
+		\begin{proof}[Proof of Lemma 2] We prove inductively. With $t=0$, we have $|S_0| = n!$. Then
 			\begin{equation*}
-				\frac{L(t)}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
+			1 =\frac{|S_0|}{n!}\ge \frac{C_{n}! - (H_{C_{n}}-H_{C_{n}})}{C_{n}!} = 1,
 			\end{equation*}
-			for all $0\le t\le n-C_{n}$, where $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
-		\begin{proof} We prove inductively. With $t=0$, we have $L(0) = n!$. Then
-			\begin{equation*}
-			1 =\frac{L(0)}{n!}\ge \frac{C_{n}! - (H_{C_{n}}-H_{C_{n}})}{C_{n}!} = 1,
-			\end{equation*}
-			and the inequality is satisfied. Now we move to the general case.
+			and the inequality is satisfied. \\
+			Now we move to the general case.
 			Recalling that (\ref{recur}) holds for all $x$, we will
-		let $x=t+C_{n}$. Solving for $L(t)$ gives us
-		
+		let $x=t+C_{n}$, giving
 			\begin{equation*}
-			\frac{L(t)}{n!}
-			 \ge \frac{1}{C_{n}+t}\left(\frac{L(t-1)}{n!}
+			\frac{|S_t|}{n!}
+			 \ge \frac{1}{C_{n}+t}\left(\frac{|S_{t-1}|}{n!}
 			-\frac{1}{(C_{n}+t)!}\right).
 			\end{equation*}
 		Assuming the lemma inductively for $t-1$, we obtain
 			\begin{align*}
-			\frac{L(t)}{n!}
+			\frac{|S_t|}{n!}
 			& \ge \frac{1}{C_{n}+t}\left(\frac{C_{n}!-(H_{C_{n}+t} - H_{C_{n}})}
 			{(C_{n}+t-1)!} - \frac{1}{(C_{n}+t)!}\right)\\
 			& \ge \left(\frac{C_{n}! - (H_{C_{n}+t-1} - H_{C_{n}}) - \frac{1}{C_{n}+t}}
@@ -292,7 +265,7 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 			which completes the induction.
 		\end{proof}
 
-	
+	\clearpage
 
 \section{Linear Algebra and the Minimax Algorithm}
 This section is dedicated to the proof of Theorem 2, which deals with the Minimax algorithm. To perform this analysis, we first change our notation. We can represent all guess vectors and hidden vectors as $(0,1)$-vectors in $\R^{nk}$, which for convenience we write with two indices $A_{ij} = A_{(i-1)n+j}$, with $i$ ranging from $1$ to $n$ and $j$ from $1$ to $k$.  These vectors are constructed in the following manner: 
