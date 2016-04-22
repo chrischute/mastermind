@@ -326,7 +326,7 @@ Theorem \ref{minimaxTheorem} follows as an immediate corollary from this lemma: 
 This section follows closely the reasoning of Doerr et al. \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to Doerr et al. to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
 \subsection{Shannon Entropy}\label{ssec:shannonEntropy}
 First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. Our presentation %TODO wrong word
- borrows from \cite{DG14}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. Then we will define a surprise function $S$ which satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$. It turns out that, with a few added assumptions, the only natural choice for $S$ is $S(x) = -\log_2(\mathbb{P}[X = x])$ \cite{DG14}.
+ borrows from \cite{DG14}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. For random variable $X$, and possible event $X=x$, we define $S(x)=-\log_2(\mathbb{P}[X=x])$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. The surprise function $S$ then satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$ \cite{DG14}.
 
 Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $H(X)$ of the random variable $X$ is defined to be
 \begin{align*}
@@ -345,7 +345,7 @@ We will use Shannon entropy in the following proof.
 \begin{proof}
 	We prove Theorem \ref{nonAdaptiveTheorem} in the case $R = F$, noting that \cite{DS13} have already proved the case $R=T$. We will be drawing substantially from the techniques they use in their proof. Consider a set $\{Q_1, Q_2, \ldots, Q_s\}$ of $s$ query sequences such that all $k!/(k-n)!$ possible hidden sequences are uniquely determined by the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_s, H)$. That is, assume that if two possible hidden vectors $H$ and $H'$ satisfy $\Delta(Q_i, H) = \Delta(Q_i, H')$ for all $i$, then $H = H'$.
 
-	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then the responses $Y_i = b(Z, q_i)$ are now random variables, and the vector $Y = (Y_1, Y_2, \ldots, Y_s)$ is also a random variable. By our assumptions, $Y$ always uniquely determines, and is uniquely determined by, $Z$. Therefore $H(Z) = H(Y)$ (which follows from the bijection of events $Z=z$ with events $Y=y$). Since $Z$ is a random variable with $k!/(k-n)!$ outcomes of equal probability, we compute
+	Let the hidden vector $Z$ be sampled uniformly at random from the set of $k!/(k-n)!$ possibilities. Then the responses $Y_i = b(Z, q_i)$ are now random variables, and the vector $Y = (Y_1, Y_2, \ldots, Y_s)$ is also a random variable. By our assumptions, $Y$ always uniquely determines, and is uniquely determined by, $Z$. This bijection of events  $Z=z$ with events $Y=y$ shows that $H(Z) = H(Y)$. Since $Z$ is a random variable with $k!/(k-n)!$ outcomes of equal probability, we compute
 	\begin{equation}\label{equalEntropy}
 		H(Z) = \log_2\left(\frac{k!}{(k-n)!}\right).
 	\end{equation}
@@ -358,34 +358,34 @@ We will use Shannon entropy in the following proof.
 		H(Y_i)=-\sum_{x=0}^n \mathbb{P}[Y_i=x]\cdot\log_2(\mathbb{P}[Y_{i}=x]).
 	\end{equation}
 	We now compute $\mathbb{P}[Y_i=x]$, namely the probability that $X$ is a solution vector with $x$ fixed points with respect to the query $q_i$. Using our previous terminology, this is the probability that $X$ is in bucket $B(x)$.
-	Using the same logic as in Lemma 1 to bound $|B(x)|$, we have
+	$|B(x)|$ is the number of ways to have exactly $x$ fixed points, which is less than the number of ways to choose $x$ fixed points, and then choose any colors on the rest of the elements. Thus:
 	\begin{align*}
 		\mathbb{P}[Y_i = x] &= \frac{|B(x)|}{\left(\frac{k!}{(k-n)!}\right)}\\
 		&\leq \frac{\binom{n}{x}\frac{(k-x)!}{(k-n)!}}{\left(\frac{k!}{(k-n)!}\right)}\\
 		&= \frac{1}{x!}\cdot\frac{n(n-1)\cdots(n-x+1)}{k(k-1)\cdots(k-x+1)}\\
 		&\leq \frac{1}{x!}.
 	\end{align*}
-	It turns out that we can't substitute this upper bound into  (\ref{entropyDef}) for all $x$, because $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function only when $\alpha<1/e$. So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and still have an upper bound. For the first three values of $x$, we will instead use the trivial upper bound $f(\alpha)\le 1/(e\log 2)$. Then
+	It turns out that we can't substitute this upper bound into  (\ref{entropyDef}) for all $x$, because $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function only when $\alpha<1/e$. So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and still have an upper bound. For the first three values of $x$, we instead use the trivial upper bound $f(\alpha)\le 1/(e\log 2)$. Then
 	\begin{align*}
-		H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2\left(\frac{1}{x!}\right)\\
-		&\le \frac{3}{e\log 2}+\sum_{x=3}^\infty \frac{\log_2(x!)}{x!}\\
-		&<3.
+		H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2\left(\frac{1}{x!}\right)
+		\le \frac{3}{e\log 2}+\sum_{x=3}^\infty \frac{\log_2(x!)}{x!}
+		<3.
 	\end{align*}
 	Combining this with (\ref{entropySum}) gives $H(Y) \leq 3s$, and since $H(Z) = H(Y)$ we have $H(Z) \leq 3s$. Substituting in (\ref{equalEntropy}) as a lower bound for $H(Z)$ and solving for $s$ gives
 	\begin{equation*}
-	s \geq \frac{1}{3}\log_2\left(\frac{k!}{(k-n)!}\right)
+	s \geq \frac{1}{3}\log_2\left(\frac{k!}{(k-n)!}\right).
 	\end{equation*}
 	
 	We can show that the right-hand side is $\Omega(n\log k)$. This is immediate for large $k$ relative to $n$ by bounding the ratio by $(k-n)^n$; for small $k$ (e.g. $k \leq 2n$) we bound the ratio by $n!$ and the claim follows from Stirling's approximation. So this gives us a lower bound of $\Omega(n \log k)$ turns for any non-adaptive strategy for Mastermind with no repeats and black-peg responses.
 	%TODO: add more perhaps?
 \end{proof}
 \subsubsection{Extension to white-peg responses}
-We can also extend the $R=T$ case of Theorem \ref{nonAdaptiveTheorem}, as proved in $\cite{DS13}$, to include $\Delta = bw$. We do this by showing that any black-white strategy must submit $\Omega(k)$ queries, and that we can convert a black and white-peg strategy into a black-peg-only strategy by adding $O(k)$ queries. 
+We extend the $R=T$ case of Theorem \ref{nonAdaptiveTheorem}, as proved in $\cite{DS13}$, to include $\Delta = bw$. We show that any black-white strategy must submit $\Omega(k)$ queries, and that we can convert a black and white-peg strategy into a black-peg-only strategy by adding $O(k)$ queries. 
 Then changing a black-white strategy to a black-only strategy changes the number of queries by at most some absolute constant factor. So we have $f(\Delta = b) = O(f(\Delta = bw))$. Combining this with Theorem 3 implies the theorem for black-white responses as well.
 
 First we describe the conversion. Take a black-white strategy and append, for each color, a query where every spot is that color. As a black-peg only strategy, we can deduce from these queries exactly how many times each color appears in the hidden vector, from which we can determine the white-peg responses to any of the original queries. Therefore, if the old strategy had enough information to determine the hidden vector with black-white responses, this new strategy can determine the hidden vector with just black-peg responses. Since there are $k$ colors, we have appended $k$ queries in this conversion. 
 
-Lastly, we just need that any non-adaptive black-white strategy must submit $\Omega(k)$ queries. This follows from the following reasoning: assume that there are two colors $a$ and $b$ such that a non-adaptive strategy guesses neither $a$ nor $b$ in either spot 1 or 2. Then this strategy would not be able to distinguish between a hidden vector starting $a,b$ and one starting $b,a$. Then by contradiction any non-adaptive strategy must guess at least $k-1$ colors in these two spots. It can guess 2 colors in these spots per turn, for a total of at least $(k-1)/2 = \Omega(k)$ turns required to solve the game. Thus, by the above logic, we conclude $f(n,k) = \Omega(n \log k)$ in this case as well.
+Lastly, we show that any non-adaptive black-white strategy must submit $\Omega(k)$ queries. Assume that there are two colors $a$ and $b$ such that a non-adaptive strategy guesses neither $a$ nor $b$ in either spot 1 or 2. Then this strategy would not be able to distinguish between a hidden vector starting $a,b$ and one starting $b,a$. Then by contradiction any non-adaptive strategy must guess at least $k-1$ colors in these two spots. It can guess 2 colors in these spots per turn, for a total of at least $(k-1)/2 = \Omega(k)$ turns required to solve the game. Thus, by the above logic, we conclude $f(n,k) = \Omega(n \log k)$ in this case as well.
 
 \subsection{An Upper Bound for Non-Adaptive Variants with Repeats}
 Consider non-adaptive variants of Mastermind in which repetitions are allowed. First we note that when $k=n$, \cite{DS13} showed the existence of a set of $O(n \log(n))$ queries which uniquely identify any hidden sequence $H$. When $k > n$, one can simply extend $H$ and all queries $Q_t$ by $k - n$ ``auxiliary'' positions until $n = k$. We fill these auxiliary positions with arbitrary colors, and we adjust the responses accordingly to account for the auxiliary positions. By the results of \cite{DS13}, there exists a set of $O(k \log k)$ queries which will uniquely identify any hidden sequence.
