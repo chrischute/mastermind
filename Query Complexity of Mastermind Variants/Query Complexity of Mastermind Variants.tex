@@ -116,7 +116,7 @@ Our second result concern's Donald Knuth's Minimax algorithm, which was first in
 \begin{theorem}\label{minimaxTheorem}
 	Consider the original variant of Mastermind (allowing arbitrary $n$ and $k$), defined by $\Delta=(b, w)$, $R=T$, $A=T$. The Minimax algorithm identifies any hidden sequence $H$ in at most $nk$ queries.
 \end{theorem}
-Knuth's Minimax algorithm is empirically near-optimal for solving small games of Mastermind ($n$ and $k$ less than 10) in as few guesses as possible. However, it has proven difficult to analyze the asymptotic performance of the Minimax algorithm, primarily because its behavior is determined by the distribution of possibilities for $H$, which is difficult to analyze in general terms \cite{KT86, OS13}. To our knowledge, this is the first upper bound on the worst-case performance of the minimax algorithm, but if it performs near-optimally for large $n$ and $k$, we would expect this bound to be much smaller. We know, for example, that $f(n,k) = O(n \log k)$ for $k$ not too large \cite{DK76, KT86}.
+Knuth's Minimax algorithm is empirically near-optimal for solving small games of Mastermind ($n$ and $k$ less than 10) in as few guesses as possible. However, it has proven difficult to analyze the asymptotic performance of the Minimax algorithm, primarily because its behavior is determined by the distribution of possibilities for $H$, which is difficult to analyze in general  \cite{OS13, KT86}. To our knowledge, this is the first upper bound on the worst-case performance of the minimax algorithm, but if it performs near-optimally for large $n$ and $k$, we would expect this bound to be much smaller. We know, for example, that $f(n,k) = O(n \log k)$ for $k$ not too large \cite{DK76, KT86}.
 
 Our third result relates to non-adaptive variants of Mastermind, which correspond to $A=F$ in our notation.
 \begin{theorem}\label{nonAdaptiveTheorem}
@@ -128,9 +128,9 @@ Consider non-adaptive Mastermind, defined by $A=F$. Let $\Delta = b$, and let $k
 The case $R = T$ was proved by Doerr, Sp\"ohel, Thomas, and Winzen in \cite{DS13}. They use an information-theoretic argument based on Shannon entropy by letting the hidden sequence be randomly chosen. Shannon entropy is discussed briefly in Section 4.1.
 We use a similar argument to extend this to $R = F$, and
 % TODO: Need to define our usage of "tight" in the following paragraph.
-these lower bounds together cover the case $n \geq k$. For neither choice of $R$ do we have provably optimal upper bounds; when $R = T$ a corollary of a result by Doerr et al. in \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the $nk$ bound is known. On the other hand, Doerr et al. are able to extend a result of Chv\'atal in \cite{VC83} to provide tight bounds for $n \le k$ with $R = T$.
+these lower bounds together cover the case $n \geq k$. For neither choice of $R$ do we have provably optimal upper bounds; when $R = T$ a corollary of a result in \cite{DS13} gives an upper bound of $O(k \log k)$ guesses, and for $R = F$ no improvement over the $nk$ bound is known. On the other hand, the authors of \cite{DS13} are able to extend a result of Chv\'atal in \cite{VC83} to provide tight bounds for $n \le k$ with $R = T$.
 \subsection{Structure of the Paper}
-Section 2 is dedicated to Theorem 1, and the proof is found in 2.2. Theorem 2 is proved in section 3, and section 4 deals with Theorem 3, with the proof in 4.2.
+Section 2 is dedicated to Theorem 1, and the proof is found in 2.2. Theorem 2 is proved in Section 3, and Section 4 deals with Theorem 3, with the proof in 4.2.
 \section{Adaptive Variants of Mastermind}
 \subsection{The Permutation Game}
 Here we introduce notation and reasoning used in the proof of Theorem 1. We recall that this deals with the Permutation Game, defined by $n=k$ and $R=F$. We can first show that the information from white-peg responses is irrelevant: These parameters together imply $H=\overline{\sigma}(\mathcal{A})$ for some permutation $\overline{\sigma}\in S_k$ (recalling that $\mathcal{A}=\{1,2,\ldots, k\}$). Moreover, recalling the definition of the white-peg distance function
@@ -156,28 +156,33 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		Consider an instance of the Permutation Game with the black-peg-only distance function $\Delta$. To uniquely identify $H$ after $m$ turns, the query response vector $(\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_m, H))$ must distinguish between all $n!$ permutations of the alphabet $\mathcal{A}$. In the $t\nth$ turn, the codebreaker submits a query sequence $Q_t$, which has $n$ possible associated responses given by $\Delta(Q_t, H)\in\{0, 1, \ldots, n-2, n\}$. We note that it is not possible to get $\Delta(Q_t, H)=n-1$ in the Permutation Game. Therefore there are $n^m$ possible query response vectors of length $m$, hence to identify $H$ in $m$ queries requires that $n^m\ge n!$. This implies $m\ge\log_n(n!)$, and the result follows immediately.
 	\end{proof}
 
-	\subsubsection{Buckets}
-	To improve upon the trivial lower bound, we first introduce terminology with which to analyze the distribution of the possible solutions after feedback $\Delta(Q_t, H)$ from a given query $Q_t$. Let $\Delta$ be the black-peg-only distance function. For an arbitrary guessing strategy, we let $S_t$ be the set of possible hidden vectors that match the responses to guesses 1 through $t$. For example, $S_0$ is the entire set of $n!$ permutations, and the game is solved exactly when the codebreaker has reduced $S_t$ to a single vector. For each possible query vector $Q_t$, the codebreaker may partition the set $S_{t-1}$ of remaining solutions into subsets which we will call \textit{buckets}; one bucket for each possible response given by the codemaker. We now formalize the notion of a bucket.
+	\subsubsection{Solution subspaces}
+	To improve upon the trivial lower bound, we first introduce terminology which we can use to analyze the worst-case performance of a possible guess in the permutation game. Assume the codebreaker has some arbitrary fixed, deterministic guessing strategy. After $t$ turns of this strategy, the codebreaker has guessed some sequence of queries $Q_1, \dots, Q_t$ and received responses $r_1,\dots,r_t$. The set of valid solution vectors $h$ with $\Delta(Q_i,h) = r_i$ for all $i$ is called the \textit{remainig solution set} $S_t$, and the codebreaker wins exactly when $|S_t| = 1$.
 	
-	Consider the $t\nth$ turn in an instance of the Permutation Game. The codebreaker may use the responses $\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_{t-1}, H)$ to construct a minimal set $S_{t-1}$ of sequences such that $H\in S_{t-1}$. Suppose the codebreaker submits the query $Q_t = (q_1, q_2, \ldots, q_n)$. Then we define the \textit{bucket $B_t(s)$ implied by response $\Delta(Q_t, H)=s$} to be
+	Now, at the beginning of turn $t$, the codebreaker is going to guess $Q_t$. This guess partitions the remaining solution set $S_{t-1}$ into subsets for each possible response $\Delta(Q_t,H)$ from 0 to $n$, where each $h \in S_{t-1}$ is in the subset corresponding to a response $\Delta(Q_t,h)$. Now say a response of $\Delta(Q_t,H) = r$ is given. Then all solutions with $\Delta(Q_t,h) \neq r$ are eliminated from the remaining solution set, and this set becomes the subset of $S_{t-1}$ corresponding to a response $r$.
+	
+	We call the subset of $S_{t-1}$ corresponding to a response $r$ a \textit{solution subspace}, formally defined as 
 	\begin{equation*}
-		B_t(s) = \left\{X\in S_{t-1}\mid \Delta(Q_t, X) = s\right\}.
+		B_t(r) = \left\{h\in S_t\mid \Delta(Q_t, h) = r\right\}.
 	\end{equation*}
-	Such a construct is useful in that if $\Delta(Q_t, H) = s$, the codebreaker may deduce that if a sequence $X\in S_{t-1}t$ satisfies $\Delta(Q_t, X)\neq s$, then $X\neq H$. Therefore the codebreaker may construct the set $S_t$ of possible solutions after the $t\nth$ turn is complete by setting $S_t = B_t(s)$.
+	Then the above logic can be written as $S_t = B_{t-1}(\Delta(Q_t,H))$.
 	
-	We now compute the size of a bucket $B_1(s)$ produced in the first turn of an instance of the Permutation Game. First we choose the $s$ colors that are fixed points with respect to the query sequence $Q_1$. We then permute the remaining $n-s$ colors without any fixed points, which can be done in $D(n - s)$ ways, with $D(i)$ as defined in (\ref{derangements}). Hence we have
+	We now compute the size of a subspace $B_0(r)$ produced in the first turn of an instance of the Permutation Game. First we choose the $s$ colors that are fixed points with respect to the query sequence $Q_1$. We then permute the remaining $n-r$ colors without any fixed points, which can be done in $D(n - r)$ ways, with $D(x)$ as defined in (\ref{derangements}). Hence we have
 	\begin{equation*}
-		|B_1(s)| = \binom{n}{s}D(n-s),
+		|B_0(r)| = \binom{n}{s}D(n-s),
 	\end{equation*}
-	for the bucket implied by response $\Delta(Q_1, H) = s$. Clearly the buckets $B_1(1), B_1(2), \ldots, B_1(n)$ partition the set $S_1$ of $n!$ possible hidden vectors.
 	
-	The above computation tells us the \textit{initial} size of each bucket, which is independent of the initial query $Q_1$. Now consider the evolution of bucket sizes, \textit{i.e.,} the sequence $|B_1(s)|, |B_2(s)|, |B_3(s)|, \ldots$ over the course of an instance of the Permutation Game. We claim that each of these is bounded by $|B_1(s)|$. Since $|B_1(s)|$ is independent of $Q_1$, assume that $Q_1 = Q_t$. Then the query $Q_t$, together with response $\Delta(Q_t, H)$, produces a bucket $B_t(s)$ defined by $B_1(s)\intersect S_t$ and so $B_t(s) \subseteq B_1(s)$. Hence bucket sizes are bounded above by their initial size, \textit{i.e.,}
+	The above computation tells us the \textit{initial} size of each subspace. Now consider $|B_t(r)|$. We have 
 	\begin{equation*}
-		|B_t(s)|\le |B_1(s)| = \binom{n}{s}D(n-s).
+	|B_t(r)| = \#\left\{h\in S_t\mid \Delta(Q_t, h) = r\right\} \leq \#\left\{h\mid \Delta(Q_t, h) = r\right\}
+	\end{equation*} 
+	Noting that $Q_t$ is necessarily a permutation of $Q_1$, we see that $\#\left\{h\mid \Delta(Q_t, h) = r\right\} = \#\left\{h\mid \Delta(Q_1, h) = r\right\}$. But the latter expression is simply $|B_0(r)|$, by definition. Thus we have
+	\begin{equation*}
+		|B_t(r)|\le |B_0(r)| = \binom{n}{r}D(n-r).
 	\end{equation*}
 
 	\subsection{Proof of Theorem 1}
-	Using buckets, we now improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game. For the proof, we require two technical lemmas. The first bounds the sums of sizes of the buckets defined above:
+	Using solution subspaces, we now improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game. For the proof, we require two technical lemmas. The first bounds the sums of sizes of the subspaces defined above:
 		 \begin{lemma}  For any positive integer $n$, we have:
 		 	\begin{equation*}
 		 	\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}.
@@ -187,11 +192,11 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		 		We give a combinatorial proof. The left-hand side denotes the number of permutations of an $n$-element vector which have at least $x$ fixed points. The right-hand side denotes the number of ways to choose $x$ fixed points and simply permute the rest of the vector. This includes all vectors with at least $x$ fixed points and over-counts by some margin, so the inequality holds.
 		 	\end{proof}
 		 Using this, we will prove the following bound on $|S_n|$:
-		 \begin{lemma} For any positive integer $C_n < n$, we have
+		 \begin{lemma} For a fixed deterministic guessing strategy, there is a choice of hidden vector such that 
 		 	\begin{equation*}
 		 	\frac{|S_t|}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
 		 	\end{equation*}
-		 	for all $0\le t\le n-C_{n}$, where $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
+		 	for any positive integer $C_n$ and all $0\le t\le n-C_{n}$, where $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
 		 \end{lemma}
 		 A proof of lemma 2 provided at the end of the section.\\
 		 \begin{proof}[Proof of Theorem 1]
@@ -222,17 +227,18 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		 
 		 Recall that $S_t$ is the set of sequences that match the responses to the first $t$ questions of some fixed deterministic guessing strategy, given some hidden code $H$. Since all queries are possible when 0 questions have been asked, we have $|S_0| = n!$.
 		 
-		 Consider the $t\nth$ turn in an instance of the Permutation Game. There have been $t-1$ guesses made so far, and the set of remaining solutions is $S_{t-1}$. Say the codebreaker is considering making a guess $Q$. To analyze the worst-case performance of this guess, the codebreaker could partition the set $S_{t-1}$ into buckets $ B_{t}(s)$ for each possible response $s$, where each bucket, as defined previously, contains the subset of $S_t$ that match the response $r$ to question $Q$. In the worst case, the codebreaker will receive the response $s$ corresponding to the largest bucket $B_t(s)$, thereby leaving a large number of solutions remaining. To choose an ``optimal'' query sequence $Q_t$, the codebreaker therefore must choose a sequence $Q_t$ which minimizes
+		 Consider the $t\nth$ turn in an instance of the Permutation Game. There have been $t-1$ guesses made so far, and the set of remaining solutions is $S_{t-1}$. Now, the codebreaker is going to guess $Q_t$. To analyze the worst-case performance of this guess, we partition $S_{t-1}$ into subspaces $ B_{t-1}(r)$ for each possible response $r$. Since $S_t = B_{t-1}(\Delta(Q_t,H))$, in the worst case, $H$ will belong to the largest subspace $B_t(r)$, thereby leaving a large number of solutions in the remaining set. Thus, the worst-case size of $S_t$ given $S_{t-1}$ is
 		 \begin{equation*}
-			\max_{s\in\{1,2,\ldots,n\}}|B_{t}(s)|.
+			\max_{r\in\{0,1,\ldots,n\}}|B_{t}(r)|.
 		 \end{equation*}
-		 The optimal query $Q$ will then partition $S_{t-1}$ into buckets as evenly as possible. In the optimal distribution of this type, some small buckets will have size equal to their upper bound, while others will be partially filled, but to a greater amount than any of the small buckets. Noting that the buckets are decreasing in size, this means that with $|S_{t-1}|$ solutions remaining, there is an optimal $x$ such that completely filling buckets $x$ through $n$ and splitting the remaining solutions among buckets 0 through $x-1$ will give us this best distribution. The size of the large buckets in this optimal hypothetical distribution is then a lower bound on $|S_t|$ in the worst case, for any possible guessing strategy.
+		 The minimum possible value of this maximum occurs when the subspaces partition $S_{t-1}$ as evenly as possible. We know that $|S_t(r)| \leq |S_0(r)|$, which is decreasing in $r$. In the optimal distribution of this type, some subspaces of higher index will have size equal to their upper bound, while the rest will be partially filled, but to a greater amount than any of the higher index subspaces. So with $|S_{t-1}|$ solutions remaining, there is an optimal $x$ such that completely filling subspaces $x$ through $n$ and splitting the remaining solutions among subspaces 0 through $x-1$ will give us this best distribution, and therefore a lower bound on $|S_t|$ in the worst case.
 		 
-		We now use this logic to bound $|S_t|$ recursively. Assume now that the codebreaker makes some query $Q$, receives some response $s$, and eliminates some number of possible solutions, leaving $S_t$ as the set of possible solutions remaining. We now claim that for all $x$,
+		We now use this logic to bound $|S_t|$ recursively. Assume now that the codebreaker makes the query $Q_t$, receives some response $r$, and eliminates some number of possible solutions, leaving $S_t$ as the set of possible solutions remaining. We now claim that for all $x$,
 		\begin{equation*}
 			|S_{t-1}|\le  x\cdot |S_t| + \sum_{i = x}^{n}\binom{n}{i}D(n-i).
 		\end{equation*}
-		By the above logic, we know this inequality holds for the optimal value of $x$, as it becomes an equality when $|S_t|$ is replaced by its theoretical lower bound. Picking $x$ larger than this optimal value increases the contribution of some of the entirely filled, smaller buckets up to $|S_t|$, thus increasing the right-hand side. Picking $x$ too small increases the contribution of some of the under-filled, larger buckets up to their full sizes, which increases the right-hand side as well. So adjustment of $x$ away from its optimal value always preserves the inequality. Thus (\ref{recur}) holds for all $x$.
+		%TODO CONTINUE HERE _________________________________________________
+		By the above logic, we know this inequality holds for the optimal value of $x$, as it becomes an equality when $|S_t|$ is replaced by its theoretical lower bound. Picking $x$ larger than this optimal value increases the sizes of some of the entirely filled, smaller subspaces past their maximum up to $|S_t|$, thus increasing the right-hand side. Picking $x$ too small increases the sizes of some of the under-filled, larger subspaces up to their maxima, which increases the right-hand side as well. So adjustment of $x$ away from its optimal value always preserves the inequality. Thus (\ref{recur}) holds for all $x$.
 		
 		We apply Lemma 1 to bound the rightmost term, and solve the inequality for $|S_t|$ to get 
 		\begin{equation}\label{recur}
@@ -268,36 +274,39 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 	\clearpage
 
 \section{Linear Algebra and the Minimax Algorithm}
-This section is dedicated to the proof of Theorem 2, which deals with the Minimax algorithm. To perform this analysis, we first change our notation. We can represent all guess vectors and hidden vectors as $(0,1)$-vectors in $\R^{nk}$, which for convenience we write with two indices $A_{ij} = A_{(i-1)n+j}$, with $i$ ranging from $1$ to $n$ and $j$ from $1$ to $k$.  These vectors are constructed in the following manner: 
+In this section we prove Theorem 2, which concerns Knuth's Minimax algorithm. 
+%TODO dankdnakdnakdnakdnk
+We will represent an arbitrary query or hidden vector as a $(0,1)$-vector $A \in \R^{nk}$ in the following manner: 
 $$
-A_{ij} = \begin{cases}
-1 & \text{this guess assigns the $i^\text{th}$ spot the $j^\text{th}$ color} \\
-0 & \text{otherwise}
+A_{in+j} = \begin{cases}
+1 & \text{this guess/solution assigns the $i^\text{th}$ spot the $j^\text{th}$ color} \\
+0 & \text{otherwise},
 \end{cases}
-$$. As such, each set of indices $A_{i1},\dots,A_{ik}$ will have exactly one 1, as the $i^\text{th}$ position is exactly one color. We refer to these vectors as \textit{representations} of the guess and hidden vectors.
+$$
+where $0 \leq i \leq n-1$ and $0 \leq j \leq k-1$. As such, each set of indices $A_{in},\dots,A_{in+k-1}$ will have exactly one 1, as the $i^\text{th}$ position is exactly one color.
 
-With this notation, the black-peg distance becomes the dot product of the representations of the guess and the hidden vector, as there will be a contribution to the dot product exactly when both representations have a one in the same $A_{ij}$, i.e. there is the same color in the same spot of both vectors. 
+With this notation, the black-peg distance becomes the dot product of the guess and the hidden vector, as there will be a contribution to the dot product exactly when both vectors have a one in the same $A_{ij}$, i.e. there is the same color in the same spot of both vectors. 
 
-The goal of Mastermind is then to find the (necessarily unique) valid representation such that its dot product with the hidden vector is $n$. By linearity of the dot product, once we know the value of the dot product of the hidden vector with some set of guess vectors, we know the value of the dot product of the hidden vector with any vector in the span of these guesses. Therefore, it is an immediate consequence that a winning strategy can be found by querying a basis for the span of the valid guess vectors, which, as a subspace of $\R^{nk}$, must be of size at most $nk$. Note that this strategy does not make use of adaptive feedback, of white-peg responses, or the condition on repeated colors. Thus, for any choice of $\Delta$, $A$, and $R$, we have $f(n,k) \leq nk$.
+The goal of Mastermind is then to find the unique valid $(0,1)$-vector such that its dot product with the hidden vector is $n$. By linearity of the dot product, once we know the value of the dot product of the hidden vector with some set of queries, we know the value of the dot product of the hidden vector with any vector in the span of these guesses. Therefore, it is an immediate consequence that a winning strategy can be found by querying a basis for the span of the valid queries, which, as a subspace of $\R^{nk}$, must be of size at most $nk$. Note that this strategy does not make use of adaptive feedback, of white-peg responses, or the condition on repeated colors. Thus, for any choice of $\Delta$, $A$, and $R$, we have $f(n,k) \leq nk$.
 
-This representation also allows us to bound the minimax algorithm of \cite{DK76}. 
+This logic also allows us to bound the minimax algorithm of \cite{DK76}. 
 \subsection{Proof of Theorem 2}
-The bulk of the proof lies in the following lemma:
+The theorem can be easily reduced to the following lemma:
 \begin{lemma}
 	At each turn, the minimax algorithm either guesses the hidden vector or guesses a vector whose representation is linearly independent of the previous guesses' representations.
 \end{lemma}
 
 \begin{proof}
-	If the hidden vector is known, the minimax algorithm will guess it. This will certainly occur when the hidden vector's representation is a linear combination of the previous guess vectors' representations, as by the logic above we can compute the dot products of the hidden vector with every possibility in the span of the previous guesses, and we would find the guess with a dot product of $n$.
+	If the hidden vector is known, the minimax algorithm will guess it. As discussed above, this will certainly occur when the solution is in the linear span of the set of vectors queried.
 	
-	Otherwise, the hidden vector is linearly independent from the previous guess vectors. Assume this is the case. If it is still uniquely determined, the algorithm will guess it. Regardless, guessing a vector $q$ that is a linear combination of the previous guesses returns no new information, as the response to that guess can already be computed. Since $q$ is linearly dependent on the previous guesses, it cannot, by our assumption, be the hidden vector, and so guessing it eliminates zero vectors and doesn't solve the game. If we can find a new query $r$ that is guaranteed to either eliminate at least one vector or solve the game, the minimax algorithm will choose $r$ over $q$. Since the hidden vector must exist and by our assumption is linearly independent of the guess vectors, there is at least one vector linearly independent of the previous guesses. Guessing such a vector will win the game with a black-peg response of $n$, and eliminate at least one vector (itself) with any other response. Thus, according to the minimax algorithm, guessing any vector linearly independent of the previous guesses will always be strictly better than guessing a linearly dependent vector, and so if the hidden vector is unknown the best guess will be necessarily independent of the previous guesses.
+	Otherwise, the hidden vector is linearly independent from the previous queries. Assume this is the case. If it is still uniquely determined, the algorithm will guess it. Regardless, guessing a vector $q$ that is a linear combination of the previous guesses returns no new information, as the response to that guess can already be computed. Since $q$ is linearly dependent on the previous guesses, it cannot, by our assumption, be the hidden vector, and so guessing it eliminates zero vectors and does not solve the game. If we can find a new query $r$ that is guaranteed to either eliminate at least one vector or solve the game, the minimax algorithm will choose $r$ over $q$. Since the hidden vector must exist and by our assumption is linearly independent of the queries, there is at least one vector linearly independent of the previous guesses. Guessing such a vector will win the game with a black-peg response of $n$, and eliminate at least one vector (itself) with any other response. Thus, according to the minimax algorithm, guessing any vector linearly independent of the previous guesses will always be strictly better than guessing a linearly dependent vector, and so if the hidden vector is unknown the best guess will be necessarily independent of the previous guesses.
 \end{proof}
 Theorem \ref{minimaxTheorem} follows as an immediate corollary from this lemma: Since these representations are in $\R^{nk}$, the minimax algorithm can make at most $nk$ linearly independent guesses. After that, the minimax cannot make a linearly independent guess and by the above lemma must then guess the hidden vector, for an upper bound of $nk$ turns to determine the hidden vector and one more turn to guess it.
 
 \section{Non-Adaptive Variants}
-This section follows closely the reasoning of Doerr et al. \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to Doerr et al. to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
+This section follows closely the reasoning  in \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to Doerr et al. to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
 \subsection{Shannon Entropy}\label{ssec:shannonEntropy}
-First we give a brief definition of entropy in the context of information theory, where it is often called \textit{Shannon entropy}. Our presentation %TODO wrong word
+First we give a brief definition of entropy in the context of information theory. Specifically, we use \textit{Shannon entropy}. Our presentation %TODO wrong word
  borrows from \cite{DG14}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. For random variable $X$, and possible event $X=x$, we define $S(x)=-\log_2(\mathbb{P}[X=x])$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. The surprise function $S$ then satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$ \cite{DG14}.
 
 Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $H(X)$ of the random variable $X$ is defined to be
@@ -306,7 +315,7 @@ Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entro
 	& = \mathbb{E}[S(x)]\\
 	& = \sum_{x\in D}\mathbb{P}[X=x]\cdot (-\log_2(\mathbb{P}[X=x])).
 \end{align*}
-One can easily show that Shannon entropy is \textit{subadditive} \cite{DG14}. That is, if $X_1, X_2, \ldots, X_n$ are random variables, then
+One can easily show that Shannon entropy is \textit{subadditive} \cite{DG14}. That is, if $X_1, X_2, \ldots, X_n$ are random variables, and $(X_1,\dots,X_n)$ is the vector containing the $X_i$ as entries, then
 	\begin{equation}\label{subadditivityDefinition}
 			H(X_1, X_2, \ldots, X_n)\le \sum_{i=1}^{n}H(X_i).
 	\end{equation}
@@ -329,7 +338,7 @@ We will use Shannon entropy in the following proof.
 	\begin{equation}\label{entropyDef}
 		H(Y_i)=-\sum_{x=0}^n \mathbb{P}[Y_i=x]\cdot\log_2(\mathbb{P}[Y_{i}=x]).
 	\end{equation}
-	We now compute $\mathbb{P}[Y_i=x]$, namely the probability that $X$ is a solution vector with $x$ fixed points with respect to the query $q_i$. Using our previous terminology, this is the probability that $X$ is in bucket $B(x)$.
+	We now compute $\mathbb{P}[Y_i=x]$, namely the probability that $X$ is a solution vector with $x$ fixed points with respect to the query $q_i$. Using our previous terminology, this is the probability that $X$ is in subspace $B(x)$.
 	$|B(x)|$ is the number of ways to have exactly $x$ fixed points, which is less than the number of ways to choose $x$ fixed points, and then choose any colors on the rest of the elements. Thus:
 	\begin{align*}
 		\mathbb{P}[Y_i = x] &= \frac{|B(x)|}{\left(\frac{k!}{(k-n)!}\right)}\\
