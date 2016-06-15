@@ -1,68 +1,62 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
 \begin{thebibliography}{10}
 
 \bibitem{NB09}
-{\sc Bshouty, N.~H.}
-\newblock Optimal algorithms for the coin weighing problem with a spring scale.
-\newblock {\em COLT 1\/} (2009).
+Nader~H. Bshouty, \emph{Optimal algorithms for the coin weighing problem with a
+  spring scale}, COLT \textbf{1} (2009).
 
 \bibitem{CC05}
-{\sc Chen, Z., Cunha, C., and Homer, S.}
-\newblock Finding a hidden code by asking questions.
-\newblock {\em Lecture Notes in Computer Science 1\/} (2005), 50--55.
+Zixiang Chen, Carlos Cunha, and Steven Homer, \emph{Finding a hidden code by
+  asking questions}, Lecture Notes in Computer Science \textbf{1} (2005),
+  50--55.
 
 \bibitem{VC83}
-{\sc Chv\'atal, V.}
-\newblock Mastermind.
-\newblock {\em Combinatorica 3\/} (1983), 325--329.
+V\'aclav Chv\'atal, \emph{Mastermind}, Combinatorica \textbf{3} (1983),
+  325--329.
 
 \bibitem{DS13}
-{\sc Doerr, B., Spohel, R., Thomas, H., and Winzen, C.}
-\newblock Playing mastermind with many colors.
-\newblock {\em Proceedings of the Twenty-Fourth Annual ACM-SIAM Symposium on
-  Discrete Algorithms\/} (2013), 695--704.
-
-\bibitem{OS13}
-{\sc El~Ouali, M., and Sauerland, V.}
-\newblock Improved approximation algorithm for the number of queries necessary
-  to identify a permutation.
-\newblock {\em CoRR abs/1303.5862\/} (2013).
+Benjamin Doerr, Reto Spohel, Henning Thomas, and Carola Winzen, \emph{Playing
+  mastermind with many colors}, Proceedings of the Twenty-Fourth Annual
+  ACM-SIAM Symposium on Discrete Algorithms (2013), 695--704.
 
 \bibitem{ER63}
-{\sc Erd\H{o}s, P., and R\'enyi, A.}
-\newblock On two problems of information theory.
-\newblock {\em Magyar Tud. Akad. Mat. Kutat\'o Int. K\H{o}zl 8\/} (1963),
-  229--243.
+Paul Erd\H{o}s and A~R\'enyi, \emph{On two problems of information theory},
+  Magyar Tud. Akad. Mat. Kutat\'o Int. K\H{o}zl \textbf{8} (1963), 229--243.
 
 \bibitem{DG14}
-{\sc Galvin, D.}
-\newblock Three tutorial lectures on entropy and counting.
-\newblock {\em First Lake Michigan Workshop on Combinatorics and Graph
-  Theory\/} (3 2014).
+David Galvin, \emph{Three tutorial lectures on entropy and counting}, First
+  Lake Michigan Workshop on Combinatorics and Graph Theory (2014).
 
 \bibitem{MG12}
-{\sc Goodrich, M.~T.}
-\newblock On the algorithmic complexity of the mastermind game with black-peg
-  results.
-\newblock {\em Information Processing Letters 109\/} (2009), 675--678.
+Michael~T. Goodrich, \emph{On the algorithmic complexity of the mastermind game
+  with black-peg results}, Information Processing Letters \textbf{109} (2009),
+  675--678.
 
 \bibitem{GK00}
-{\sc Grebinsky, V., and Kucherov, G.}
-\newblock Optimal reconstruction of graphs under the additive model.
-\newblock {\em Algorithmica 1\/} (2000), 104--124.
+V~Grebinsky and G~Kucherov, \emph{Optimal reconstruction of graphs under the
+  additive model}, Algorithmica \textbf{1} (2000), 104--124.
 
 \bibitem{MH03}
-{\sc Hassani, M.}
-\newblock Derangements and applications.
-\newblock {\em Journal of Integer Sequences 6\/} (2 2003).
+Mehdi Hassani, \emph{Derangements and applications}, Journal of Integer
+  Sequences \textbf{6} (2003).
 
 \bibitem{DK76}
-{\sc Knuth, D.}
-\newblock The computer as master mind.
-\newblock {\em Journal of Recreational Mathematics 9}, 1 (2 1976), 2--7.
+Donald Knuth, \emph{The computer as master mind}, Journal of Recreational
+  Mathematics \textbf{9} (1976), no.~1, 2--7.
 
 \bibitem{KT86}
-{\sc Ko, K.-I., and Teng, S.-C.}
-\newblock On the number of queries necessary to identify a permutation.
-\newblock {\em Journal of Algorithms 7\/} (7 1986), 449--462.
+Ker-I Ko and Shia-Chung Teng, \emph{On the number of queries necessary to
+  identify a permutation}, Journal of Algorithms \textbf{7} (1986), 449--462.
+
+\bibitem{OS13}
+Mourad~El Ouali and Volkmar Sauerland, \emph{Improved approximation algorithm
+  for the number of queries necessary to identify a permutation}, CoRR
+  \textbf{abs/1303.5862} (2013).
 
 \end{thebibliography}

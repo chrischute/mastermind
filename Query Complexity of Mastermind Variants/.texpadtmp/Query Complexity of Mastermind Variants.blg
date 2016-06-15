@@ -1,46 +1,51 @@
 This is BibTeX, Version 0.99d (TeX Live 2015)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: /Users/christopherchute/Desktop/SUMRY_Mastermind/Query Complexity of Mastermind Variants/.texpadtmp/Query Complexity of Mastermind Variants.aux
-The style file: acm.bst
+The top-level auxiliary file: /Users/christopherchute/Documents/Mastermind for SUMRY/SUMRY_Mastermind/Query Complexity of Mastermind Variants/.texpadtmp/Query Complexity of Mastermind Variants.aux
+The style file: amsplain.bst
 Database file #1: ../QCMV_Bibliography.bib
+Warning--missing pages in NB09
+Warning--missing pages in DG14
+Warning--missing pages in MH03
+Warning--missing pages in OS13
 You've used 12 entries,
-            2253 wiz_defined-function locations,
-            611 strings with 5662 characters,
-and the built_in function-call counts, 3401 in all, are:
-= -- 342
-> -- 129
+            2213 wiz_defined-function locations,
+            583 strings with 5740 characters,
+and the built_in function-call counts, 3414 in all, are:
+= -- 307
+> -- 135
 < -- 0
 + -- 55
 - -- 42
-* -- 278
-:= -- 571
-add.period$ -- 36
+* -- 306
+:= -- 560
+add.period$ -- 12
 call.type$ -- 12
 change.case$ -- 57
 chr.to.int$ -- 0
-cite$ -- 12
-duplicate$ -- 108
-empty$ -- 287
+cite$ -- 16
+duplicate$ -- 132
+empty$ -- 299
 format.name$ -- 42
-if$ -- 688
+if$ -- 683
 int.to.chr$ -- 0
 int.to.str$ -- 12
-missing$ -- 12
-newline$ -- 63
+missing$ -- 24
+newline$ -- 46
 num.names$ -- 24
-pop$ -- 37
+pop$ -- 72
 preamble$ -- 1
 purify$ -- 45
 quote$ -- 0
-skip$ -- 61
+skip$ -- 65
 stack$ -- 0
 substring$ -- 243
-swap$ -- 24
+swap$ -- 16
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 48
-warning$ -- 0
+warning$ -- 4
 while$ -- 40
 width$ -- 14
-write$ -- 118
+write$ -- 102
+(There were 4 warnings)
