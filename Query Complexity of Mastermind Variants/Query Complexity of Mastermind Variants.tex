@@ -18,16 +18,19 @@
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[nottoc]{tocbibind}
-\usepackage{authblk}
+\usepackage[affil-it]{authblk}
+
 \makeatletter
 \renewcommand\AB@affilsepx{\qquad\protect\Affilfont}
 \makeatother
-\author{Aaron Berger}
-\affil{Yale University} % Can put in email with "\authorcr <email>"
-\author{Christopher Chute}
-\affil{Yale University}
-\author{Matthew Stone}
-\affil{Yale University}
+%\author{Aaron Berger}
+%\affil{Yale University} % Can put in email with "\authorcr <email>"
+%\author{Christopher Chute}
+%\affil{Yale University}
+%\author{Matthew Stone}
+%\affil{Yale University}
+\author[  ]{Aaron Berger, Christopher Chute, Matthew Stone}
+\affil[  ]{Yale University}
 \setcounter{Maxaffil}{0}
 \renewcommand\Affilfont{\itshape\small}
 
@@ -118,15 +121,15 @@ Our first main result concerns the Permutation Game, in which $n=k$ and $R=F$, t
 	\end{equation*}
 \end{theorem}
 
-Explicit algorithms that take $O(n \log n)$ turns to solve this variant were developed by Ko and Teng in \cite{KT86}, and Ouali and Sutherland in \cite{OS13}. Ko and Teng approach the problem with an algorithm akin to binary search. The algorithm queries a sequence $Q_t$, swaps two components, and queries again, doing so repeatedly until a previously unknown component of $H$ is determined by the values of the distance function across these repeated queries. Ouali and Sutherland improve this algorithm primarily by altering the search routine after a single component of $H$ has been identified. They also extend their results to variants with $k\ge n$. In this way, they achieve an average factor of two reduction in the number of queries needed to identify $H$. In our notation, these results state that $f(n, k=n, \Delta=b, R = F, A = T)\le O(n\log n)$.
+Explicit algorithms that take $O(n \log n)$ turns to solve this variant were developed by Ko and Teng in \cite{KT86}, and El Ouali and Sauerland in \cite{OS13}. Ko and Teng approach the problem with an algorithm akin to binary search. The algorithm queries a sequence $Q_t$, swaps two components, and queries again, doing so repeatedly until a previously unknown component of $H$ is determined by the values of the distance function across these repeated queries. El Ouali and Sauerland improve this algorithm primarily by altering the search routine after a single component of $H$ has been identified. They also extend their results to variants with $k\ge n$. In this way, they achieve an average factor of two reduction in the number of queries needed to identify $H$. In our notation, these results state that $f(n, k=n, \Delta=b, R = F, A = T)\le O(n\log n)$.
 
-Via a basic information-theoretic argument, one can show that the Permutation Game also satisfies $f(n, n)\ge n - n/\log n + c$ for some constant $c>0$. We improve this lower bound to $f(n, n)\ge n- \log \log n$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
+Via a basic information-theoretic argument, one can show that the Permutation Game satisfies $f(n, n)\ge n - n/\log n + c$ for some constant $c>0$. We improve this lower bound to $f(n, n)\ge n- \log \log n$ for sufficiently large $n$. To our knowledge, this constitutes the first improvement over the trivial information-theoretic lower bound for the Permutation Game variant of Mastermind.
 
-Our second result concern's Donald Knuth's Minimax algorithm, which was first introduced in 1976.
+Our second result concerns Donald Knuth's Minimax algorithm, which was first introduced in 1976.
 \begin{theorem}\label{minimaxTheorem}
 	Consider the original variant of Mastermind (allowing arbitrary $n$ and $k$), defined by $\Delta=(b, w)$, $R=T$, $A=T$. The Minimax algorithm identifies any hidden sequence $H$ in at most $nk$ queries.
 \end{theorem}
-Knuth's Minimax algorithm is empirically near-optimal for solving small games of Mastermind ($n$ and $k$ less than 10) in as few guesses as possible. However, it has proven difficult to analyze the asymptotic performance of the Minimax algorithm, primarily because its behavior is determined by the distribution of possibilities for $H$, which is difficult to analyze in general  \cite{OS13, KT86}. To our knowledge, this is the first upper bound on the worst-case performance of the minimax algorithm, but if it performs near-optimally for large $n$ and $k$, we would expect this bound to be much smaller. We know, for example, that $f(n,k) = O(n \log k)$ for $k$ not too large \cite{DK76, KT86}.
+Knuth's Minimax algorithm is empirically near-optimal for solving small games of Mastermind ($n$ and $k$ less than 10) in as few guesses as possible. However, it has proven difficult to analyze the asymptotic performance of the Minimax algorithm, primarily because its behavior is determined by the distribution remaining solutions aftera series of guesses, which is difficult to analyze in general  \cite{OS13, KT86}. To our knowledge, this is the first upper bound on the worst-case performance of the minimax algorithm, but if it performs near-optimally for large $n$ and $k$, we would expect this bound to be much smaller. We know, for example, that $f(n,k) = O(n \log k)$ for $k$ not too large \cite{DK76, KT86}.
 
 Our third result relates to non-adaptive variants of Mastermind, which correspond to $A=F$ in our notation.
 \begin{theorem}\label{nonAdaptiveTheorem}
@@ -151,7 +154,7 @@ We introduce notation and reasoning used in the proof of Theorem 1. We recall th
 % TODO: Nathan does not like the following paragraph, thinks it could be simpler.
 Letting $Q_t = \tau(\mathcal{A})$ for some $\tau \in S_k$, we have that with $\sigma = \overline{\sigma}\circ \tau\inv$. So we have $\sigma(Q_t) = \overline{\sigma}\circ\tau\inv\circ\tau(\mathcal A)$ which is just $H$, and then $b(\sigma(Q_t),H) = b(H,H)$ achieves the maximum possible value of $n$. Then $w(Q_t,H) = n - b(Q_t,H)$ and is uniquely determined by $b(Q_t,H)$ and so no new information is provided from white-peg responses. As such, for the permutation game we will let $\Delta = b$, as $\Delta = bw$ is precisely the same game.
 
- As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log n$ was proved in 1986 by Ko and Teng, and in 2013 Ouali and Sutherland improved this constant \cite{KT86, OS13}. We establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
+ As stated in the introduction, an upper bound $f(n, n)\le c\cdot n\log n$ was proved in 1986 by Ko and Teng, and in 2013 El Ouali and Sauerland improved this constant \cite{KT86, OS13}. We establish lower bounds for $f(n, n) = f(n, k=n, \Delta=b, R=F, A=T)$ concerning the Permutation Game.
  
  In this section we reference the derangements function, denoted $D(n)$, which counts the number of permutations in $S_n$ with no fixed points. That is,
 \begin{equation}\label{derangements}
@@ -169,23 +172,23 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		Consider an instance of the Permutation Game with the black-peg-only distance function $\Delta$. To uniquely identify $H$ after $m$ turns, the query response vector $(\Delta(Q_1, H), \Delta(Q_2, H), \ldots, \Delta(Q_m, H))$ must distinguish between all $n!$ permutations of the alphabet $\mathcal{A}$. In the $t\nth$ turn, the codebreaker submits a query sequence $Q_t$, which has $n$ possible associated responses given by $\Delta(Q_t, H)\in\{0, 1, \ldots, n-2, n\}$. We note that it is not possible to get $\Delta(Q_t, H)=n-1$ in the Permutation Game. Therefore there are $n^m$ possible query response vectors of length $m$, hence to identify $H$ in $m$ queries requires that $n^m\ge n!$. This implies $m\ge\log_n(n!)$, and the result follows immediately.
 	\end{proof}
 
-	\subsubsection{Solution subspaces}
+	\subsubsection{Solution subsets}
 	To improve upon the trivial lower bound, we first introduce terminology which we can use to analyze the worst-case performance of a possible guess in the permutation game. Assume the codebreaker has some arbitrary fixed, deterministic guessing strategy. After $t$ turns of this strategy, the codebreaker has guessed some sequence of queries $Q_1, \dots, Q_t$ and received responses $r_1,\dots,r_t$. The set of valid solution vectors $h$ with $\Delta(Q_i,h) = r_i$ for all $i$ is called the \textit{remainig solution set} $S_t$, and the codebreaker wins exactly when $|S_t| = 1$.
 	
 	Now, at the beginning of turn $t$, the codebreaker is going to guess $Q_t$. This guess partitions the remaining solution set $S_{t-1}$ into subsets for each possible response $\Delta(Q_t,H)$ from 0 to $n$, where each $h \in S_{t-1}$ is in the subset corresponding to a response $\Delta(Q_t,h)$. Now say a response of $\Delta(Q_t,H) = r$ is given. Then all solutions with $\Delta(Q_t,h) \neq r$ are eliminated from the remaining solution set, and this set becomes the subset of $S_{t-1}$ corresponding to a response $r$.
 	
-	We call the subset of $S_{t-1}$ corresponding to a response $r$ a \textit{solution subspace}, formally defined as 
+	We call the subset of $S_{t-1}$ corresponding to a response $r$ a \textit{solution subset}, formally defined as 
 	\begin{equation*}
 		B_t(r) = \left\{h\in S_t\mid \Delta(Q_t, h) = r\right\}.
 	\end{equation*}
 	Then the above logic can be written as $S_t = B_{t-1}(\Delta(Q_t,H))$.
 	
-	We now compute the size of a subspace $B_0(r)$ produced in the first turn of an instance of the Permutation Game. First we choose the $s$ colors that are fixed points with respect to the query sequence $Q_1$. We then permute the remaining $n-r$ colors without any fixed points, which can be done in $D(n - r)$ ways, with $D(x)$ as defined in (\ref{derangements}). Hence we have
+	We now compute the size of a subset $B_0(r)$ produced in the first turn of an instance of the Permutation Game. First we choose the $s$ colors that are fixed points with respect to the query sequence $Q_1$. We then permute the remaining $n-r$ colors without any fixed points, which can be done in $D(n - r)$ ways, with $D(x)$ as defined in (\ref{derangements}). Hence we have
 	\begin{equation*}
-		|B_0(r)| = \binom{n}{s}D(n-s),
+		|B_0(r)| = \binom{n}{s}D(n-r).
 	\end{equation*}
 	
-	The above computation tells us the \textit{initial} size of each subspace. Now consider $|B_t(r)|$. We have 
+	The above computation tells us the \textit{initial} size of each subset. Now consider $|B_t(r)|$. We have 
 	\begin{equation*}
 	|B_t(r)| = \#\left\{h\in S_t\mid \Delta(Q_t, h) = r\right\} \leq \#\left\{h\mid \Delta(Q_t, h) = r\right\}
 	\end{equation*} 
@@ -195,7 +198,7 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 	\end{equation*}
 
 	\subsection{Proof of Theorem 1}
-	Using solution subspaces, we now improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game. For the proof, we require two technical lemmas. The first bounds the sums of sizes of the subspaces defined above:
+	Using solution subsets, we now improve the trivial lower bound for $f(n, n)$ in the context of the Permutation Game. For the proof, we require two technical lemmas. The first bounds the sums of sizes of the subsets defined above:
 		 \begin{lemma}  For any positive integer $n$, we have:
 		 	\begin{equation*}
 		 	\sum_{i=x}^n\binom{n}{i}D(n-i) \le \frac{n!}{x!}.
@@ -207,11 +210,11 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		 Using this, we will prove the following bound on $|S_n|$:
 		 \begin{lemma} For a fixed deterministic guessing strategy, there is a choice of hidden vector such that 
 		 	\begin{equation*}
-		 	\frac{|S_t|}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!}
+		 	\frac{|S_t|}{n!}\ge \frac{C_{n}! - (H_{C_{n}+t} - H_{C_{n}})}{(C_n+t)!},
 		 	\end{equation*}
 		 	for any positive integer $C_n$ and all $0\le t\le n-C_{n}$, where $H_n=\sum_{i = 1}^n\frac{1}{i}$ is the $n\nth$ harmonic number.
 		 \end{lemma}
-		 A proof of lemma 2 provided at the end of the section.\\
+		 We prove Lemma 2 at the end of the section.\\
 		 \begin{proof}[Proof of Theorem 1]
 		 Apply Lemma 2 for $t = n-C_n$. Then we have
 		 \begin{equation*}
@@ -237,29 +240,28 @@ which is the nearest integer to $n!/e$  \cite{MH03}.
 		 
 		 
 		 \subsection{Proof of Lemma 2}
-		 
+		 \begin{proof}[Proof] 
 		 Recall that $S_t$ is the set of sequences that match the responses to the first $t$ questions of some fixed deterministic guessing strategy, given some hidden code $H$. Since all queries are possible when 0 questions have been asked, we have $|S_0| = n!$.
 		 
-		 Consider the $t\nth$ turn in an instance of the Permutation Game. There have been $t-1$ guesses made so far, and the set of remaining solutions is $S_{t-1}$. Now, the codebreaker is going to guess $Q_t$. To analyze the worst-case performance of this guess, we partition $S_{t-1}$ into subspaces $ B_{t-1}(r)$ for each possible response $r$. Since $S_t = B_{t-1}(\Delta(Q_t,H))$, in the worst case, $H$ will belong to the largest subspace $B_t(r)$, thereby leaving a large number of solutions in the remaining set. Thus, the worst-case size of $S_t$ given $S_{t-1}$ is
+		 Consider the $t\nth$ turn in an instance of the Permutation Game. There have been $t-1$ guesses made so far, and the set of remaining solutions is $S_{t-1}$. Now, the codebreaker is going to guess $Q_t$. To analyze the worst-case performance of this guess, we partition $S_{t-1}$ into subsets $ B_{t-1}(r)$ for each possible response $r$. Since $S_t = B_{t-1}(\Delta(Q_t,H))$, in the worst case, $H$ will belong to the largest subset $B_t(r)$, thereby leaving a large number of solutions in the remaining set. Thus, the worst-case size of $S_t$ given $S_{t-1}$ is
 		 \begin{equation*}
 			\max_{r\in\{0,1,\ldots,n\}}|B_{t}(r)|.
 		 \end{equation*}
-		 The minimum possible value of this maximum occurs when the subspaces partition $S_{t-1}$ as evenly as possible. We know that $|S_t(r)| \leq |S_0(r)|$, which is decreasing in $r$. In the optimal distribution of this type, some subspaces of higher index will have size equal to their upper bound, while the rest will be partially filled, but to a greater amount than any of the higher index subspaces. So with $|S_{t-1}|$ solutions remaining, there is an optimal $x$ such that completely filling subspaces $x$ through $n$ and splitting the remaining solutions among subspaces 0 through $x-1$ will give us this best distribution, and therefore a lower bound on $|S_t|$ in the worst case.
+		 The minimum possible value of this maximum occurs when the subsets partition $S_{t-1}$ as evenly as possible. We know that $|B_t(r)| \leq |B_0(r)|$, which is decreasing in $r$. In the optimal distribution of this type, some subsets of higher index will have size equal to their upper bound, while the rest will be partially filled, but to a greater amount than any of the higher index subsets. So with $|S_{t-1}|$ solutions remaining, there is an optimal $x$ such that completely filling subsets $x$ through $n$ and splitting the remaining solutions among subsets 0 through $x-1$ will give us this best distribution, and therefore a lower bound on $|S_t|$ in the worst case.
 		 
 		We now use this logic to bound $|S_t|$ recursively. Assume now that the codebreaker makes the query $Q_t$, receives some response $r$, and eliminates some number of possible solutions, leaving $S_t$ as the set of possible solutions remaining. We now claim that for all $x$,
-		\begin{equation*}
-			|S_{t-1}|\le  x\cdot |S_t| + \sum_{i = x}^{n}\binom{n}{i}D(n-i).
-		\end{equation*}
-		%TODO CONTINUE HERE _________________________________________________
-		By the above logic, we know this inequality holds for the optimal value of $x$, as it becomes an equality when $|S_t|$ is replaced by its theoretical lower bound. Picking $x$ larger than this optimal value increases the sizes of some of the entirely filled, smaller subspaces past their maximum up to $|S_t|$, thus increasing the right-hand side. Picking $x$ too small increases the sizes of some of the under-filled, larger subspaces up to their maxima, which increases the right-hand side as well. So adjustment of $x$ away from its optimal value always preserves the inequality. Thus (\ref{recur}) holds for all $x$.
+		\begin{equation}
+		|S_t| \ge \frac 1x \left(|S_{t-1}|-\sum_{i = x}^{n}\binom{n}{i}D(n-i)\right)
+		\end{equation}
+		By the above logic, we know this inequality holds for some optimal value of $x$, however since the subsets are decreasing in size, it is easy to see from the construction that the right-hand side is maximized for this choice of $x$, and so adjustment of $x$ away from this optimal value always preserves the inequality.
 		
-		We apply Lemma 1 to bound the rightmost term, and solve the inequality for $|S_t|$ to get 
+		We apply Lemma 1 to bound the rightmost term and get 
 		\begin{equation}\label{recur}
 			|S_t| \ge \frac{1}{x}\left(|S_{t-1}|-\frac{n!}{x!}\right).
 		\end{equation}
 		We now exhibit a solution to this recurrence relation to prove Lemma 2.
 		
-		\begin{proof}[Proof of Lemma 2] We prove inductively. With $t=0$, we have $|S_0| = n!$. Then
+		We proceed by induction. With $t=0$, we have $|S_0| = n!$. Then
 			\begin{equation*}
 			1 =\frac{|S_0|}{n!}\ge \frac{C_{n}! - (H_{C_{n}}-H_{C_{n}})}{C_{n}!} = 1,
 			\end{equation*}
@@ -295,7 +297,7 @@ A_{in+j} = \begin{cases}
 $$
 where $0 \leq i \leq n-1$ and $0 \leq j \leq k-1$. As such, each set of indices $A_{in},\dots,A_{in+k-1}$ will have exactly one 1, as the $i^\text{th}$ position is exactly one color.
 
-With this notation, the black-peg distance becomes the dot product of the guess and the hidden vector, as there will be a contribution to the dot product exactly when both vectors have a one in the same $A_{ij}$, i.e. there is the same color in the same spot of both vectors. 
+With this notation, the black-peg distance becomes the dot product of the guess and the hidden vector, as there will be a contribution to the dot product exactly when both vectors have a one in the same spot, i.e. there is the same color in the same spot of both vectors. 
 
 The goal of Mastermind is then to find the unique valid $(0,1)$-vector such that its dot product with the hidden vector is $n$. By linearity of the dot product, once we know the value of the dot product of the hidden vector with some set of queries, we know the value of the dot product of the hidden vector with any vector in the span of these guesses. Therefore, it is an immediate consequence that a winning strategy can be found by querying a basis for the span of the valid queries, which, as a subspace of $\R^{nk}$, must be of size at most $nk$. Note that this strategy does not make use of adaptive feedback, of white-peg responses, or the condition on repeated colors. Thus, for any choice of $\Delta$, $A$, and $R$, we have $f(n,k) \leq nk$.
 
@@ -303,33 +305,32 @@ This logic also allows us to bound the minimax algorithm of \cite{DK76}.
 \subsection{Proof of Theorem 2}
 The theorem can be easily reduced to the following lemma:
 \begin{lemma}
-	At each turn, the minimax algorithm either guesses the hidden vector or guesses a vector whose representation is linearly independent of the previous guesses' representations.
+	At each turn, the minimax algorithm either guesses the hidden vector or guesses a vector that is linearly independent of the previous guesses.
 \end{lemma}
 
 \begin{proof}
 	If the hidden vector is known, the minimax algorithm will guess it. As discussed above, this will certainly occur when the solution is in the linear span of the set of vectors queried.
 	
-	Otherwise, the hidden vector is linearly independent from the previous queries. Assume this is the case. If it is still uniquely determined, the algorithm will guess it. Regardless, guessing a vector $q$ that is a linear combination of the previous guesses returns no new information, as the response to that guess can already be computed. Since $q$ is linearly dependent on the previous guesses, it cannot, by our assumption, be the hidden vector, and so guessing it eliminates zero vectors and does not solve the game. If we can find a new query $r$ that is guaranteed to either eliminate at least one vector or solve the game, the minimax algorithm will choose $r$ over $q$. Since the hidden vector must exist and by our assumption is linearly independent of the queries, there is at least one vector linearly independent of the previous guesses. Guessing such a vector will win the game with a black-peg response of $n$, and eliminate at least one vector (itself) with any other response. Thus, according to the minimax algorithm, guessing any vector linearly independent of the previous guesses will always be strictly better than guessing a linearly dependent vector, and so if the hidden vector is unknown the best guess will be necessarily independent of the previous guesses.
+	Otherwise, the hidden vector is linearly independent from the previous queries. At this point, guessing a vector $q$ that is a linear combination of the previous guesses returns no new information, as the response to that guess can already be computed. Since $q$ is linearly dependent on the previous guesses, it cannot, by our assumption, be the hidden vector, and so guessing it eliminates zero vectors and does not solve the game. If we can find a new query $r$ that is guaranteed to either eliminate at least one vector or solve the game, the minimax algorithm will choose $r$ over $q$. Since the hidden vector must exist and by our assumption is linearly independent of the queries, it is a valid, linearly independent guess, so at least one such guess must exist. Guessing such a vector will win the game with a black-peg response of $n$, and eliminate at least one vector (itself) with any other response. Thus, according to the minimax algorithm, guessing any vector linearly independent of the previous guesses will always be strictly better than guessing a linearly dependent vector, and so if the hidden vector is unknown the best guess will be necessarily independent of the previous guesses.
 \end{proof}
 Theorem \ref{minimaxTheorem} follows as an immediate corollary from this lemma: Since these representations are in $\R^{nk}$, the minimax algorithm can make at most $nk$ linearly independent guesses. After that, the minimax cannot make a linearly independent guess and by the above lemma must then guess the hidden vector, for an upper bound of $nk$ turns to determine the hidden vector and one more turn to guess it.
 
 \section{Non-Adaptive Variants}
-This section follows closely the reasoning  in \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to Doerr et al. to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
+This section follows closely the reasoning  in \cite{DS13} as they analyze non-adaptive games.  We perform an analysis of the Mastermind variant in which $\Delta$ is the black-peg-only distance function, $R=F$ and $A=F$ (\textit{i.e.,} no repeats and non-adaptive). We first introduce Shannon entropy, which we then employ to give a lower bound for $f(n,k)$ when no repeats are allowed. We conclude with a small extension of one of the proofs due to Doerr, Sp\"ohel, Thomas, and Winzen to provide an upper bound on $f(n,k)$ for non-adaptive variants when $k\ge n$.
 \subsection{Shannon Entropy}\label{ssec:shannonEntropy}
 First we give a brief definition of entropy in the context of information theory. Specifically, we use \textit{Shannon entropy}. Our presentation %TODO wrong word
  borrows from \cite{DG14}. Shannon entropy is intuitively the ``expected level of surprise'' of a random variable, and hence is based upon the definition of a surprise function $S$. For random variable $X$, and possible event $X=x$, we define $S(x)=-\log_2(\mathbb{P}[X=x])$. Let $X$ and $Y$ be a random variables and let $X=x$ and $Y=y$ be events. The surprise function $S$ then satisfies $S(X=x\land Y=y) = S(X=x) + S(Y=y\mid X=x)$ \cite{DG14}.
  
 Let $D$ be the domain of the random variable $X$. Then the \textit{Shannon entropy} $H(X)$ of the random variable $X$ is defined to be
-\begin{align*}
+\begin{equation*}
 	H(X)
-	& = \mathbb{E}[S(x)]\\
-	& = \sum_{x\in D}\mathbb{P}[X=x]\cdot (-\log_2(\mathbb{P}[X=x])).
-\end{align*}
+	 = \mathbb{E}[S(x)]\\
+	 = \sum_{x\in D}\mathbb{P}[X=x]\cdot (-\log_2(\mathbb{P}[X=x])).
+\end{equation*}
 One can easily show that Shannon entropy is \textit{subadditive} \cite{DG14}. That is, if $X_1, X_2, \ldots, X_n$ are random variables, and $(X_1,\dots,X_n)$ is the vector containing the $X_i$ as entries, then
 	\begin{equation}\label{subadditivityDefinition}
 			H(X_1, X_2, \ldots, X_n)\le \sum_{i=1}^{n}H(X_i).
 	\end{equation}
-We will use Shannon entropy in the following proof.
 
 \subsection{Proof of Theorem 3}
 
@@ -349,14 +350,14 @@ We will use Shannon entropy in the following proof.
 		H(Y_i)=-\sum_{x=0}^n \mathbb{P}[Y_i=x]\cdot\log_2(\mathbb{P}[Y_{i}=x]).
 	\end{equation}
 	We now compute $\mathbb{P}[Y_i=x]$, namely the probability that $X$ is a solution vector with $x$ fixed points with respect to the query $q_i$. Using our previous terminology, this is the probability that $X$ is in subspace $B(x)$.
-	$|B(x)|$ is the number of ways to have exactly $x$ fixed points, which is less than the number of ways to choose $x$ fixed points, and then choose any colors on the rest of the elements. Thus:
+	The size of $B(x)$ is the number of permutations with exactly $x$ fixed points, which is fewer than the number of ways to choose $x$ fixed points, and then choose any colors for the remaining of the elements. Thus:
 	\begin{align*}
 		\mathbb{P}[Y_i = x] &= \frac{|B(x)|}{\left(\frac{k!}{(k-n)!}\right)}\\
 		&\leq \frac{\binom{n}{x}\frac{(k-x)!}{(k-n)!}}{\left(\frac{k!}{(k-n)!}\right)}\\
 		&= \frac{1}{x!}\cdot\frac{n(n-1)\cdots(n-x+1)}{k(k-1)\cdots(k-x+1)}\\
 		&\leq \frac{1}{x!}.
 	\end{align*}
-	It turns out that we can't substitute this upper bound into  (\ref{entropyDef}) for all $x$, because $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function only when $\alpha<1/e$. So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and still have an upper bound. For the first three values of $x$, we instead use the trivial upper bound $f(\alpha)\le 1/(e\log 2)$. Then
+	It turns out that we cannot substitute this upper bound into  (\ref{entropyDef}) for all $x$, because $f(\alpha)=-\alpha\log_2\alpha$ is an increasing function only when $\alpha<1/e$. So we can plug in the upper bound of $\text{Pr}[X=x]\le 1/x!$ when $x\ge 3$ and still have an upper bound. For the first three values of $x$, we instead use the trivial upper bound $f(\alpha)\le 1/(e\log 2)$. Then
 	\begin{align*}
 		H(Y_i) &\leq \frac{3}{e\log 2}+\sum_{x=3}^n-\frac{1}{x!}\cdot\log_2\left(\frac{1}{x!}\right)
 		\le \frac{3}{e\log 2}+\sum_{x=3}^\infty \frac{\log_2(x!)}{x!}
