@@ -6,4 +6,5 @@
 *.toc
 *.out
 *.nav
+.DS_Store
 
